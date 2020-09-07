@@ -6,6 +6,7 @@ M2 = (14, 15)
 M3 = (17, 18)
 M4 = (27, 22)
 M5 = (23, 24)
+M_LIGHT = ()
 channel_list = list(M1) + list(M2) + list(M3) + list(M4) + list(M5)
 
 GPIO.setup(channel_list, GPIO.OUT)
@@ -37,4 +38,24 @@ class Base(Part):
 	def clock(timer=None):
 		self.down(timer)
 
+class Shoulder(Part):
+	def __init__(self):
+		super().__init__(M2)
 
+class Elbow(Part):
+	def __init__(self):
+		super().__init__(M3)
+
+class Wrist(Part):
+	def __init__(self):
+		super().__init__(M4)
+
+class Grip(Part):
+	def __init__(self):
+		super().__init__(M5)
+
+	def close(timer=None):
+		self.up(timer)
+
+	def open(timer=None):
+		self.down(timer)
