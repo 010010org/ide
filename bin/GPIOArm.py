@@ -1,61 +1,78 @@
 import RPi.GPIO as GPIO
 import time
 
-M1 = (2, 3)
-M2 = (14, 15)
-M3 = (17, 18)
-M4 = (27, 22)
-M5 = (23, 24)
-M_LIGHT = ()
-channel_list = list(M1) + list(M2) + list(M3) + list(M4) + list(M5)
+class Arm(object):
+	M1 = (2, 3)
+	M2 = (14, 15)
+	M3 = (17, 18)
+	M4 = (27, 22)
+	M5 = (23, 24)
+	M_LIGHT = ()
+	channel_list = list(M1) + list(M2) + list(M3) + list(M4) + list(M5) + list(M_LIGHT)
 
-GPIO.setup(channel_list, GPIO.OUT)
-GPIO.output(channel_list, GPIO.HIGH)
-
-class Part(object):
-	def __init__(self, pin):
-		self.pin = pin
-
-	def move(piin, timer):
-		GPIO.output(piin, GPIO.LOW)
-		if(timer):
-			time.sleep(timer)
-			GPIO.output(piin, GPIO.HIGH)
-
-	def up(timer=None):
-		move(pin[0], timer)
-
-	def down(timer=None):
-		move(pin[1], timer)
-
-class Base(Part):
 	def __init__(self):
-		super().__init__(M1)
+		GPIO.setmode(GPIO.BCM)
+		for i in channel_list:
+        		GPIO.setup(i, GPIO.OUT)
+	        	GPIO.output(i, GPIO.HIGH)
 
-	def counter(timer=None):
-		self.up(timer)
+		base=Base(M5)
+		shoulder=Shoulder(M4)
+		elbow=Elbow(M3)
+		wrist=Wrist(M2)
+		grip=Grip(M1)
 
-	def clock(timer=None):
-		self.down(timer)
+	class Part(object):
+		pins=(0,0)
 
-class Shoulder(Part):
-	def __init__(self):
-		super().__init__(M2)
+		def __init__(self, pins):
+			self.pins=pins
 
-class Elbow(Part):
-	def __init__(self):
-		super().__init__(M3)
+		def move(self, pin, timer=0):
+       	        	GPIO.output(pin, GPIO.LOW)
+        	        if(timer>0):
+       	        	        time.sleep(timer)
+               	        	GPIO.output(pin, GPIO.HIGH)
 
-class Wrist(Part):
-	def __init__(self):
-		super().__init__(M4)
+		def up(self, timer=0):
+			self.move(pins[0], timer)
 
-class Grip(Part):
-	def __init__(self):
-		super().__init__(M5)
+        	def down(self, timer=0):
+       	        	self.move(pins[1], timer)
 
-	def close(timer=None):
-		self.up(timer)
+	class Base(Part):
+		def __init__(self, pins):
+			super.__init__(pins)
 
-	def open(timer=None):
-		self.down(timer)
+		def counter(self, timer=0):
+			self.up(timer)
+
+		def clock(self, timer=0):
+			self.down(timer)
+
+	class Shoulder(Part):
+		def __init__(self, pins):
+			super.__init__(pins)
+
+	class Elbow(Part):
+		def __init__(self, pins):
+			super.__init__(pins)
+
+	class Wrist(Part):
+		def __init__(self, pins):
+			super.__init__(pins)
+
+	class Grip(Part):
+		def __init__(self, pins):
+			super.__init__(pins)
+
+		def close(timer=0):
+			self.up(timer)
+
+		def open(timer=0):
+			self.down(timer)
+
+arm = Arm()
+input("Press Enter when ready...")
+
+arm.base.counter(1)
