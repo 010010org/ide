@@ -17,11 +17,11 @@ class Arm(object):
 				GPIO.setup(i, GPIO.OUT)
 				GPIO.output(i, GPIO.HIGH)
 
-		base = self.Base(self.M5)
-		shoulder = self.Shoulder(self.M4)
-		elbow = self.Elbow(self.M3)
-		wrist = self.Wrist(self.M2)
-		grip = self.Grip(self.M1)
+		self.base = self.Base(self.M5)
+		self.shoulder = self.Shoulder(self.M4)
+		self.elbow = self.Elbow(self.M3)
+		self.wrist = self.Wrist(self.M2)
+		self.grip = self.Grip(self.M1)
 
 	class Part(object):
 		pins = (0, 0)
@@ -43,7 +43,7 @@ class Arm(object):
 
 	class Base(Part):
 		def __init__(self, pins):
-			super.__init__(pins)
+			super().__init__(pins)
 
 		def counter(self, timer=0):
 			self.up(timer)
@@ -53,19 +53,19 @@ class Arm(object):
 
 	class Shoulder(Part):
 		def __init__(self, pins):
-			super.__init__(pins)
+			super().__init__(pins)
 
 	class Elbow(Part):
 		def __init__(self, pins):
-			super.__init__(pins)
+			super().__init__(pins)
 
 	class Wrist(Part):
 		def __init__(self, pins):
-			super.__init__(pins)
+			super().__init__(pins)
 
 	class Grip(Part):
 		def __init__(self, pins):
-			super.__init__(pins)
+			super().__init__(pins)
 
 		def close(self, timer=0):
 			self.up(timer)
