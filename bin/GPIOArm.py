@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
+
 class Arm(object):
 	M1 = (2, 3)
 	M2 = (14, 15)
@@ -12,33 +13,33 @@ class Arm(object):
 
 	def __init__(self):
 		GPIO.setmode(GPIO.BCM)
-		for i in channel_list:
-        		GPIO.setup(i, GPIO.OUT)
-	        	GPIO.output(i, GPIO.HIGH)
+		for i in self.channel_list:
+				GPIO.setup(i, GPIO.OUT)
+				GPIO.output(i, GPIO.HIGH)
 
-		base=Base(M5)
-		shoulder=Shoulder(M4)
-		elbow=Elbow(M3)
-		wrist=Wrist(M2)
-		grip=Grip(M1)
+		base = self.Base(self.M5)
+		shoulder = self.Shoulder(self.M4)
+		elbow = self.Elbow(self.M3)
+		wrist = self.Wrist(self.M2)
+		grip = self.Grip(self.M1)
 
 	class Part(object):
-		pins=(0,0)
+		pins = (0, 0)
 
 		def __init__(self, pins):
-			self.pins=pins
+			self.pins = pins
 
 		def move(self, pin, timer=0):
-       	        	GPIO.output(pin, GPIO.LOW)
-        	        if(timer>0):
-       	        	        time.sleep(timer)
-               	        	GPIO.output(pin, GPIO.HIGH)
+			GPIO.output(pin, GPIO.LOW)
+			if timer > 0:
+				time.sleep(timer)
+				GPIO.output(pin, GPIO.HIGH)
 
 		def up(self, timer=0):
-			self.move(pins[0], timer)
+			self.move(self.pins[0], timer)
 
-        	def down(self, timer=0):
-       	        	self.move(pins[1], timer)
+		def down(self, timer=0):
+			self.move(self.pins[1], timer)
 
 	class Base(Part):
 		def __init__(self, pins):
@@ -66,11 +67,12 @@ class Arm(object):
 		def __init__(self, pins):
 			super.__init__(pins)
 
-		def close(timer=0):
+		def close(self, timer=0):
 			self.up(timer)
 
-		def open(timer=0):
+		def open(self, timer=0):
 			self.down(timer)
+
 
 arm = Arm()
 input("Press Enter when ready...")
