@@ -4,9 +4,11 @@ arm = Arm()
 pygame.init()
 pygame.display.set_mode()
 
+
 def ArmControl(key, part, state):
-        if event.key == getattr(pygame,"K_"+key):
-                getattr(getattr(arm, part), state)()
+	if event.key == getattr(pygame, "K_"+key):
+		getattr(getattr(arm, part), state)()
+
 
 while True:
 	for event in pygame.event.get():
@@ -26,4 +28,15 @@ while True:
 			ArmControl("u", "light", "on")
 			ArmControl("j", "light", "off")
 		elif event.type == pygame.KEYUP:
-			
+			ArmControl("a", "base", "off")
+			ArmControl("d", "base", "off")
+			ArmControl("w", "shoulder", "off")
+			ArmControl("s", "shoulder", "off")
+			ArmControl("r", "elbow", "off")
+			ArmControl("f", "elbow", "off")
+			ArmControl("t", "wrist", "off")
+			ArmControl("g", "wrist", "off")
+			ArmControl("y", "grip", "off")
+			ArmControl("h", "grip", "off")
+			ArmControl("u", "light", "off")
+			ArmControl("j", "light", "off")
