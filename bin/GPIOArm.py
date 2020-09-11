@@ -44,7 +44,7 @@ class Arm(object):
 			self.move(self.pins[1], timer)
 
 		def off(self):
-			GPIO.output(self.pins, LOW)
+			GPIO.output(self.pins, GPIO.LOW)
 
 	class Base(Part):
 		def __init__(self, pins):
