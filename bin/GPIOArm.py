@@ -8,20 +8,21 @@ class Arm(object):
 	M3 = (17, 18)
 	M4 = (27, 22)
 	M5 = (23, 24)
-	M_LIGHT = ()
+	M_LIGHT = 25,
 	channel_list = list(M1) + list(M2) + list(M3) + list(M4) + list(M5) + list(M_LIGHT)
 
 	def __init__(self):
 		GPIO.setmode(GPIO.BCM)
 		for i in self.channel_list:
 				GPIO.setup(i, GPIO.OUT)
-				GPIO.output(i, GPIO.HIGH)
+				GPIO.output(i, GPIO.LOW)
 
 		self.base = self.Base(self.M5)
 		self.shoulder = self.Shoulder(self.M4)
 		self.elbow = self.Elbow(self.M3)
 		self.wrist = self.Wrist(self.M2)
 		self.grip = self.Grip(self.M1)
+		self.light = self.LIGHT(self.M_LIGHT)
 
 	class Part(object):
 		pins = (0, 0)
@@ -30,16 +31,19 @@ class Arm(object):
 			self.pins = pins
 
 		def move(self, pin, timer=0):
-			GPIO.output(pin, GPIO.LOW)
+			GPIO.output(pin, GPIO.HIGH)
 			if timer > 0:
 				time.sleep(timer)
-				GPIO.output(pin, GPIO.HIGH)
+				GPIO.output(pin, GPIO.LOW)
 
 		def up(self, timer=0):
 			self.move(self.pins[0], timer)
 
 		def down(self, timer=0):
 			self.move(self.pins[1], timer)
+
+		def off(self):
+			GPIO.output(self.pins, LOW)
 
 	class Base(Part):
 		def __init__(self, pins):
@@ -74,7 +78,15 @@ class Arm(object):
 			self.down(timer)
 
 
-arm = Arm()
-input("Press Enter when ready...")
+	class Light(Part):
+		def __init__(self, pin):
+			self.pin = pin
 
-arm.base.counter(1)
+		def on(self, timer=0):
+			GPIO.output(self.pin, GPIO.HIGH)
+			if timer>0:
+				time.sleep(timer)
+				GPIO.output(self.pin, GPIO.LOW)
+
+		def off(self):
+			GPIO.output(self.pin, GPIO.LOW)
