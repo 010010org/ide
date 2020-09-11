@@ -1,4 +1,4 @@
-from roboarm import Arm
+from GPIOArm import Arm
 import pygame
 arm = Arm()
 pygame.init()
@@ -12,22 +12,18 @@ while True:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			pygame.quit()
-		if event.type == pygame.KEYDOWN:
-			ArmControl("a", "base", "rotate_counter")
-			ArmControl("d", "base", "rotate_clock")
+		elif event.type == pygame.KEYDOWN:
+			ArmControl("a", "base", "counter")
+			ArmControl("d", "base", "clock")
 			ArmControl("w", "shoulder", "up")
 			ArmControl("s", "shoulder", "down")
 			ArmControl("r", "elbow", "up")
 			ArmControl("f", "elbow", "down")
 			ArmControl("t", "wrist", "up")
 			ArmControl("g", "wrist", "down")
-			ArmControl("y", "grips", "close")
-			ArmControl("h", "grips", "open")
-			ArmControl("u", "led", "on")
-			ArmControl("j", "led", "off")
-#arm.base.rotate_clock(1)
-#arm.shoulder.up(1)
-#arm.elbow.down(1)
-#arm.wrist.up(1)
-#arm.grips.close(1)
-#arm.led.on(2)
+			ArmControl("y", "grip", "close")
+			ArmControl("h", "grip", "open")
+			ArmControl("u", "light", "on")
+			ArmControl("j", "light", "off")
+		elif event.type == pygame.KEYUP:
+			

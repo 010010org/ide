@@ -22,7 +22,7 @@ class Arm(object):
 		self.elbow = self.Elbow(self.M3)
 		self.wrist = self.Wrist(self.M2)
 		self.grip = self.Grip(self.M1)
-		self.light = self.LIGHT(self.M_LIGHT)
+		self.light = self.Light(self.M_LIGHT)
 
 	class Part(object):
 		pins = (0, 0)
@@ -32,9 +32,10 @@ class Arm(object):
 
 		def move(self, pin, timer=0):
 			GPIO.output(pin, GPIO.HIGH)
-			if timer > 0:
-				time.sleep(timer)
-				GPIO.output(pin, GPIO.LOW)
+			if timer <= 0:
+				return
+			time.sleep(timer)
+			GPIO.output(pin, GPIO.LOW)
 
 		def up(self, timer=0):
 			self.move(self.pins[0], timer)
@@ -84,9 +85,10 @@ class Arm(object):
 
 		def on(self, timer=0):
 			GPIO.output(self.pin, GPIO.HIGH)
-			if timer>0:
-				time.sleep(timer)
-				GPIO.output(self.pin, GPIO.LOW)
+			if timer <= 0:
+				return
+			time.sleep(timer)
+			GPIO.output(self.pin, GPIO.LOW)
 
 		def off(self):
 			GPIO.output(self.pin, GPIO.LOW)
