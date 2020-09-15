@@ -44,17 +44,22 @@ class Font(object):
 		self.image = pygame.image.load("img/font.bmp")
 		self.image.set_colorkey((0xFF, 0xFF, 0xFF))
 
-	def drawChar(self, letter, x, y):
+
+	def drawChar(self, letter, x, y, color=(0, 0, 0)):
 		self.char = ord(letter[0])
 		self.row = self.char // 32
 		self.column = self.char % 32
 		self.width = 8
 		self.height = 8
 		surface.blit(self.image, (x, y), (self.width*self.column, self.height*self.row, self.width, self.height))
+		if color != (0, 0, 0):
+			pixels = PixelArray(surface)
+			pixels.replace(Color(0, 0, 0), color)
+			del pixels
 
-	def drawString(self, letters, x, y):
+	def drawString(self, letters, x, y, color=(0, 0, 0)):
 		for i in range(len(letters)):
-			self.drawChar(letters[i], x+self.width*i, y)
+			self.drawChar(letters[i], x+self.width*i, y, color)
 
 pygame.init()
 fpsClock = pygame.time.Clock()
