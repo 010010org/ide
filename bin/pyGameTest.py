@@ -48,26 +48,29 @@ class Font(object):
 		self.image.set_colorkey(MAGENTA)
 
 
-	def drawChar(self, letter, x, y, color=BLACK):
+	def drawChar(self, letter, x=0, y=0, color=BLACK, fancy=False, bold=False, underline=False):
 		self.char = ord(letter[0])
 		self.row = self.char // 32
 		self.column = self.char % 32
 		self.width = 8
 		self.height = 8
 		surface.blit(self.image, (x, y), (self.width*self.column, self.height*self.row, self.width, self.height))
+		if bold:
+			surface.blit(self.image, (x+1, y), (self.width*self.column, self.height*self.row, self.width, self.height))
+		if underline:
+			surface.blit(self.image, (x, y+1), (self.width*(ord('_')%32), self.height*(ord('_')//32), self.width, self.height))
+		if fancy:
+			color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
 		if color != BLACK:
 			pixels = PixelArray(surface)
 			pixels.replace(Color(0, 0, 0), color)
 			del pixels
 
-	def drawString(self, letters, x, y, color=BLACK, fancy=False):
+	def drawString(self, letters, x=0, y=0, color=BLACK, fancy=False, bold=False, underline=False):
 		lineList = letters.splitlines(keepends=False)
 		for i in range(len(lineList)):
 			for j in range(len(lineList[i])):
-				if fancy:
-					self.drawChar(lineList[i][j], x+self.width*j, y+self.height*i, (random.randint(0,254), random.randint(0,254), random.randint(0,254)))
-				else:
-					self.drawChar(lineList[i][j], x+self.width*j, y+self.height*i, color)
+				self.drawChar(lineList[i][j], x+self.width*j, y+self.height*i, color, fancy, bold, underline)
 
 pygame.init()
 fpsClock = pygame.time.Clock()
@@ -94,7 +97,7 @@ while True:
 			sys.exit()
 		elif event.type == MOUSEMOTION:
 			mouseX, mouseY = event.pos
-	font.drawString(loremIpsum, 10, 10, fancy=True)
+	font.drawString(loremIpsum, fancy=True, bold=True, underline=True)
 	#surface.blit(smiley.image, (smiley.x, smiley.y))
 	#smiley.update()
 	pygame.display.update()
