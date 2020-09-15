@@ -1,10 +1,13 @@
-import pygame, os, sys
+import pygame, os, sys, random
 from pygame.locals import *
-
+from pygame import PixelArray
 
 SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 480
-
+BLACK = (0,0,0)
+WHITE = (255,255,255)
+RED = (255,0,0)
+MAGENTA = (255,0,255)
 
 class Sprite(object):
 
@@ -42,24 +45,29 @@ class Font(object):
 
 	def __init__(self):
 		self.image = pygame.image.load("img/font.bmp")
-		self.image.set_colorkey((0xFF, 0xFF, 0xFF))
+		self.image.set_colorkey(MAGENTA)
 
 
-	def drawChar(self, letter, x, y, color=(0, 0, 0)):
+	def drawChar(self, letter, x, y, color=BLACK):
 		self.char = ord(letter[0])
 		self.row = self.char // 32
 		self.column = self.char % 32
 		self.width = 8
 		self.height = 8
 		surface.blit(self.image, (x, y), (self.width*self.column, self.height*self.row, self.width, self.height))
-		if color != (0, 0, 0):
+		if color != BLACK:
 			pixels = PixelArray(surface)
 			pixels.replace(Color(0, 0, 0), color)
 			del pixels
 
-	def drawString(self, letters, x, y, color=(0, 0, 0)):
-		for i in range(len(letters)):
-			self.drawChar(letters[i], x+self.width*i, y, color)
+	def drawString(self, letters, x, y, color=BLACK, fancy=False):
+		lineList = letters.splitlines(keepends=False)
+		for i in range(len(lineList)):
+			for j in range(len(lineList[i])):
+				if fancy:
+					self.drawChar(lineList[i][j], x+self.width*j, y+self.height*i, (random.randint(0,254), random.randint(0,254), random.randint(0,254)))
+				else:
+					self.drawChar(lineList[i][j], x+self.width*j, y+self.height*i, color)
 
 pygame.init()
 fpsClock = pygame.time.Clock()
@@ -68,6 +76,16 @@ background = pygame.Color(255, 0, 0)
 #smiley = Smiley(100, 100, [5, 5])
 font = Font()
 iter = 0
+
+loremIpsum = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua.
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+nisi ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit in voluptate velit esse
+cillum dolore eu fugiat nulla pariatur.
+Excepteur sint occaecat cupidatat non proident, sunt in culpa
+qui officia deserunt mollit anim id est laborum."""
+
 while True:
 	surface.fill(background)
 	for event in pygame.event.get():
@@ -76,7 +94,7 @@ while True:
 			sys.exit()
 		elif event.type == MOUSEMOTION:
 			mouseX, mouseY = event.pos
-	font.drawString('Hello World', 100, 100)
+	font.drawString(loremIpsum, 10, 10, fancy=True)
 	#surface.blit(smiley.image, (smiley.x, smiley.y))
 	#smiley.update()
 	pygame.display.update()
