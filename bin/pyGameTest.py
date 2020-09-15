@@ -15,37 +15,39 @@ class Sprite(object):
 		self.image = pygame.image.load(imageLoc)
 
 	def update(self):
-		self.x+=self.speed[0]
-		self.y+=self.speed[1]
-		if self.x+self.image.get_width()>SCREEN_WIDTH:
-			self.x=SCREEN_WIDTH-self.image.get_width()
-			self.speed[0]*=-1
-		if self.x<0:
-			self.x=0
-			self.speed[0]*=-1
-		if self.y+self.image.get_height()>SCREEN_HEIGHT:
-			self.y=SCREEN_HEIGHT-self.image.get_height()
-			self.speed[1]*=-1
-		if self.y<0:
-			self.y=0
-			self.speed[1]*=-1
+		self.x += self.speed[0]
+		self.y += self.speed[1]
+		if self.x+self.image.get_width() > SCREEN_WIDTH:
+			self.x = SCREEN_WIDTH-self.image.get_width()
+			self.speed[0] *= -1
+		if self.x < 0:
+			self.x = 0
+			self.speed[0] *= -1
+		if self.y+self.image.get_height() > SCREEN_HEIGHT:
+			self.y = SCREEN_HEIGHT-self.image.get_height()
+			self.speed[1] *= -1
+		if self.y < 0:
+			self.y = 0
+			self.speed[1] *= -1
 
 
 class Smiley(Sprite):
 	def __init__(self, x, y, speed):
 		super().__init__(x, y, speed, "img/smiley.bmp")
 
+
 class Font(object):
 	width = 8
 	height = 8
+
 	def __init__(self):
 		self.image = pygame.image.load("img/font.bmp")
+		self.image.set_colorkey((0xFF, 0xFF, 0xFF))
 
 	def drawChar(self, letter, x, y):
 		self.char = ord(letter[0])
 		self.row = self.char // 32
 		self.column = self.char % 32
-		print("%d   %d",self.row, self.column)
 		self.width = 8
 		self.height = 8
 		surface.blit(self.image, (x, y), (self.width*self.column, self.height*self.row, self.width, self.height))
