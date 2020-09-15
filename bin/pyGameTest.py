@@ -43,20 +43,18 @@ class Font(object):
 	width = 8
 	height = 8
 
-	def __init__(self):
-		self.image = pygame.image.load("img/font.bmp")
+	def __init__(self, fontname="font"):
+		self.image = pygame.image.load("img/"+fontname+".bmp")
 		self.image.set_colorkey(MAGENTA)
 
 
 	def drawChar(self, letter, x=0, y=0, color=BLACK, fancy=False, bold=False, underline=False):
-		self.char = ord(letter[0])
-		self.row = self.char // 32
-		self.column = self.char % 32
-		self.width = 8
-		self.height = 8
-		surface.blit(self.image, (x, y), (self.width*self.column, self.height*self.row, self.width, self.height))
+		char = ord(letter[0])
+		row = char // 32
+		column = char % 32
+		surface.blit(self.image, (x, y), (self.width*column, self.height*row, self.width, self.height))
 		if bold:
-			surface.blit(self.image, (x+1, y), (self.width*self.column, self.height*self.row, self.width, self.height))
+			surface.blit(self.image, (x+1, y), (self.width*column, self.height*row, self.width, self.height))
 		if underline:
 			surface.blit(self.image, (x, y+1), (self.width*(ord('_')%32), self.height*(ord('_')//32), self.width, self.height))
 		if fancy:
@@ -70,7 +68,7 @@ class Font(object):
 		lineList = letters.splitlines(keepends=False)
 		for i in range(len(lineList)):
 			for j in range(len(lineList[i])):
-				self.drawChar(lineList[i][j], x+self.width*j, y+self.height*i, color, fancy, bold, underline)
+				self.drawChar(lineList[i][j], x+(self.width-1)*j, y+self.height*i, color, fancy, bold, underline)
 
 pygame.init()
 fpsClock = pygame.time.Clock()
@@ -97,7 +95,7 @@ while True:
 			sys.exit()
 		elif event.type == MOUSEMOTION:
 			mouseX, mouseY = event.pos
-	font.drawString(loremIpsum, fancy=True, bold=True, underline=True)
+	font.drawString(loremIpsum, color=WHITE, underline=True)
 	#surface.blit(smiley.image, (smiley.x, smiley.y))
 	#smiley.update()
 	pygame.display.update()
