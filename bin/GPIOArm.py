@@ -1,5 +1,66 @@
 import RPi.GPIO as GPIO
 import time
+import threading
+
+
+class PartThread(threading.Thread):
+	isRunning = True
+
+	def __init__(self, part, name):
+		self.part = part
+		self.name = name
+		threading.Thread.__init__(self)
+		self.daemon = True
+		self.start()
+
+	def run(self):
+		while self.isRunning:
+			pass
+
+	def up(self, timer=0):
+		if hasattr(self.part, "up"):
+			self.part.up(timer)
+		else:
+			print(self.name + "can't move up or down!")
+
+	def down(self, timer=0):
+		if hasattr(self.part, "down"):
+			self.part.down(timer)
+		else:
+			print(self.name + "can't move up or down!")
+
+	def left(self, timer=0):
+		if hasattr(self.part, "left"):
+			self.part.left(timer)
+		else:
+			print(self.name + "can't move left or right!")
+
+	def right(self, timer=0):
+		if hasattr(self.part, "right"):
+			self.part.right(timer)
+		else:
+			print(self.name + "can't move left or right!")
+
+	def open(self, timer=0):
+		if hasattr(self.part, "open"):
+			self.part.open(timer)
+		else:
+			print(self.name + "can't open or close!")
+
+	def close(self, timer=0):
+		if hasattr(self.part, "close"):
+			self.part.close(timer)
+		else:
+			print(self.name + "can't open or close!")
+
+	def on(self, timer=0):
+		if hasattr(self.part, "on"):
+			self.part.on(timer)
+		else:
+			print(self.name + "can't just turn on!")
+
+	def off(self):
+		self.part.off()
 
 
 class Arm(object):
@@ -12,10 +73,11 @@ class Arm(object):
 	M5 = (23, 24)
 	M_LIGHT = 25,
 	channel_list = list(M1) + list(M2) + list(M3) + list(M4) + list(M5) + list(M_LIGHT)
+	threads = []
 
 	# Wanneer de arm geinitialiseerd wordt zet deze alle pins op output en haalt ie overal de stroom af, voor het geval
 	# dat de pins hiervoor ergens anders voor gebruikt zijn en er nog stroom op staat.
-	# Ook maakt de Arm objecten aan voor alle verschillende onderdelen, zodat deze makkelijk (met naam) aangestuurd
+	# Ook maakt de Arm threads aan voor alle verschillende onderdelen, zodat deze tegelijk (met naam) aangestuurd
 	# kunnen worden.
 	def __init__(self):
 		GPIO.setmode(GPIO.BCM)
@@ -23,12 +85,23 @@ class Arm(object):
 			GPIO.setup(i, GPIO.OUT)
 			GPIO.output(i, GPIO.LOW)
 
-		self.base = self.Base(self.M5)
-		self.shoulder = self.Shoulder(self.M4)
-		self.elbow = self.Elbow(self.M3)
-		self.wrist = self.Wrist(self.M2)
-		self.grip = self.Grip(self.M1)
-		self.light = self.Light(self.M_LIGHT)
+		self.base = PartThread(self.Base(self.M5), "base")
+		self.shoulder = PartThread(self.Shoulder(self.M4), "shoulder")
+		self.elbow = PartThread(self.Elbow(self.M3), "elbow")
+		self.wrist = PartThread(self.Wrist(self.M2), "wrist")
+		self.grip = PartThread(self.Grip(self.M1), "grip")
+		self.light = PartThread(self.Light(self.M_LIGHT), "light")
+
+		self.threads.append(self.base)
+		self.threads.append(self.shoulder)
+		self.threads.append(self.elbow)
+		self.threads.append(self.wrist)
+		self.threads.append(self.grip)
+		self.threads.append(self.light)
+
+	def close(self):
+		for i in self.threads:
+			i.isRunning = False
 
 	# Dit is de parent class van alle motoren. Hierin staan de functies voor het aansturen.
 	class Part(object):

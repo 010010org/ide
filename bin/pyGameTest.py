@@ -47,8 +47,8 @@ class Font(object):
     width = 8
     height = 8
 
-    def __init__(self, fontname="font"):
-        self.image = pygame.image.load("img/" + fontname + ".bmp")
+    def __init__(self, fontName="font"):
+        self.image = pygame.image.load("img/" + fontName + ".bmp")
         self.image.set_colorkey(MAGENTA)
 
     def drawChar(self, letter, x=0, y=0, color=BLACK, fancy=False, bold=False, underline=False):
