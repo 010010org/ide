@@ -1,34 +1,55 @@
-from tkinter import Toplevel, Button, Tk, Menu
+import tkinter as tk
+from GPIOArm import Arm
 
-top = Tk()
-menubar = Menu(top)
-file = Menu(menubar, tearoff=0)
-file.add_command(label="New")
-file.add_command(label="Open")
-file.add_command(label="Save")
-file.add_command(label="Save as...")
-file.add_command(label="Close")
+arm = Arm()
+window = tk.Tk()
+window.geometry("300x200")
+window.title = "test"
 
-file.add_separator()
+commandList = ["if", "for", "while", "goto"]
 
-file.add_command(label="Exit", command=top.quit)
+options = tk.StringVar(window)
+options.set("Select one") # default value
 
-menubar.add_cascade(label="File", menu=file)
-edit = Menu(menubar, tearoff=0)
-edit.add_command(label="Undo")
+om1 =tk.OptionMenu(window, options, *commandList)
+om1.grid(row=2,column=1)
 
-edit.add_separator()
+def get_option(*args):
+    print(options.get())
 
-edit.add_command(label="Cut")
-edit.add_command(label="Copy")
-edit.add_command(label="Paste")
-edit.add_command(label="Delete")
-edit.add_command(label="Select All")
+options.trace('w',get_option)
 
-menubar.add_cascade(label="Edit", menu=edit)
-help = Menu(menubar, tearoff=0)
-help.add_command(label="About")
-menubar.add_cascade(label="Help", menu=help)
+armList=[]
+for attr in dir(arm):
+    if not callable(getattr(arm, attr)) and not attr.startswith("_"):
+            armList.append(attr)
 
-top.config(menu=menubar)
-top.mainloop()
+armOptions = tk.StringVar(window)
+armOptions.set("Select one") # default value
+
+armMenu =tk.OptionMenu(window, armOptions, *armList)
+armMenu.grid(row=2,column=2)
+
+moveList = []
+moveOptions = tk.StringVar(window)
+moveOptions.set("Select one") # default value
+
+def getArmOption(*args):
+    if(hasattr(getattr(arm, armOptions.get()).part, "clock")):
+        moveList=["clock", "counter", "off"]
+    elif(hasattr(getattr(arm, armOptions.get()).part, "open")):
+        moveList=["open", "close", "off"]
+    elif(hasattr(getattr(arm, armOptions.get()).part, "on")):
+        moveList=["on", "off"]
+    else:
+        moveList=["up", "down", "off"]
+
+    moveMenu=tk.OptionMenu(window, moveOptions, *moveList)
+    moveMenu.grid(row=2, column=3)
+
+def getMoveOption(*args):
+    print(armOptions.get()+" moving "+moveOptions.get())
+
+armOptions.trace('w',getArmOption)
+moveOptions.trace('w',getMoveOption)
+window.mainloop()  # Keep the window open
