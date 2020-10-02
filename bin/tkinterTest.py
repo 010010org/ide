@@ -1,55 +1,81 @@
 import tkinter as tk
-from GPIOArm import Arm
+import math
+import ast
 
-arm = Arm()
-window = tk.Tk()
-window.geometry("300x200")
-window.title = "test"
+import GPIOArm
 
-commandList = ["if", "for", "while", "goto"]
 
-options = tk.StringVar(window)
-options.set("Select one") # default value
+class Interface(object):
+    SCREEN_WIDTH = 600
+    SCREEN_HEIGHT = 400
+    buttonWidth = 8
+    maxButtons = SCREEN_WIDTH/(15*buttonWidth)
+    buttonNumber = iter(range(0xEFFFFFFF))
+    buttonColumn = buttonNumber.__next__() % maxButtons
+    buttonRow = 2
+    arm = GPIOArm.Arm()
+    window = tk.Tk()
+    commandList = ["if", "for", "while", "break", "continue"]
+    armList = []
+    expressionList = ["+", "-", "*", "/", "//", "%", "**", "<<", ">>", "|", "^", "&", "~", "@"]
+    expressionExplanationList = ["optellen", "aftrekken",
+                                 "vermenigvuldigen", "delen", "delen zonder rest", "rest van deling",
+                                 "machtsverheffen", "Bitwise shift naar links", "Bitwise shift naar rechts",
+                                 "Bitwise OR", "Bitwise XOR", "Bitwise AND", "Bitwise NOT",
+                                 "Matrix vermenigvuldiging"]
+    equationList = ["==", "!=", "<", "<=", ">", ">=", "is", "isNot"]
+    logicGateList = ["AND", "OR", "XOR", "NOT"]
+    logicGateList2 = ["NAND", "NOR", "XNOR"]
+    variableList = ["i", "j", "k", "l"]
+    options = tk.StringVar(window)
+    armOptions = tk.StringVar(window)
+    moveOptions = tk.StringVar(window)
+    logicGateOptions = tk.StringVar(window)
+    logicGateOptions2 = tk.StringVar(window)
 
-om1 =tk.OptionMenu(window, options, *commandList)
-om1.grid(row=2,column=1)
+    def __init__(self):
+        self.window.geometry(str(self.SCREEN_WIDTH)+"x"+str(self.SCREEN_HEIGHT))
+        self.window.title = "robotarm"
+        self.options.set("Select one")
+        optionMenu = tk.OptionMenu(self.window, self.options, *self.commandList)
+        optionMenu.config(width=self.buttonWidth)
+        optionMenu.grid(row=self.buttonRow, column=self.buttonColumn)
+        print(self.buttonNumber)
+        self.options.trace('w', self.getOption)
+        for attr in dir(self.arm):
+            if not callable(getattr(self.arm, attr)) and not attr.startswith("_"):
+                self.armList.append(attr)
+        self.armOptions.set("Select one")
+        armMenu = tk.OptionMenu(self.window, self.armOptions, *self.armList)
+        armMenu.config(width=self.buttonWidth)
+        armMenu.grid(row=self.buttonRow, column=self.buttonColumn)
+        self.moveOptions.set("Select one")
+        self.armOptions.trace('w', self.getArmOption)
+        self.moveOptions.trace('w', self.getMoveOption)
+        self.window.mainloop()
 
-def get_option(*args):
-    print(options.get())
+    def getOption(self, *_args):
+        print(self.options.get())
 
-options.trace('w',get_option)
+    def getArmOption(self, *_args):
+        moveList = []
+        self.moveOptions.set("Select one")
+        if hasattr(getattr(self.arm, self.armOptions.get()).part, "clock"):
+            moveList = ["clock", "counter"]
+        elif hasattr(getattr(self.arm, self.armOptions.get()).part, "open"):
+            moveList = ["open", "close"]
+        elif hasattr(getattr(self.arm, self.armOptions.get()).part, "on"):
+            moveList.append("on")
+        else:
+            moveList = ["up", "down"]
+        moveList.append("off")
 
-armList=[]
-for attr in dir(arm):
-    if not callable(getattr(arm, attr)) and not attr.startswith("_"):
-            armList.append(attr)
+        moveMenu = tk.OptionMenu(self.window, self.moveOptions, *moveList)
+        moveMenu.config(width=self.buttonWidth)
+        moveMenu.grid(row=self.buttonRow, column=self.buttonColumn)
 
-armOptions = tk.StringVar(window)
-armOptions.set("Select one") # default value
+    def getMoveOption(self, *_args):
+        print(self.armOptions.get()+" moving "+self.moveOptions.get())
 
-armMenu =tk.OptionMenu(window, armOptions, *armList)
-armMenu.grid(row=2,column=2)
 
-moveList = []
-moveOptions = tk.StringVar(window)
-moveOptions.set("Select one") # default value
-
-def getArmOption(*args):
-    if(hasattr(getattr(arm, armOptions.get()).part, "clock")):
-        moveList=["clock", "counter", "off"]
-    elif(hasattr(getattr(arm, armOptions.get()).part, "open")):
-        moveList=["open", "close", "off"]
-    elif(hasattr(getattr(arm, armOptions.get()).part, "on")):
-        moveList=["on", "off"]
-    else:
-        moveList=["up", "down", "off"]
-
-    moveMenu=tk.OptionMenu(window, moveOptions, *moveList)
-    moveMenu.grid(row=2, column=3)
-
-def getMoveOption(*args):
-    print(armOptions.get()+" moving "+moveOptions.get())
-
-armOptions.trace('w',getArmOption)
-moveOptions.trace('w',getMoveOption)
-window.mainloop()  # Keep the window open
+interface = Interface()
