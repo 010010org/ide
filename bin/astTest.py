@@ -1,9 +1,9 @@
 import ast
 import json
 
-print(dir(ast.cmpop))
-for element in ast.cmpop._attributes:
-    print(element)
+buttonNumber = iter(range(0xEFFFFFFF))
+    buttonColumn = buttonNumber.__next__() % 5
+    buttonRow = 2 + buttonNumber.__//5
 
 
 def plusPlus(x):
