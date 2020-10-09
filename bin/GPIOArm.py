@@ -1,6 +1,7 @@
 #import RPi.GPIO as GPIO
 import time
 import threading
+import localisationData as ld
 
 
 class PartThread(threading.Thread):
@@ -21,43 +22,43 @@ class PartThread(threading.Thread):
 		if hasattr(self.part, "up"):
 			self.part.up(timer)
 		else:
-			print(self.name + "can't move up or down!")
+			print(self.name + ld.upDownErrorMessage)
 
 	def down(self, timer=0):
 		if hasattr(self.part, "down"):
 			self.part.down(timer)
 		else:
-			print(self.name + "can't move up or down!")
+			print(self.name + ld.upDownErrorMessage)
 
 	def counter(self, timer=0):
 		if hasattr(self.part, "counter"):
 			self.part.counter(timer)
 		else:
-			print(self.name + "can't move left or right!")
+			print(self.name + ld.leftRightErrorMessage)
 
 	def clock(self, timer=0):
 		if hasattr(self.part, "clock"):
 			self.part.clock(timer)
 		else:
-			print(self.name + "can't move left or right!")
+			print(self.name + ld.leftRightErrorMessage)
 
 	def open(self, timer=0):
 		if hasattr(self.part, "open"):
 			self.part.open(timer)
 		else:
-			print(self.name + "can't open or close!")
+			print(self.name + ld.openCloseErrorMessage)
 
 	def close(self, timer=0):
 		if hasattr(self.part, "close"):
 			self.part.close(timer)
 		else:
-			print(self.name + "can't open or close!")
+			print(self.name + ld.openCloseErrorMessage)
 
 	def on(self, timer=0):
 		if hasattr(self.part, "on"):
 			self.part.on(timer)
 		else:
-			print(self.name + "can't just turn on!")
+			print(self.name + ld.turnOnErrorMessage)
 
 	def off(self):
 		self.part.off()
@@ -85,12 +86,12 @@ class Arm(object):
 			#GPIO.setup(i, GPIO.OUT)
 			#GPIO.output(i, GPIO.LOW)
 
-		self.base = PartThread(self.Base(self._M5), "base")
-		self.shoulder = PartThread(self.Shoulder(self._M4), "shoulder")
-		self.elbow = PartThread(self.Elbow(self._M3), "elbow")
-		self.wrist = PartThread(self.Wrist(self._M2), "wrist")
-		self.grip = PartThread(self.Grip(self._M1), "grip")
-		self.light = PartThread(self.Light(self._M_LIGHT), "light")
+		self.base = PartThread(self.Base(self._M5), ld.partList[0])
+		self.shoulder = PartThread(self.Shoulder(self._M4), ld.partList[1])
+		self.elbow = PartThread(self.Elbow(self._M3), ld.partList[2])
+		self.wrist = PartThread(self.Wrist(self._M2), ld.partList[3])
+		self.grip = PartThread(self.Grip(self._M1), ld.partList[4])
+		self.light = PartThread(self.Light(self._M_LIGHT), ld.partList[5])
 
 		self._threads.append(self.base)
 		self._threads.append(self.shoulder)

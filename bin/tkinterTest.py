@@ -3,6 +3,7 @@ import ast
 import time
 import GPIOArm
 import tkTooltip
+import localisationData as ld
 
 
 class Interface(object):
@@ -16,11 +17,6 @@ class Interface(object):
     commandList = ["if", "elif", "else", "for", "while", "break", "continue"]
     armList = []
     expressionList = ["+", "-", "*", "/", "//", "%", "**", "<<", ">>", "|", "^", "&", "~", "@"]
-    expressionExplanationList = ["optellen", "aftrekken",
-                                 "vermenigvuldigen", "delen", "delen zonder rest", "rest van deling",
-                                 "machtsverheffen", "Bitwise shift naar links", "Bitwise shift naar rechts",
-                                 "Bitwise OR", "Bitwise XOR", "Bitwise AND", "Bitwise NOT",
-                                 "Matrix vermenigvuldiging"]
     equationList = ["==", "!=", "<", "<=", ">", ">=", "is", "is not", "in", "not in"]
     logicGateList = ["AND", "OR", "XOR", "NOT"]
     logicGateList2 = ["NAND", "NOR", "XNOR"]
@@ -34,30 +30,30 @@ class Interface(object):
 
     def __init__(self):
         self.window.geometry(str(self.SCREEN_WIDTH)+"x"+str(self.SCREEN_HEIGHT))
-        self.window.title = "robotarm"
-        self.options.set("command")
+        self.window.title = ld.windowName
+        self.options.set(ld.commandWindowName)
         optionMenu = tk.OptionMenu(self.window, self.options, *self.commandList)
         optionMenu.config(width=self.buttonWidth)
         optionMenu.grid(row=self.buttonRow(), column=self.buttonColumn())
         self.options.trace('w', self.getOption)
-        self.expressionOptions.set("expressions")
+        self.expressionOptions.set(ld.expressionWindowName)
         self.expressionMenu = tk.OptionMenu(self.window, self.expressionOptions, *self.expressionList)
         self.expressionMenu.config(width=self.buttonWidth)
         self.expressionMenu['menu'].bind("<Enter>", self.on_enter)
         self.expressionMenu['menu'].bind("<Leave>", self.on_leave)
-        #for i in range(self.expressionMenu['menu'].index("end")+1):
-            #print(self.expressionMenu['menu'].entrycget(i, "state"))
-            #tkTooltip.Tooltip(self.expressionMenu['menu'].entrycget(i, "label"), text=self.expressionExplanationList[i])
+        # for i in range(self.expressionMenu['menu'].index("end")+1):
+        # print(self.expressionMenu['menu'].entrycget(i, "state"))
+        # tkTooltip.Tooltip(self.expressionMenu['menu'].entrycget(i, "label"), text=ld.expressionExplanationList[i])
         self.expressionMenu.grid(row=self.buttonRow(), column=self.buttonColumn())
         self.expressionOptions.trace('w', self.getExpressionOption)
         for attr in dir(self.arm):
             if not callable(getattr(self.arm, attr)) and not attr.startswith("_"):
-                self.armList.append(attr)
-        self.armOptions.set("part")
+                self.armList.append(getattr(self.arm, attr).name)
+        self.armOptions.set(ld.armWindowName)
         armMenu = tk.OptionMenu(self.window, self.armOptions, *self.armList)
         armMenu.config(width=self.buttonWidth)
         armMenu.grid(row=self.buttonRow(), column=self.buttonColumn())
-        self.moveOptions.set("direction")
+        self.moveOptions.set(ld.movementWindowName)
         self.armOptions.trace('w', self.getArmOption)
         self.moveOptions.trace('w', self.getMoveOption)
         self.window.mainloop()
@@ -86,16 +82,16 @@ class Interface(object):
 
     def getArmOption(self, *_args):
         moveList = []
-        self.moveOptions.set("Select one")
+        self.moveOptions.set(ld.movementWindowName)
         if hasattr(getattr(self.arm, self.armOptions.get()).part, "clock"):
-            moveList = ["clock", "counter"]
+            moveList = ld.baseMovements
         elif hasattr(getattr(self.arm, self.armOptions.get()).part, "open"):
-            moveList = ["open", "close"]
+            moveList = ld.gripMovements
         elif hasattr(getattr(self.arm, self.armOptions.get()).part, "on"):
-            moveList.append("on")
+            moveList.append(ld.ledMovement)
         else:
-            moveList = ["up", "down"]
-        moveList.append("off")
+            moveList = ld.normalMovements
+        moveList.append(ld.offMovement)
 
         moveMenu = tk.OptionMenu(self.window, self.moveOptions, *moveList)
         moveMenu.config(width=self.buttonWidth)
