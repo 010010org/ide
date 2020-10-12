@@ -3,39 +3,56 @@ import ast
 import time
 import GPIOArm
 import tkTooltip
-import localisationData as ld
+import localisationdata as ld
+import configparser
 
 
 class Interface(object):
-    SCREEN_WIDTH = 600
-    SCREEN_HEIGHT = 400
+    iniReader = configparser.ConfigParser()
+    SCREEN_WIDTH = 640
+    SCREEN_HEIGHT = 480
     buttonWidth = 8
-    maxButtons = SCREEN_WIDTH//(15*buttonWidth)
+    maxButtons = SCREEN_WIDTH//(16*buttonWidth)
     buttonNumber = iter(range(0xEFFFFFFF))
     arm = GPIOArm.Arm()
     window = tk.Tk()
-    commandList = ["if", "elif", "else", "for", "while", "break", "continue"]
+    commandList = ["if", "elif", "else", "for", "while"]
+    advancedCommandList = ["break", "continue"]
     armList = []
-    expressionList = ["+", "-", "*", "/", "//", "%", "**", "<<", ">>", "|", "^", "&", "~", "@"]
-    equationList = ["==", "!=", "<", "<=", ">", ">=", "is", "is not", "in", "not in"]
+    expressionList = ["+", "-", "*", "/", "//", "%", "**"]
+    advancedExpressionList = ["<<", ">>", "|", "^", "&", "~", "@"]
+    equationList = ["==", "!=", "<", "<=", ">", ">="]
+    advancedEquationList = ["is", "is not", "in", "not in"]
     logicGateList = ["AND", "OR", "XOR", "NOT"]
-    logicGateList2 = ["NAND", "NOR", "XNOR"]
+    advancedLogicGateList = ["NAND", "NOR", "XNOR"]
     variableList = ["i", "j", "k", "l"]
-    options = tk.StringVar(window)
+    fileOptions = tk.StringVar(window)
+    commandOptions = tk.StringVar(window)
     expressionOptions = tk.StringVar(window)
     armOptions = tk.StringVar(window)
     moveOptions = tk.StringVar(window)
     logicGateOptions = tk.StringVar(window)
-    logicGateOptions2 = tk.StringVar(window)
 
     def __init__(self):
+        self.iniReader.read('config.ini')
+        self.advancedMode = int(self.iniReader['options']['ADVANCED_MODE'])
+        if self.advancedMode:
+            self.expressionList += self.advancedExpressionList
+            self.commandList += self.advancedCommandList
+            self.equationList += self.advancedEquationList
+            self.logicGateList += self.advancedLogicGateList
         self.window.geometry(str(self.SCREEN_WIDTH)+"x"+str(self.SCREEN_HEIGHT))
         self.window.title = ld.windowName
-        self.options.set(ld.commandWindowName)
-        optionMenu = tk.OptionMenu(self.window, self.options, *self.commandList)
-        optionMenu.config(width=self.buttonWidth)
-        optionMenu.grid(row=self.buttonRow(), column=self.buttonColumn())
-        self.options.trace('w', self.getOption)
+        self.commandOptions.set(ld.commandWindowName)
+        fileMenu = tk.OptionMenu(self.window, self.fileOptions, *ld.fileMenuList)
+        fileMenu.config(width=self.buttonWidth)
+        fileMenu.grid(row=self.buttonRow(), column=self.buttonColumn())
+        fileMenu['menu'].add_checkbutton(label=ld.advanced, variable=self.advancedMode, onvalue=1, offvalue=0, command=self.setAdvancedMode)
+        self.fileOptions.set(ld.fileWindowName)
+        self.commandMenu = tk.OptionMenu(self.window, self.commandOptions, *self.commandList)
+        self.commandMenu.config(width=self.buttonWidth)
+        self.commandMenu.grid(row=self.buttonRow(), column=self.buttonColumn())
+        self.commandOptions.trace('w', self.getCommandOption)
         self.expressionOptions.set(ld.expressionWindowName)
         self.expressionMenu = tk.OptionMenu(self.window, self.expressionOptions, *self.expressionList)
         self.expressionMenu.config(width=self.buttonWidth)
@@ -71,11 +88,32 @@ class Interface(object):
                 print(self.expressionMenu['menu'].entrycget(i, "label"))
         print(event)
 
+    def setAdvancedMode(self):
+        self.commandMenu['menu'].delete(0, 'end')
+        self.expressionMenu['menu'].delete(0, 'end')
+        self.advancedMode ^= 1
+        if self.advancedMode:
+            for i in self.advancedCommandList:
+                self.commandList.append(i)
+            for i in self.advancedExpressionList:
+                self.expressionList.append(i)
+        else:
+            for i in self.advancedCommandList:
+                while i in self.commandList:
+                    self.commandList.remove(i)
+            for i in self.advancedExpressionList:
+                while i in self.expressionList:
+                    self.expressionList.remove(i)
+        for i in self.commandList:
+            self.commandMenu['menu'].add_command(label=i)
+        for i in self.expressionList:
+            self.expressionMenu['menu'].add_command(label=i)
+
     def on_leave(self, event):
         return
 
-    def getOption(self, *_args):
-        print(self.options.get())
+    def getCommandOption(self, *_args):
+        print(self.commandOptions.get())
 
     def getExpressionOption(self, *_args):
         print(self.expressionOptions.get())

@@ -1,3 +1,6 @@
+advanced = "Geavanceerde modus"
+fileMenuList = ["Nieuw...", "Openen", "Opslaan", "Opslaan als..."]
+fileWindowName = "Bestand"
 expressionExplanationList = ["optellen", "aftrekken",
                                  "vermenigvuldigen", "delen", "delen zonder rest", "modulo (rest van deling)",
                                  "machtsverheffen", "Bitwise shift naar links", "Bitwise shift naar rechts",

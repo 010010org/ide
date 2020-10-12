@@ -1,7 +1,7 @@
 #import RPi.GPIO as GPIO
 import time
 import threading
-import localisationData as ld
+import localisationdata as ld
 
 
 class PartThread(threading.Thread):

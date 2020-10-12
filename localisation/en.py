@@ -1,3 +1,6 @@
+advanced = "Advanced mode"
+fileMenuList = ["New...", "Open", "Save", "Save as..."]
+fileWindowName = "File"
 expressionExplanationList = ["addition", "subtraction",
                                  "multiplication", "division", "floor division (division rounded down)", "modulo (rest number of division)",
                                  "exponentiation", "Bitwise shift left", "Bitwise shift right",

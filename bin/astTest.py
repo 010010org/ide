@@ -1,9 +1,10 @@
 import ast
 import json
 
-buttonNumber = iter(range(0xEFFFFFFF))
-    buttonColumn = buttonNumber.__next__() % 5
-    buttonRow = 2 + buttonNumber.__//5
+list = [1, 2, 3]
+list2 = [4, 5, 6]
+list+=list2
+print(list)
 
 
 def plusPlus(x):
