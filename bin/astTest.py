@@ -1,11 +1,8 @@
 import ast
 import json
 
-list = [1, 2, 3]
-list2 = [4, 5, 6]
-list+=list2
-print(list)
-
+for i in range(5):
+    print(i)
 
 def plusPlus(x):
     i = 1
