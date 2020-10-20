@@ -31,6 +31,7 @@ class Interface(object):
     armOptions = tk.StringVar(window)
     moveOptions = tk.StringVar(window)
     logicGateOptions = tk.StringVar(window)
+    tipWindow = None
 
     def __init__(self):
         self.iniReader.read('config.ini')
@@ -55,13 +56,13 @@ class Interface(object):
         self.expressionOptions.set(ld.expressionWindowName)
         self.expressionMenu = tk.OptionMenu(self.window, self.expressionOptions, *self.expressionList)
         self.expressionMenu.config(width=self.buttonWidth)
-        self.expressionMenu['menu'].bind("<Enter>", self.on_enter)
-        self.expressionMenu['menu'].bind("<Leave>", self.on_leave)
+        self.expressionMenu['menu'].bind("<Button-1>", self.on_click)
+        self.expressionMenu['menu'].bind("<Button-3>", self.on_rmb)
         # for i in range(self.expressionMenu['menu'].index("end")+1):
         # print(self.expressionMenu['menu'].entrycget(i, "state"))
         # tkTooltip.Tooltip(self.expressionMenu['menu'].entrycget(i, "label"), text=ld.expressionExplanationList[i])
         self.expressionMenu.grid(row=self.buttonRow(), column=self.buttonColumn())
-        self.expressionOptions.trace('w', self.getExpressionOption)
+        # self.expressionOptions.trace('w', self.getExpressionOption)
         self.armOptions.set(ld.armWindowName)
         armMenu = tk.OptionMenu(self.window, self.armOptions, *ld.partList)
         armMenu.config(width=self.buttonWidth)
@@ -77,12 +78,12 @@ class Interface(object):
     def buttonColumn(self):
         return (self.buttonNumber.__next__()//2) % self.maxButtons + 1
 
-    def on_enter(self, event):
-        time.sleep(0.025)
-        for i in range(self.expressionMenu['menu'].index("end")+1):
-            if self.expressionMenu['menu'].entrycget(i, "state") == "active":
-                print(self.expressionMenu['menu'].entrycget(i, "label"))
-        print(event)
+    def on_click(self, event):
+        print("(left)clicked option " + self.expressionList[event.y // 22])
+
+    def on_rmb(self, event):
+        print(ld.expressionExplanationList[event.y//22])
+
 
     def setAdvancedMode(self):
         self.commandMenu['menu'].delete(0, 'end')
@@ -104,9 +105,6 @@ class Interface(object):
             self.commandMenu['menu'].add_command(label=i)
         for i in self.expressionList:
             self.expressionMenu['menu'].add_command(label=i)
-
-    def on_leave(self, event):
-        return
 
     def getCommandOption(self, *_args):
         print(self.commandOptions.get())
