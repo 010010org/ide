@@ -1,8 +1,5 @@
 import tkinter as tk
-import ast
-import time
 import GPIOArm
-import tkTooltip
 import localisationdata as ld
 import configparser
 
@@ -11,8 +8,8 @@ class Interface(object):
     iniReader = configparser.ConfigParser()
     SCREEN_WIDTH = 640
     SCREEN_HEIGHT = 480
-    buttonWidth = 8
-    maxButtons = SCREEN_WIDTH//(16*buttonWidth)
+    buttonWidth = 9
+    maxButtons = SCREEN_WIDTH//(14*buttonWidth)
     buttonNumber = iter(range(0xEFFFFFFF))
     arm = GPIOArm.Arm()
     window = tk.Tk()
@@ -28,6 +25,7 @@ class Interface(object):
     fileOptions = tk.StringVar(window)
     commandOptions = tk.StringVar(window)
     expressionOptions = tk.StringVar(window)
+    equationOptions = tk.StringVar(window)
     armOptions = tk.StringVar(window)
     moveOptions = tk.StringVar(window)
     logicGateOptions = tk.StringVar(window)
@@ -56,13 +54,16 @@ class Interface(object):
         self.expressionOptions.set(ld.expressionWindowName)
         self.expressionMenu = tk.OptionMenu(self.window, self.expressionOptions, *self.expressionList)
         self.expressionMenu.config(width=self.buttonWidth)
-        self.expressionMenu['menu'].bind("<Button-1>", self.on_click)
-        self.expressionMenu['menu'].bind("<Button-3>", self.on_rmb)
-        # for i in range(self.expressionMenu['menu'].index("end")+1):
-        # print(self.expressionMenu['menu'].entrycget(i, "state"))
-        # tkTooltip.Tooltip(self.expressionMenu['menu'].entrycget(i, "label"), text=ld.expressionExplanationList[i])
+        self.expressionMenu['menu'].bind("<Button-1>", self.expressionClick)
+        self.expressionMenu['menu'].bind("<Button-3>", self.expressionRightClick)
         self.expressionMenu.grid(row=self.buttonRow(), column=self.buttonColumn())
         # self.expressionOptions.trace('w', self.getExpressionOption)
+        self.equationOptions.set(ld.equationWindowName)
+        self.equationMenu = tk.OptionMenu(self.window, self.equationOptions, *self.equationList)
+        self.equationMenu.config(width=self.buttonWidth)
+        self.equationMenu['menu'].bind("<Button-1>", self.equationClick)
+        self.equationMenu['menu'].bind("<Button-3>", self.equationRightClick)
+        self.equationMenu.grid(row=self.buttonRow(), column=self.buttonColumn())
         self.armOptions.set(ld.armWindowName)
         armMenu = tk.OptionMenu(self.window, self.armOptions, *ld.partList)
         armMenu.config(width=self.buttonWidth)
@@ -78,12 +79,17 @@ class Interface(object):
     def buttonColumn(self):
         return (self.buttonNumber.__next__()//2) % self.maxButtons + 1
 
-    def on_click(self, event):
+    def expressionClick(self, event):
         print("(left)clicked option " + self.expressionList[event.y // 22])
 
-    def on_rmb(self, event):
+    def expressionRightClick(self, event):
         print(ld.expressionExplanationList[event.y//22])
 
+    def equationClick(self, event):
+        print("(left)clicked option " + self.equationList[event.y // 22])
+
+    def equationRightClick(self, event):
+        print(ld.equationExplanationList[event.y//22])
 
     def setAdvancedMode(self):
         self.commandMenu['menu'].delete(0, 'end')
