@@ -1,8 +1,12 @@
-import ast
-import json
+import time
+start = time.time()
+seconden = 0
 
-for i in range(5):
-    print(i)
+while time.time() < start + 10:
+    print(seconden)
+    seconden += 1
+    time.sleep(1)
+
 
 def plusPlus(x):
     i = 1
