@@ -18,7 +18,6 @@ class Interface(object):
     window = tk.Tk()
     commandList = ["if", "elif", "else", "for", "while"]
     advancedCommandList = ["break", "continue"]
-    armList = []
     expressionList = ["+", "-", "*", "/", "//", "%", "**"]
     advancedExpressionList = ["<<", ">>", "|", "^", "&", "~", "@"]
     equationList = ["==", "!=", "<", "<=", ">", ">="]
@@ -63,11 +62,8 @@ class Interface(object):
         # tkTooltip.Tooltip(self.expressionMenu['menu'].entrycget(i, "label"), text=ld.expressionExplanationList[i])
         self.expressionMenu.grid(row=self.buttonRow(), column=self.buttonColumn())
         self.expressionOptions.trace('w', self.getExpressionOption)
-        for attr in dir(self.arm):
-            if not callable(getattr(self.arm, attr)) and not attr.startswith("_"):
-                self.armList.append(getattr(self.arm, attr).name)
         self.armOptions.set(ld.armWindowName)
-        armMenu = tk.OptionMenu(self.window, self.armOptions, *self.armList)
+        armMenu = tk.OptionMenu(self.window, self.armOptions, *ld.partList)
         armMenu.config(width=self.buttonWidth)
         armMenu.grid(row=self.buttonRow(), column=self.buttonColumn())
         self.moveOptions.set(ld.movementWindowName)
@@ -121,11 +117,11 @@ class Interface(object):
     def getArmOption(self, *_args):
         moveList = []
         self.moveOptions.set(ld.movementWindowName)
-        if hasattr(getattr(self.arm, self.arm.partList(ld.partList.index(self.armOptions.get()))).part, "clock"):
+        if hasattr(getattr(self.arm, self.arm.partList[ld.partList.index(self.armOptions.get())]).part, "clock"):
             moveList = ld.baseMovements
-        elif hasattr(getattr(self.arm, self.arm.partList(ld.partList.index(self.armOptions.get()))).part, "open"):
+        elif hasattr(getattr(self.arm, self.arm.partList[ld.partList.index(self.armOptions.get())]).part, "open"):
             moveList = ld.gripMovements
-        elif hasattr(getattr(self.arm, self.arm.partList(ld.partList.index(self.armOptions.get()))).part, "on"):
+        elif hasattr(getattr(self.arm, self.arm.partList[ld.partList.index(self.armOptions.get())]).part, "on"):
             moveList.append(ld.ledMovement)
         else:
             moveList = ld.normalMovements
