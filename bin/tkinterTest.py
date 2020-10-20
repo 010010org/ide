@@ -121,11 +121,11 @@ class Interface(object):
     def getArmOption(self, *_args):
         moveList = []
         self.moveOptions.set(ld.movementWindowName)
-        if hasattr(getattr(self.arm, self.armOptions.get()).part, "clock"):
+        if hasattr(getattr(self.arm, self.arm.partList(ld.partList.index(self.armOptions.get()))).part, "clock"):
             moveList = ld.baseMovements
-        elif hasattr(getattr(self.arm, self.armOptions.get()).part, "open"):
+        elif hasattr(getattr(self.arm, self.arm.partList(ld.partList.index(self.armOptions.get()))).part, "open"):
             moveList = ld.gripMovements
-        elif hasattr(getattr(self.arm, self.armOptions.get()).part, "on"):
+        elif hasattr(getattr(self.arm, self.arm.partList(ld.partList.index(self.armOptions.get()))).part, "on"):
             moveList.append(ld.ledMovement)
         else:
             moveList = ld.normalMovements
