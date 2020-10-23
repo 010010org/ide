@@ -51,54 +51,53 @@ class Interface(object):
         self.menuBar = tk.Menu(self.window)
 
         # setup file menu (only decorative except for advanced mode for now)
-        self.fileMenu = tk.OptionMenu(self.window, self.fileOptions, *ld.fileMenuList)
-        self.fileMenu.config(width=self.buttonWidth)
-        self.fileMenu.grid(row=self.buttonRow(), column=self.buttonColumn())
-        self.fileMenu['menu'].add_checkbutton(label=ld.advanced, variable=self.advancedMode, onvalue=1, offvalue=0, command=self.setAdvancedMode)
-        self.fileOptions.set(ld.fileWindowName)
+        self.fileMenu = tk.Menu(self.menuBar, tearoff=0)
+        for i in ld.fileMenuList:
+            self.fileMenu.add_command(label=i)
+        self.fileMenu.add_checkbutton(label=ld.advanced, variable=self.advancedMode, onvalue=1, offvalue=0, command=self.setAdvancedMode)
+        self.menuBar.add_cascade(label=ld.fileWindowName, menu=self.fileMenu)
 
         # setup command menu
-        self.commandMenu = tk.OptionMenu(self.window, self.commandOptions, *self.commandList)
-        self.commandMenu.config(width=self.buttonWidth)
-        self.commandMenu['menu'].bind("<Button-1>", self.commandClick)
-        self.commandMenu.grid(row=self.buttonRow(), column=self.buttonColumn())
-        self.commandOptions.set(ld.commandWindowName)
+        self.commandMenu = tk.Menu(self.menuBar, tearoff=0)
+        for i in self.commandList:
+            self.commandMenu.add_command(label=i)
+        self.commandMenu.bind("<Button-1>", self.commandClick)
+        self.menuBar.add_cascade(label=ld.commandWindowName, menu=self.commandMenu)
 
         # setup expression menu
-        self.expressionMenu = tk.OptionMenu(self.window, self.expressionOptions, *self.expressionList)
-        self.expressionMenu.config(width=self.buttonWidth)
-        self.expressionMenu['menu'].bind("<Button-1>", self.expressionClick)
-        self.expressionMenu['menu'].bind("<Button-3>", self.expressionRightClick)
-        self.expressionMenu.grid(row=self.buttonRow(), column=self.buttonColumn())
-        self.expressionOptions.set(ld.expressionWindowName)
+        self.expressionMenu = tk.Menu(self.menuBar, tearoff=0)
+        for i in self.expressionList:
+            self.expressionMenu.add_command(label=i)
+        self.expressionMenu.bind("<Button-1>", self.expressionClick)
+        self.expressionMenu.bind("<Button-3>", self.expressionRightClick)
+        self.menuBar.add_cascade(label=ld.expressionWindowName, menu=self.expressionMenu)
 
         # setup equation menu
-        self.equationMenu = tk.OptionMenu(self.window, self.equationOptions,  *self.equationList)
-        self.equationMenu.config(width=self.buttonWidth)
-        self.equationMenu['menu'].bind("<Button-1>", self.equationClick)
-        self.equationMenu['menu'].bind("<Button-3>", self.equationRightClick)
-        self.equationMenu.grid(row=self.buttonRow(), column=self.buttonColumn())
-        self.equationOptions.set(ld.equationWindowName)
+        self.equationMenu = tk.Menu(self.menuBar, tearoff=0)
+        for i in self.equationList:
+            self.equationMenu.add_command(label=i)
+        self.equationMenu.bind("<Button-1>", self.equationClick)
+        self.equationMenu.bind("<Button-3>", self.equationRightClick)
+        self.menuBar.add_cascade(label=ld.equationWindowName, menu=self.equationMenu)
 
         # setup arm menu
-        self.armMenu = tk.OptionMenu(self.window, self.armOptions, *ld.partList)
-        self.armMenu.config(width=self.buttonWidth)
-        self.armMenu.grid(row=self.buttonRow(), column=self.buttonColumn())
-        self.armOptions.set(ld.armWindowName)
-        self.armOptions.trace('w', self.getArmOption)
+        self.armMenu = tk.Menu(self.menuBar, tearoff=0)
+        for i in ld.partList:
+            self.armMenu.add_command(label=i)
+        self.armMenu.bind("<Button-1>", self.armClick)
+        self.menuBar.add_cascade(label=ld.armWindowName, menu=self.armMenu)
 
         # setup move menu; actual values get added once a part has been selected in the arm menu.
-        self.moveMenu = tk.OptionMenu(self.window, self.moveOptions, *self.moveList)
-        self.moveMenu.config(width=self.buttonWidth)
-        self.moveMenu.grid(row=self.buttonRow(), column=self.buttonColumn())
-        self.moveOptions.set(ld.movementWindowName)
-        self.moveOptions.trace('w', self.getMoveOption)
+        self.moveMenu = tk.Menu(self.menuBar, tearoff=0)
+        self.moveMenu.bind("<Button-1>", self.moveClick)
+        self.menuBar.add_cascade(label=ld.movementWindowName, menu=self.moveMenu)
 
         # setup textbox
         self.textBox = tk.Text(self.window, width=79)
         self.textBox.grid(row=5, columnspan=6)
 
         # start program loop
+        self.window.config(menu=self.menuBar)
         self.window.mainloop()
 
     def buttonRow(self):
@@ -128,8 +127,8 @@ class Interface(object):
         print(ld.equationExplanationList[event.y // 22])
 
     def setAdvancedMode(self):
-        self.commandMenu['menu'].delete(0, 'end')
-        self.expressionMenu['menu'].delete(0, 'end')
+        self.commandMenu.delete(0, 'end')
+        self.expressionMenu.delete(0, 'end')
         self.advancedMode ^= 1
         if self.advancedMode:
             for i in self.advancedCommandList:
@@ -144,28 +143,28 @@ class Interface(object):
                 while i in self.expressionList:
                     self.expressionList.remove(i)
         for i in self.commandList:
-            self.commandMenu['menu'].add_command(label=i)
+            self.commandMenu.add_command(label=i)
         for i in self.expressionList:
-            self.expressionMenu['menu'].add_command(label=i)
+            self.expressionMenu.add_command(label=i)
 
-    def getArmOption(self, *_args):
+    def armClick(self, event):
         self.moveList = []
-        self.moveOptions.set(ld.movementWindowName)
-        if hasattr(getattr(self.arm, self.arm.partList[ld.partList.index(self.armOptions.get())]).part, "clock"):
+        self.moveMenu.delete(0, 'end')
+        if hasattr(getattr(self.arm, self.arm.partList[event.y//22]).part, "clock"):
             self.moveList = ld.baseMovements
-        elif hasattr(getattr(self.arm, self.arm.partList[ld.partList.index(self.armOptions.get())]).part, "open"):
+        elif hasattr(getattr(self.arm, self.arm.partList[event.y//22]).part, "open"):
             self.moveList = ld.gripMovements
-        elif hasattr(getattr(self.arm, self.arm.partList[ld.partList.index(self.armOptions.get())]).part, "on"):
+        elif hasattr(getattr(self.arm, self.arm.partList[event.y//22]).part, "on"):
             self.moveList.append(ld.ledMovement)
         else:
             self.moveList = ld.normalMovements
         self.moveList.append(ld.offMovement)
 
         for i in self.moveList:
-            self.moveMenu['menu'].add_command(label=i)
+            self.moveMenu.add_command(label=i)
 
-    def getMoveOption(self, *_args):
-        print(self.armOptions.get()+" moving "+self.moveOptions.get())
+    def moveClick(self, event):
+        print("moving " + self.moveList[event.y//22])
 
 
 interface = Interface()
