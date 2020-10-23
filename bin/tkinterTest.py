@@ -99,11 +99,11 @@ class Interface(object):
     def commandClick(self, event):
         self.textBox.insert(tk.INSERT, self.commandList[event.y // 22] + "():\n\t")
         self.textBox.mark_set(tk.INSERT, tk.END)
-        print("(left)clicked option " + self.commandList[event.y // 22])
         return "break"
 
     def expressionClick(self, event):
-        self.textBox.insert(tk.INSERT, self.commandList[event.y // 22])
+        self.textBox.insert(tk.INSERT, self.expressionList[event.y // 22])
+        self.helpText.set(ld.helpInfo + ld.expressionExplanationList[event.y // 22])
         return "break"
 
     def expressionRightClick(self, event):
@@ -111,7 +111,8 @@ class Interface(object):
         return "break"
 
     def equationClick(self, event):
-        self.textBox.insert(tk.INSERT, self.commandList[event.y // 22])
+        self.textBox.insert(tk.INSERT, self.equationList[event.y // 22])
+        self.helpText.set(ld.helpInfo + ld.equationExplanationList[event.y // 22])
         return "break"
 
     def equationRightClick(self, event):
