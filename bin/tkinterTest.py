@@ -1,5 +1,4 @@
 import tkinter as tk
-import tkinter.ttk as ttk
 import GPIOArm
 import localisationdata as ld
 import configparser
@@ -9,9 +8,6 @@ class Interface(object):
     iniReader = configparser.ConfigParser()
     SCREEN_WIDTH = 640
     SCREEN_HEIGHT = 480
-    buttonWidth = 9
-    maxButtons = SCREEN_WIDTH//(14*buttonWidth)
-    buttonNumber = iter(range(0xEFFFFFFF))
     arm = GPIOArm.Arm()
     window = tk.Tk()
     commandList = ["if", "elif", "else", "for", "while"]
@@ -24,13 +20,6 @@ class Interface(object):
     advancedLogicGateList = ["NAND", "NOR", "XNOR"]
     variableList = ["i", "j", "k", "l"]
     moveList = [None]
-    fileOptions = tk.StringVar(window)
-    commandOptions = tk.StringVar(window)
-    expressionOptions = tk.StringVar(window)
-    equationOptions = tk.StringVar(window)
-    armOptions = tk.StringVar(window)
-    moveOptions = tk.StringVar(window)
-    logicGateOptions = tk.StringVar(window)
     tipWindow = None
 
     def __init__(self):
@@ -100,30 +89,19 @@ class Interface(object):
         self.window.config(menu=self.menuBar)
         self.window.mainloop()
 
-    def buttonRow(self):
-        return (self.buttonNumber.__next__()//2) // self.maxButtons + 2
-
-    def buttonColumn(self):
-        return (self.buttonNumber.__next__()//2) % self.maxButtons + 1
-
     def commandClick(self, event):
-        self.commandOptions.set(ld.commandWindowName)
         print("(left)clicked option " + self.commandList[event.y // 22])
 
     def expressionClick(self, event):
-        self.expressionOptions.set(ld.expressionWindowName)
         print("(left)clicked option " + self.expressionList[event.y // 22])
 
     def expressionRightClick(self, event):
-        self.expressionOptions.set(ld.expressionWindowName)
         print(ld.expressionExplanationList[event.y // 22])
 
     def equationClick(self, event):
-        self.equationOptions.set(ld.equationWindowName)
         print("(left)clicked option " + self.equationList[event.y // 22])
 
     def equationRightClick(self, event):
-        self.equationOptions.set(ld.equationWindowName)
         print(ld.equationExplanationList[event.y // 22])
 
     def setAdvancedMode(self):
