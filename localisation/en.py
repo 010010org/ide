@@ -1,3 +1,10 @@
+startMenuName = "start menu"
+startMenuMessage = "choose a program to start"
+controlArmOption = "control robot arm with keyboard"
+programOption = "start programming interface"
+
+startButtonText = "start controlling robot arm"
+
 advanced = "Advanced mode"
 fileMenuList = ["New...", "Open", "Save", "Save as..."]
 fileWindowName = "File"

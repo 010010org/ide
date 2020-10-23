@@ -27,7 +27,7 @@ class Interface(object):
     def __init__(self):
         # read state of advanced mode and implement if needed
         self.iniReader.read('config.ini')
-        self.advancedMode = int(self.iniReader['options']['ADVANCED_MODE'])
+        self.advancedMode = int(self.iniReader['OPTIONS']['ADVANCED_MODE'])
         if self.advancedMode:
             self.expressionList += self.advancedExpressionList
             self.commandList += self.advancedCommandList
@@ -162,4 +162,4 @@ class Interface(object):
         self.textBox.insert(tk.INSERT, self.selectedPart.name + "." + self.moveList[event.y//22] + "()")
 
 
-interface = Interface()
+# interface = Interface()

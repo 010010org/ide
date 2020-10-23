@@ -1,3 +1,10 @@
+startMenuName = "startmenu"
+startMenuMessage = "kies een programma om te starten"
+controlArmOption = "robotarm besturen met toetsenbord"
+programOption = "programmeerinterface starten"
+
+startButtonText = "begin met besturen"
+
 advanced = "Geavanceerde modus"
 fileMenuList = ["Nieuw...", "Openen", "Opslaan", "Opslaan als..."]
 fileWindowName = "Bestand"

@@ -1,7 +1,7 @@
-from bin.GPIOArm import Arm
+import GPIOArm
 import pygame
 # code om deze library direct te testen. Wordt niet uitgevoegd als de library geimporteerd wordt.
-arm = Arm()
+arm = GPIOArm.Arm()
 pygame.init()
 pygame.display.set_mode()
 
