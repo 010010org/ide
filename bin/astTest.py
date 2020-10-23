@@ -1,11 +1,4 @@
-import time
-start = time.time()
-seconden = 0
-
-while time.time() < start + 10:
-    print(seconden)
-    seconden += 1
-    time.sleep(1)
+print("():")
 
 
 def plusPlus(x):

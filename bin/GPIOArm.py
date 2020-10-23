@@ -75,7 +75,7 @@ class Arm(object):
 	_M_LIGHT = 25,
 	_channel_list = list(_M1) + list(_M2) + list(_M3) + list(_M4) + list(_M5) + list(_M_LIGHT)
 	_threads = []
-	partList = ["base", "shoulder", "elbow", "wrist", "grips", "light"]
+	partList = ["base", "shoulder", "elbow", "wrist", "grip", "light"]
 
 	# Wanneer de arm geinitialiseerd wordt zet deze alle pins op output en haalt ie overal de stroom af, voor het geval
 	# dat de pins hiervoor ergens anders voor gebruikt zijn en er nog stroom op staat.

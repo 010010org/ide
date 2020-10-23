@@ -17,13 +17,16 @@ equationWindowName = "equation"
 armWindowName = "part"
 movementWindowName = "direction"
 
+helpInfo = "command explanation: "
+helpInfoDefault = "right click a command to get an explanation of it"
+
 baseMovements = ["clockwise", "counterclockwise"]
 gripMovements = ["open", "close"]
 ledMovement = "on"
 normalMovements = ["up", "down"]
 offMovement = "off"
 
-partList = ["base", "shoulder", "elbow", "wrist", "grips", "light"]
+partList = ["base", "shoulder", "elbow", "wrist", "grip", "light"]
 
 upDownErrorMessage = "can't move up or down!"
 leftRightErrorMessage = "can't move left or right!"

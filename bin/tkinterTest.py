@@ -19,7 +19,9 @@ class Interface(object):
     logicGateList = ["AND", "OR", "XOR", "NOT"]
     advancedLogicGateList = ["NAND", "NOR", "XNOR"]
     variableList = ["i", "j", "k", "l"]
-    moveList = [None]
+    selectedPart = None
+    moveList = []
+    helpText = tk.StringVar(window)
     tipWindow = None
 
     def __init__(self):
@@ -83,26 +85,38 @@ class Interface(object):
 
         # setup textbox
         self.textBox = tk.Text(self.window, width=79)
-        self.textBox.grid(row=5, columnspan=6)
+        self.textBox.grid(row=2, columnspan=6)
+
+        # setup help text
+        self.helpText.set(ld.helpInfo+ld.helpInfoDefault)
+        self.helpLabel = tk.Label(self.window, textvar=self.helpText, anchor=tk.W, justify=tk.LEFT)
+        self.helpLabel.grid(row=3, column=0, columnspan=6)
 
         # start program loop
         self.window.config(menu=self.menuBar)
         self.window.mainloop()
 
     def commandClick(self, event):
+        self.textBox.insert(tk.INSERT, self.commandList[event.y // 22] + "():\n\t")
+        self.textBox.mark_set(tk.INSERT, tk.END)
         print("(left)clicked option " + self.commandList[event.y // 22])
+        return "break"
 
     def expressionClick(self, event):
-        print("(left)clicked option " + self.expressionList[event.y // 22])
+        self.textBox.insert(tk.INSERT, self.commandList[event.y // 22])
+        return "break"
 
     def expressionRightClick(self, event):
-        print(ld.expressionExplanationList[event.y // 22])
+        self.helpText.set(ld.helpInfo + ld.expressionExplanationList[event.y // 22])
+        return "break"
 
     def equationClick(self, event):
-        print("(left)clicked option " + self.equationList[event.y // 22])
+        self.textBox.insert(tk.INSERT, self.commandList[event.y // 22])
+        return "break"
 
     def equationRightClick(self, event):
-        print(ld.equationExplanationList[event.y // 22])
+        self.helpText.set(ld.helpInfo + ld.equationExplanationList[event.y // 22])
+        return "break"
 
     def setAdvancedMode(self):
         self.commandMenu.delete(0, 'end')
@@ -126,13 +140,14 @@ class Interface(object):
             self.expressionMenu.add_command(label=i)
 
     def armClick(self, event):
+        self.selectedPart = getattr(self.arm, self.arm.partList[event.y//22])
         self.moveList = []
         self.moveMenu.delete(0, 'end')
-        if hasattr(getattr(self.arm, self.arm.partList[event.y//22]).part, "clock"):
+        if hasattr(self.selectedPart.part, "clock"):
             self.moveList = ld.baseMovements
-        elif hasattr(getattr(self.arm, self.arm.partList[event.y//22]).part, "open"):
+        elif hasattr(self.selectedPart.part, "open"):
             self.moveList = ld.gripMovements
-        elif hasattr(getattr(self.arm, self.arm.partList[event.y//22]).part, "on"):
+        elif hasattr(self.selectedPart.part, "on"):
             self.moveList.append(ld.ledMovement)
         else:
             self.moveList = ld.normalMovements
@@ -140,9 +155,10 @@ class Interface(object):
 
         for i in self.moveList:
             self.moveMenu.add_command(label=i)
+        return "break"
 
     def moveClick(self, event):
-        print("moving " + self.moveList[event.y//22])
+        self.textBox.insert(tk.INSERT, self.selectedPart.name + "." + self.moveList[event.y//22] + "()")
 
 
 interface = Interface()

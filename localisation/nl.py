@@ -16,6 +16,9 @@ equationWindowName = "vergelijking"
 armWindowName = "onderdeel"
 movementWindowName = "beweegrichting"
 
+helpInfo = "commando-uitleg: "
+helpInfoDefault = "klik met je rechtermuisknop op een commando voor uitleg"
+
 baseMovements = ["met de klok mee", "tegen de klok in"]
 gripMovements = ["open", "dicht"]
 ledMovement = "aan"
