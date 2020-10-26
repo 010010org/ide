@@ -51,7 +51,7 @@ class Interface(object):
             self.iniWriter.write(configFile)
         controlInterface = armControl.ArmControl()
         pygame.init()
-        # self.window.destroy()
+        self.window.destroy()
         while True:
             for event in pygame.event.get():
                 controlInterface.armInput(event)
