@@ -144,11 +144,11 @@ class Interface(object):
         self.selectedPart = getattr(self.arm, self.arm.partList[event.y//22])
         self.moveList = []
         self.moveMenu.delete(0, 'end')
-        if hasattr(self.selectedPart.part, "clock"):
+        if hasattr(self.selectedPart, "clock"):
             self.moveList = ld.baseMovements
-        elif hasattr(self.selectedPart.part, "open"):
+        elif hasattr(self.selectedPart, "open"):
             self.moveList = ld.gripMovements
-        elif hasattr(self.selectedPart.part, "on"):
+        elif hasattr(self.selectedPart, "on"):
             self.moveList.append(ld.ledMovement)
         else:
             self.moveList = ld.normalMovements
