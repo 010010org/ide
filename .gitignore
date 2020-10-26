@@ -22,3 +22,6 @@ Backup of *.doc*
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Backup files
+*.save
