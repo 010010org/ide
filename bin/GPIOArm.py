@@ -51,6 +51,7 @@ class Arm(object):
 		# zodra de timer afgelopen is. Zo niet, dan blijft de motor aan staan tot hij weer uitgezet wordt.
 		def move(self, pin, timer=0):
 			#GPIO.output(pin, GPIO.HIGH)
+			print("start")
 			if timer <= 0:
 				return
 			time.sleep(timer)
@@ -65,6 +66,7 @@ class Arm(object):
 		# Deze functie zet de motor weer uit.
 		def off(self):
 			#GPIO.output(self.pins, GPIO.LOW)
+			print("stop")
 			pass
 
 	# Omdat de base-motor niet naar boven en beneden maar naar links en rechts gaat

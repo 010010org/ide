@@ -1,9 +1,11 @@
 import tkinter as tk
 import localisationdata as ld
 import configparser
+import GPIOArm
 
 
 class Interface(object):
+    _arm = GPIOArm.Arm()
     iniWriter = configparser.ConfigParser()
     iniFile = 'bin/armControls.ini'
     window = tk.Tk()
@@ -41,17 +43,13 @@ class Interface(object):
             self.warningLabel.config(text="")
 
     def startProgram(self):
-        import armControl
-        import pygame
+        self.window.unbind_all('<Key>')     # Dit werkt niet... TODO: fix
         for i in range(len(self.keyArray)):
             self.partArray[i][2] = self.keyArray[i].get()
         for i in self.partArray:
             self.iniWriter[i[0]][i[1]] = i[2]
         with open(self.iniFile, 'w') as configFile:
             self.iniWriter.write(configFile)
-        controlInterface = armControl.ArmControl()
-        pygame.init()
-        self.window.destroy()
-        while True:
-            for event in pygame.event.get():
-                controlInterface.armInput(event)
+        for i in self.partArray:
+            self.window.bind('<'+i[2]+'>', lambda x: getattr(getattr(self._arm, i[0]), i[1])())
+            self.window.bind('<KeyRelease-'+i[2]+'>', lambda y: getattr(getattr(self._arm, i[0]), 'off')())
