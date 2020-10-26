@@ -1,4 +1,7 @@
-print("():")
+a = "aa"
+b = "aa"
+if a == b:
+    print("dit werkt")
 
 
 def plusPlus(x):
