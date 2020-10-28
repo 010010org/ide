@@ -2,6 +2,7 @@ import tkinter as tk
 import localisationdata as ld
 import configparser
 import GPIOArm
+import string
 
 
 class Interface(object):
@@ -13,6 +14,7 @@ class Interface(object):
     keyArray = []
     entryArray = []
     rowNumber = 0
+    maxEntryLength = 1
     warningLabel = tk.Label(window, text="")
 
     def __init__(self):
@@ -28,22 +30,26 @@ class Interface(object):
             tk.Label(self.window, text=self.partArray[i][0]+" "+self.partArray[i][1]).grid(row=i, column=1)
             tk.Entry(self.window, textvariable=self.keyArray[i]).grid(row=i, column=2)
             self.rowNumber = i
-        startButton = tk.Button(self.window, text=ld.startButtonText, command=self.startProgram).grid(row=self.rowNumber+1, column=1)
-        self.warningLabel.grid(row=self.rowNumber + 1, column=2)
+        startButton = tk.Button(self.window, text=ld.startButtonText, command=self.startProgram).grid(sticky='w', row=self.rowNumber+1, column=1, columnspan=2)
+        self.warningLabel.grid(sticky='w', row=self.rowNumber+2, column=1, columnspan=2)
         self.testDuplicates()
         self.window.mainloop()
 
-    def testDuplicates(self, *args):
+    def testDuplicates(self, *_args):
         stringKeyArray = []
         for i in self.keyArray:
             stringKeyArray.append(i.get())
+            if len(i.get()) > self.maxEntryLength:
+                i.set(i.get()[0])
         if len(self.keyArray) != len(set(stringKeyArray)):
             self.warningLabel.config(text=ld.duplicatesWarning)
         else:
             self.warningLabel.config(text="")
 
     def startProgram(self):
-        self.window.unbind_all('<Key>')     # Dit werkt niet... TODO: fix
+        for i in string.ascii_letters:
+            self.window.unbind('<'+i[0]+'>')
+            self.window.unbind('<KeyRelease-'+i[0]+'>')
         for i in range(len(self.keyArray)):
             self.partArray[i][2] = self.keyArray[i].get()
         for i in self.partArray:

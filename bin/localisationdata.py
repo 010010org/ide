@@ -4,7 +4,7 @@ controlArmOption = "robotarm besturen met toetsenbord"
 programOption = "programmeerinterface starten"
 
 duplicatesWarning = "Dezelfde toets wordt voor meerdere dingen gebruikt."
-startButtonText = "begin met besturen"
+startButtonText = "opslaan en besturen"
 
 advanced = "Geavanceerde modus"
 fileMenuList = ["Nieuw...", "Openen", "Opslaan", "Opslaan als..."]

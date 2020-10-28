@@ -4,7 +4,7 @@ controlArmOption = "control robot arm with keyboard"
 programOption = "start programming interface"
 
 duplicatesWarning = "You used the same key multiple times"
-startButtonText = "start controlling robot arm"
+startButtonText = "save and start controlling robot arm"
 
 advanced = "Advanced mode"
 fileMenuList = ["New...", "Open", "Save", "Save as..."]

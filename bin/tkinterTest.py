@@ -89,8 +89,8 @@ class Interface(object):
 
         # setup help text
         self.helpText.set(ld.helpInfo+ld.helpInfoDefault)
-        self.helpLabel = tk.Label(self.window, textvar=self.helpText, anchor=tk.W, justify=tk.LEFT)
-        self.helpLabel.grid(row=3, column=0, columnspan=6)
+        self.helpLabel = tk.Label(self.window, textvar=self.helpText)
+        self.helpLabel.grid(sticky=tk.W, row=3, column=0, columnspan=6)
 
         # start program loop
         self.window.config(menu=self.menuBar)
