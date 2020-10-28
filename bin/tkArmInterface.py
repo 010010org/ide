@@ -47,7 +47,7 @@ class Interface(object):
             self.warningLabel.config(text="")
 
     def startProgram(self):
-        for i in string.ascii_letters:
+        for i in string.ascii_letters+string.digits:
             self.window.unbind('<'+i[0]+'>')
             self.window.unbind('<KeyRelease-'+i[0]+'>')
         for i in range(len(self.keyArray)):

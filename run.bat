@@ -3,10 +3,10 @@
 :main
   setlocal enabledelayedexpansion
   call :get-ini config.ini OPTIONS LANGUAGE result
-  copy localisation\%result%.py bin\localisationdata.py
+  copy localisation\%result%.py bin\localisationdata.py >NUL
   
   IF NOT EXIST ./bin/armControls.ini (
-    copy bin\defaultArmControls.ini bin\armControls.ini
+    copy bin\defaultArmControls.ini bin\armControls.ini >NUL
   )
   
   python3 ./bin/startMenu.py
