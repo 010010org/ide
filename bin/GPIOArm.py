@@ -1,6 +1,5 @@
-#import RPi.GPIO as GPIO
+import pigpio
 import time
-import threading
 import localisationdata as ld
 
 
@@ -16,16 +15,15 @@ class Arm(object):
 	_channel_list = list(_M1) + list(_M2) + list(_M3) + list(_M4) + list(_M5) + list(_M_LIGHT)
 	_threads = []
 	_partList = ["base", "shoulder", "elbow", "wrist", "grip", "light"]
+	_pwmPins = pigpio.pi()
 
 	# Wanneer de arm geinitialiseerd wordt zet deze alle pins op output en haalt ie overal de stroom af, voor het geval
 	# dat de pins hiervoor ergens anders voor gebruikt zijn en er nog stroom op staat.
 	# Ook maakt de Arm threads aan voor alle verschillende onderdelen, zodat deze tegelijk (met naam) aangestuurd
 	# kunnen worden.
 	def __init__(self):
-		#GPIO.setmode(GPIO.BCM)
-		#for i in self._channel_list:
-			#GPIO.setup(i, GPIO.OUT)
-			#GPIO.output(i, GPIO.LOW)
+		for i in self._channel_list:
+			self._pwmPins.set_mode(i, pigpio.OUTPUT)
 
 		self.base = self.Base(self._M5, ld.partList[0])
 		self.shoulder = self.Shoulder(self._M4, ld.partList[1])
@@ -49,23 +47,27 @@ class Arm(object):
 		# up() en down() vullen gewoon de pin in die aangestuurd moet worden.
 		# De functie kan met of zonder timer aangestuurd worden. als er een timer meegegeven wordt gaat de motor uit
 		# zodra de timer afgelopen is. Zo niet, dan blijft de motor aan staan tot hij weer uitgezet wordt.
-		def move(self, pin, timer=0):
-			#GPIO.output(pin, GPIO.HIGH)
+		def move(self, pin, power=0, timer=0):
+			if power > 0:
+				if power < 4:
+					self._pwmPins.set_PWM_dutycycle(pin, round(256*(power/4.0)))
+			else:
+				self._pwmPins.set_PWM_dutycycle(pin, 255)
 			print("start")
 			if timer <= 0:
 				return
 			time.sleep(timer)
-			#GPIO.output(pin, GPIO.LOW)
+			self._pwmPins.set_PWM_dutycycle(pin, 0)
 
-		def up(self, timer=0):
-			self.move(self.pins[0], timer)
+		def up(self, power=0, timer=0):
+			self.move(self.pins[0], power, timer)
 
-		def down(self, timer=0):
-			self.move(self.pins[1], timer)
+		def down(self, power=0, timer=0):
+			self.move(self.pins[1], power, timer)
 
 		# Deze functie zet de motor weer uit.
 		def off(self):
-			#GPIO.output(self.pins, GPIO.LOW)
+			self._pwmPins.set_PWM_dutycycle(self.pins, 0)
 			print("stop")
 			pass
 
@@ -77,11 +79,11 @@ class Arm(object):
 			self.name = name
 			super().__init__(pins)
 
-		def counter(self, timer=0):
-			self.up(timer)
+		def counter(self, power=0, timer=0):
+			self.up(power, timer)
 
-		def clock(self, timer=0):
-			self.down(timer)
+		def clock(self, power=0, timer=0):
+			self.down(power, timer)
 
 	class Shoulder(Part):
 		def __init__(self, pins, name):
@@ -104,11 +106,11 @@ class Arm(object):
 			self.name = name
 			super().__init__(pins)
 
-		def close(self, timer=0):
-			self.up(timer)
+		def close(self, power=0, timer=0):
+			self.up(power, timer)
 
-		def open(self, timer=0):
-			self.down(timer)
+		def open(self, power=0, timer=0):
+			self.down(power, timer)
 
 	# Omdat het lampje alleen aan of uit kan in plaats van omhoog en omlaag (en dus ook maar 1 pin in plaats van 2)
 	# gebruikt deze alleen een hernoemde versie van up(). down() zet het lampje ook aan. off() staat al in Part().
@@ -117,5 +119,5 @@ class Arm(object):
 			self.name = name
 			super().__init__((pin, pin))
 
-		def on(self, timer=0):
-			self.up(timer)
+		def on(self, power=0, timer=0):
+			self.up(power, timer)

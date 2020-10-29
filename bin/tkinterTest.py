@@ -16,6 +16,8 @@ class Interface(object):
     advancedExpressionList = ["<<", ">>", "|", "^", "&", "~", "@"]
     equationList = ["==", "!=", "<", "<=", ">", ">="]
     advancedEquationList = ["is", "is not", "in", "not in"]
+    functionList = ["print()", "input()", "str()", "int()", "float()", "round()", "range()", "len()", "min()", "max()"]
+    functionList2 = ["time.sleep()", "time.time()", "random.random()", "random.randint()"]
     logicGateList = ["AND", "OR", "XOR", "NOT"]
     advancedLogicGateList = ["NAND", "NOR", "XNOR"]
     variableList = ["i", "j", "k", "l"]
@@ -71,6 +73,22 @@ class Interface(object):
         self.equationMenu.bind("<Button-3>", self.equationRightClick)
         self.menuBar.add_cascade(label=ld.equationWindowName, menu=self.equationMenu)
 
+        # setup standard function menu
+        self.functionMenu = tk.Menu(self.menuBar, tearoff=0)
+        for i in self.functionList:
+            self.functionMenu.add_command(label=i)
+        self.functionMenu.bind("<Button-1>", self.functionClick)
+        self.functionMenu.bind("<Button-3>", self.functionRightClick)
+        self.menuBar.add_cascade(label=ld.functionWindowName, menu=self.functionMenu)
+
+        # setup standard function menu
+        self.functionMenu2 = tk.Menu(self.menuBar, tearoff=0)
+        for i in self.functionList2:
+            self.functionMenu2.add_command(label=i)
+        self.functionMenu2.bind("<Button-1>", self.function2Click)
+        self.functionMenu2.bind("<Button-3>", self.function2RightClick)
+        self.menuBar.add_cascade(label=ld.functionWindow2Name, menu=self.functionMenu2)
+
         # setup arm menu
         self.armMenu = tk.Menu(self.menuBar, tearoff=0)
         for i in ld.partList:
@@ -117,6 +135,24 @@ class Interface(object):
 
     def equationRightClick(self, event):
         self.helpText.set(ld.helpInfo + ld.equationExplanationList[event.y // 22])
+        return "break"
+
+    def functionClick(self, event):
+        self.textBox.insert(tk.INSERT, self.functionList[event.y // 22])
+        self.helpText.set(ld.helpInfo + ld.functionExplanationList[event.y // 22])
+        return "break"
+
+    def functionRightClick(self, event):
+        self.helpText.set(ld.helpInfo + ld.functionExplanationList[event.y // 22])
+        return "break"
+
+    def function2Click(self, event):
+        self.textBox.insert(tk.INSERT, self.functionList2[event.y // 22])
+        self.helpText.set(ld.helpInfo + ld.functionExplanationList2[event.y // 22])
+        return "break"
+
+    def function2RightClick(self, event):
+        self.helpText.set(ld.helpInfo + ld.functionExplanationList2[event.y // 22])
         return "break"
 
     def setAdvancedMode(self):

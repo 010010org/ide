@@ -16,11 +16,23 @@ expressionExplanationList = ["optellen", "aftrekken", "vermenigvuldigen", "delen
 equationExplanationList = ["is gelijk aan", "niet gelijk aan", "kleiner dan", "kleiner dan of gelijk aan", "groter dan",
                            "groter dan of gelijk aan", "is dezelfde variabele", "niet dezelfde variabele",
                            "is een onderdeel van", "geen onderdeel van"]
+functionExplanationList = ["schrijft tekst naar de console", "leest tekst uit de console tot de enter-toets ingedrukt wordt", "zet data om in tekst",
+                           "zet data om in een geheel getal (rondt omlaag af)", "zet data om in een kommagetal",
+                           "rondt een kommagetal af naar het dichtstbijzijnde gehele getal",
+                           "geeft een \"range\" van getallen tussen de twee ingevoerde getallen. Als je maar één getal invult wordt als ander getal 0 gebruikt. Wordt gebruikt in for loops",
+                           "geeft de lengte van een lijst of string. Handig voor for loops", "geeft het laagste getal in een lijst",
+                           "geeft het hoogste getal in een lijst"]
+functionExplanationList2 = ["wacht voor de ingevoerde tijd (in seconden)", "geeft het aantal seconden sinds 1 januari 1970. Handig voor vergelijkingen",
+                            "geeft een willekeurig kommagetal tussen 0.0 en 1.0",
+                            "geeft een willekeurig geheel getal tussen de twee getallen die je ingevoerd hebt. Als je maar één getal invult wordt als ander getal 0 gebruikt"]
+
 
 windowName = "robotarm"
 commandWindowName = "commando"
 expressionWindowName = "berekening"
 equationWindowName = "vergelijking"
+functionWindowName = "standaard functies"
+functionWindow2Name = "externe functies"
 armWindowName = "onderdeel"
 movementWindowName = "beweegrichting"
 
