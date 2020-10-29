@@ -1,4 +1,4 @@
-import pigpio
+# import pigpio
 import time
 import localisationdata as ld
 
@@ -15,15 +15,15 @@ class Arm(object):
 	_channel_list = list(_M1) + list(_M2) + list(_M3) + list(_M4) + list(_M5) + list(_M_LIGHT)
 	_threads = []
 	_partList = ["base", "shoulder", "elbow", "wrist", "grip", "light"]
-	_pwmPins = pigpio.pi()
+	# _pwmPins = pigpio.pi()
 
 	# Wanneer de arm geinitialiseerd wordt zet deze alle pins op output en haalt ie overal de stroom af, voor het geval
 	# dat de pins hiervoor ergens anders voor gebruikt zijn en er nog stroom op staat.
 	# Ook maakt de Arm threads aan voor alle verschillende onderdelen, zodat deze tegelijk (met naam) aangestuurd
 	# kunnen worden.
 	def __init__(self):
-		for i in self._channel_list:
-			self._pwmPins.set_mode(i, pigpio.OUTPUT)
+		# for i in self._channel_list:
+			# self._pwmPins.set_mode(i, pigpio.OUTPUT)
 
 		self.base = self.Base(self._M5, ld.partList[0])
 		self.shoulder = self.Shoulder(self._M4, ld.partList[1])
@@ -38,6 +38,7 @@ class Arm(object):
 
 	# Dit is de parent class van alle motoren. Hierin staan de functies voor het aansturen.
 	class Part(object):
+		# _pwmPins = pigpio.pi()
 		pins = (0, 0)
 
 		def __init__(self, pins):
@@ -48,16 +49,16 @@ class Arm(object):
 		# De functie kan met of zonder timer aangestuurd worden. als er een timer meegegeven wordt gaat de motor uit
 		# zodra de timer afgelopen is. Zo niet, dan blijft de motor aan staan tot hij weer uitgezet wordt.
 		def move(self, pin, power=0, timer=0):
-			if power > 0:
-				if power < 4:
-					self._pwmPins.set_PWM_dutycycle(pin, round(256*(power/4.0)))
-			else:
-				self._pwmPins.set_PWM_dutycycle(pin, 255)
-			print("start")
+			# if power > 0:
+				# if power < 4:
+					# self._pwmPins.set_PWM_dutycycle(pin, round(256*(power/4.0)))
+			# else:
+				# self._pwmPins.set_PWM_dutycycle(pin, 255)
+			print("start pin", pin, "with power:", power, "and timer:", timer)
 			if timer <= 0:
 				return
 			time.sleep(timer)
-			self._pwmPins.set_PWM_dutycycle(pin, 0)
+			# self._pwmPins.set_PWM_dutycycle(pin, 0)
 
 		def up(self, power=0, timer=0):
 			self.move(self.pins[0], power, timer)
@@ -67,7 +68,7 @@ class Arm(object):
 
 		# Deze functie zet de motor weer uit.
 		def off(self):
-			self._pwmPins.set_PWM_dutycycle(self.pins, 0)
+			# self._pwmPins.set_PWM_dutycycle(self.pins, 0)
 			print("stop")
 			pass
 

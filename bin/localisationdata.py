@@ -4,7 +4,11 @@ controlArmOption = "control robot arm with keyboard"
 programOption = "start programming interface"
 
 duplicatesWarning = "You used the same key multiple times"
+timerButtonText = "Timer"
+powerButtonText = "Power"
 startButtonText = "save and start controlling robot arm"
+timerInfo = "enter a number of seconds"
+powerInfo = "enter a percentage (0-100)"
 
 advanced = "Advanced mode"
 fileMenuList = ["New...", "Open", "Save", "Save as..."]
