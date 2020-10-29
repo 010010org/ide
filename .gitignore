@@ -25,3 +25,6 @@ __pycache__/
 
 # Backup files
 *.save
+
+# Config files
+bin/armControls.ini
