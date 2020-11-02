@@ -1,0 +1,1 @@
+ERROR: Must be run from [C:\Program Files\Intel\SUR\QUEENCREEK\x64]. It is now running from [c:\robotarm]

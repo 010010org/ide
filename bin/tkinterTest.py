@@ -32,7 +32,7 @@ class Interface(object):
     helpText = tk.StringVar(window)
     tipWindow = None
     fileName = ""
-    fullScreen = 1
+    fullScreen = 0
 
     def __init__(self):
         # read state of advanced mode and implement if needed
@@ -46,7 +46,8 @@ class Interface(object):
 
         # setup window
         self.window.geometry(str(self.SCREEN_WIDTH)+"x"+str(self.SCREEN_HEIGHT))
-        self.window.attributes("-fullscreen", True)
+        if self.fullScreen:
+            self.window.attributes("-fullscreen", True)
         self.window.bind("<F11>", self.swapFullScreen)
         self.window.title(ld.windowName)
 
@@ -98,7 +99,6 @@ class Interface(object):
 
         # setup move menu; actual values get added once a part has been selected in the arm menu.
         self.moveMenu = tk.Menu(self.menuBar, tearoff=0)
-        self.moveMenu.bind("<Button-1>", self.moveClick)
         self.menuBar.add_cascade(label=ld.movementWindowName, menu=self.moveMenu)
 
         # setup textbox
@@ -154,8 +154,13 @@ class Interface(object):
         file.close()
 
     def commandClick(self, item):
-        self.textBox.insert(tk.INSERT, item + "():\n\t")
-        self.textBox.mark_set(tk.INSERT, tk.END)
+        startIndex = self.textBox.index(tk.INSERT)
+        self.textBox.insert(tk.INSERT, item)
+        if item != "else":
+            self.textBox.insert(tk.INSERT, "()")
+        self.textBox.insert(tk.INSERT, ":\n\t")
+        self.textBox.mark_set(tk.INSERT, str(float(startIndex)+(len(item)+1)/10))
+        # self.textBox.mark_set(tk.INSERT, tk.END)
         return "break"
 
     def expressionClick(self, item):
