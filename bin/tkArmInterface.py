@@ -35,7 +35,7 @@ class Interface(object):
         for i in range(len(self.partArray)):
             self.keyArray.append(tk.StringVar(self.window))
             self.keyArray[i].set(self.partArray[i][2])
-            self.keyArray[i].trace_add('write', self.testDuplicates)
+            self.keyArray[i].trace_add('write', self.updateEntries)
             tk.Label(self.window, text=self.partArray[i][0]+" "+self.partArray[i][1]).grid(row=i, column=1)
             tk.Entry(self.window, textvariable=self.keyArray[i]).grid(row=i, column=2)
             self.rowNumber = i
@@ -60,7 +60,7 @@ class Interface(object):
 
         self.startButton = tk.Button(self.window, text=ld.startButtonText, command=self.startProgram).grid(sticky='w', row=self.rowNumber+2, column=1, columnspan=2)
         self.warningLabel.grid(sticky='w', row=self.rowNumber+3, column=1, columnspan=2)
-        self.testDuplicates()
+        self.updateEntries()
         self.window.mainloop()
 
     def setTimerMode(self):
@@ -102,7 +102,7 @@ class Interface(object):
     def onFocusLoss(self, *_args):
         self.warningLabel.config(text="")
 
-    def testDuplicates(self, *_args):
+    def updateEntries(self, *_args):
         stringKeyArray = []
         for i in self.keyArray:
             stringKeyArray.append(i.get())

@@ -1,4 +1,6 @@
+import os
 import tkinter as tk
+import tkinter.filedialog as filedialog
 import GPIOArm
 import localisationdata as ld
 import configparser
@@ -10,6 +12,8 @@ class Interface(object):
     SCREEN_HEIGHT = 480
     arm = GPIOArm.Arm()
     window = tk.Tk()
+
+    # lists of menu items
     commandList = ["if", "elif", "else", "for", "while"]
     advancedCommandList = ["break", "continue"]
     expressionList = ["+", "-", "*", "/", "//", "%", "**"]
@@ -21,10 +25,12 @@ class Interface(object):
     logicGateList = ["AND", "OR", "XOR", "NOT"]
     advancedLogicGateList = ["NAND", "NOR", "XNOR"]
     variableList = ["i", "j", "k", "l"]
+
     selectedPart = None
     moveList = []
     helpText = tk.StringVar(window)
     tipWindow = None
+    fileName = ""
 
     def __init__(self):
         # read state of advanced mode and implement if needed
@@ -38,7 +44,7 @@ class Interface(object):
 
         # setup window
         self.window.geometry(str(self.SCREEN_WIDTH)+"x"+str(self.SCREEN_HEIGHT))
-        self.window.title = ld.windowName
+        self.window.title(ld.windowName)
 
         # setup menu bar
         self.menuBar = tk.Menu(self.window)
@@ -46,54 +52,44 @@ class Interface(object):
         # setup file menu (only decorative except for advanced mode for now)
         self.fileMenu = tk.Menu(self.menuBar, tearoff=0)
         for i in ld.fileMenuList:
-            self.fileMenu.add_command(label=i)
+            self.fileMenu.add_command(label=i, command=lambda item=i: self.fileClick(item))
         self.fileMenu.add_checkbutton(label=ld.advanced, variable=self.advancedMode, onvalue=1, offvalue=0, command=self.setAdvancedMode)
         self.menuBar.add_cascade(label=ld.fileWindowName, menu=self.fileMenu)
 
         # setup command menu
         self.commandMenu = tk.Menu(self.menuBar, tearoff=0)
         for i in self.commandList:
-            self.commandMenu.add_command(label=i)
-        self.commandMenu.bind("<Button-1>", self.commandClick)
+            self.commandMenu.add_command(label=i, command=lambda item=i: self.commandClick(item))
         self.menuBar.add_cascade(label=ld.commandWindowName, menu=self.commandMenu)
 
         # setup expression menu
         self.expressionMenu = tk.Menu(self.menuBar, tearoff=0)
         for i in self.expressionList:
-            self.expressionMenu.add_command(label=i)
-        self.expressionMenu.bind("<Button-1>", self.expressionClick)
-        self.expressionMenu.bind("<Button-3>", self.expressionRightClick)
+            self.expressionMenu.add_command(label=i, command=lambda item=i: self.expressionClick(item))
         self.menuBar.add_cascade(label=ld.expressionWindowName, menu=self.expressionMenu)
 
         # setup equation menu
         self.equationMenu = tk.Menu(self.menuBar, tearoff=0)
         for i in self.equationList:
-            self.equationMenu.add_command(label=i)
-        self.equationMenu.bind("<Button-1>", self.equationClick)
-        self.equationMenu.bind("<Button-3>", self.equationRightClick)
+            self.equationMenu.add_command(label=i, command=lambda item=i: self.equationClick(item))
         self.menuBar.add_cascade(label=ld.equationWindowName, menu=self.equationMenu)
 
         # setup standard function menu
         self.functionMenu = tk.Menu(self.menuBar, tearoff=0)
         for i in self.functionList:
-            self.functionMenu.add_command(label=i)
-        self.functionMenu.bind("<Button-1>", self.functionClick)
-        self.functionMenu.bind("<Button-3>", self.functionRightClick)
+            self.functionMenu.add_command(label=i, command=lambda item=i: self.functionClick(item))
         self.menuBar.add_cascade(label=ld.functionWindowName, menu=self.functionMenu)
 
         # setup standard function menu
         self.functionMenu2 = tk.Menu(self.menuBar, tearoff=0)
         for i in self.functionList2:
-            self.functionMenu2.add_command(label=i)
-        self.functionMenu2.bind("<Button-1>", self.function2Click)
-        self.functionMenu2.bind("<Button-3>", self.function2RightClick)
+            self.functionMenu2.add_command(label=i, command=lambda item=i: self.function2Click(item))
         self.menuBar.add_cascade(label=ld.functionWindow2Name, menu=self.functionMenu2)
 
         # setup arm menu
         self.armMenu = tk.Menu(self.menuBar, tearoff=0)
         for i in ld.partList:
-            self.armMenu.add_command(label=i)
-        self.armMenu.bind("<Button-1>", self.armClick)
+            self.armMenu.add_command(label=i, command=lambda item=i: self.armClick(item))
         self.menuBar.add_cascade(label=ld.armWindowName, menu=self.armMenu)
 
         # setup move menu; actual values get added once a part has been selected in the arm menu.
@@ -114,45 +110,60 @@ class Interface(object):
         self.window.config(menu=self.menuBar)
         self.window.mainloop()
 
-    def commandClick(self, event):
-        self.textBox.insert(tk.INSERT, self.commandList[event.y // 22] + "():\n\t")
+    def fileClick(self, item):
+        itemId = ld.fileMenuList.index(item)
+        if itemId == 0:  # new file
+            self.textBox.delete(1.0, tk.END)
+        if itemId == 1:  # open file
+            self.openFile()
+        if itemId == 2:  # save file
+            self.saveFile()
+        if itemId == 3:  # save as
+            self.saveFile(True)
+
+    def openFile(self):
+        fileOpenPopup = filedialog.askopenfile(mode="r", initialdir=os.getcwd()+"/saves", initialfile=self.fileName)
+        if fileOpenPopup is None:
+            return
+        self.fileName = fileOpenPopup.name
+        file = open(self.fileName, "r")
+        self.textBox.delete(1.0, tk.END)
+        self.textBox.insert(1.0, file.read())
+        file.close()
+
+    def saveFile(self, newName=False):
+        if newName | (self.fileName == ""):
+            fileSavePopup = filedialog.asksaveasfile(mode="w", initialdir=os.getcwd()+"/saves", initialfile=self.fileName, defaultextension=".py", filetypes=(("python files", "*.py"), ("text files", "*.txt")))
+            if fileSavePopup is None:
+                return
+            self.fileName = fileSavePopup.name
+        file = open(self.fileName, "w")
+        file.write(self.textBox.get(1.0, tk.END))
+        file.close()
+
+    def commandClick(self, item):
+        self.textBox.insert(tk.INSERT, item + "():\n\t")
         self.textBox.mark_set(tk.INSERT, tk.END)
         return "break"
 
-    def expressionClick(self, event):
-        self.textBox.insert(tk.INSERT, self.expressionList[event.y // 22])
-        self.helpText.set(ld.helpInfo + ld.expressionExplanationList[event.y // 22])
+    def expressionClick(self, item):
+        self.textBox.insert(tk.INSERT, item)
+        self.helpText.set(ld.helpInfo + ld.expressionExplanationList[self.expressionList.index(item)])
         return "break"
 
-    def expressionRightClick(self, event):
-        self.helpText.set(ld.helpInfo + ld.expressionExplanationList[event.y // 22])
+    def equationClick(self, item):
+        self.textBox.insert(tk.INSERT, item)
+        self.helpText.set(ld.helpInfo + ld.equationExplanationList[self.equationList.index(item)])
         return "break"
 
-    def equationClick(self, event):
-        self.textBox.insert(tk.INSERT, self.equationList[event.y // 22])
-        self.helpText.set(ld.helpInfo + ld.equationExplanationList[event.y // 22])
+    def functionClick(self, item):
+        self.textBox.insert(tk.INSERT, item)
+        self.helpText.set(ld.helpInfo + ld.functionExplanationList[self.functionList.index(item)])
         return "break"
 
-    def equationRightClick(self, event):
-        self.helpText.set(ld.helpInfo + ld.equationExplanationList[event.y // 22])
-        return "break"
-
-    def functionClick(self, event):
-        self.textBox.insert(tk.INSERT, self.functionList[event.y // 22])
-        self.helpText.set(ld.helpInfo + ld.functionExplanationList[event.y // 22])
-        return "break"
-
-    def functionRightClick(self, event):
-        self.helpText.set(ld.helpInfo + ld.functionExplanationList[event.y // 22])
-        return "break"
-
-    def function2Click(self, event):
-        self.textBox.insert(tk.INSERT, self.functionList2[event.y // 22])
-        self.helpText.set(ld.helpInfo + ld.functionExplanationList2[event.y // 22])
-        return "break"
-
-    def function2RightClick(self, event):
-        self.helpText.set(ld.helpInfo + ld.functionExplanationList2[event.y // 22])
+    def function2Click(self, item):
+        self.textBox.insert(tk.INSERT, item)
+        self.helpText.set(ld.helpInfo + ld.functionExplanationList2[self.functionList2.index(item)])
         return "break"
 
     def setAdvancedMode(self):
@@ -176,8 +187,8 @@ class Interface(object):
         for i in self.expressionList:
             self.expressionMenu.add_command(label=i)
 
-    def armClick(self, event):
-        self.selectedPart = getattr(self.arm, self.arm.partList[event.y//22])
+    def armClick(self, item):
+        self.selectedPart = getattr(self.arm, item)
         self.moveList = []
         self.moveMenu.delete(0, 'end')
         if hasattr(self.selectedPart, "clock"):
@@ -191,11 +202,11 @@ class Interface(object):
         self.moveList.append(ld.offMovement)
 
         for i in self.moveList:
-            self.moveMenu.add_command(label=i)
+            self.moveMenu.add_command(label=i, command=lambda moveItem=i: self.moveClick(moveItem))
         return "break"
 
-    def moveClick(self, event):
-        self.textBox.insert(tk.INSERT, self.selectedPart.name + "." + self.moveList[event.y//22] + "()")
+    def moveClick(self, item):
+        self.textBox.insert(tk.INSERT, self.selectedPart.name + "." + item + "()")
 
 
 # interface = Interface()

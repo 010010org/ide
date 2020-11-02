@@ -12,7 +12,6 @@ powerInfo = "vul een percentage (0-100) in"
 
 advanced = "Geavanceerde modus"
 fileMenuList = ["Nieuw...", "Openen", "Opslaan", "Opslaan als..."]
-fileWindowName = "Bestand"
 expressionExplanationList = ["optellen", "aftrekken", "vermenigvuldigen", "delen", "delen zonder rest",
                              "modulo (rest van deling)", "machtsverheffen", "Bitwise shift naar links",
                              "Bitwise shift naar rechts", "Bitwise OR", "Bitwise XOR", "Bitwise AND", "Bitwise NOT",
@@ -32,6 +31,7 @@ functionExplanationList2 = ["wacht voor de ingevoerde tijd (in seconden)", "geef
 
 
 windowName = "robotarm"
+fileWindowName = "Bestand"
 commandWindowName = "commando"
 expressionWindowName = "berekening"
 equationWindowName = "vergelijking"
@@ -39,6 +39,7 @@ functionWindowName = "standaard functies"
 functionWindow2Name = "externe functies"
 armWindowName = "onderdeel"
 movementWindowName = "beweegrichting"
+saveAsWindowText = "Bestandsnaam:"
 
 helpInfo = "commando-uitleg: "
 helpInfoDefault = "klik met je rechtermuisknop op een commando voor uitleg"

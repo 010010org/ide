@@ -12,7 +12,6 @@ powerInfo = "enter a percentage (0-100)"
 
 advanced = "Advanced mode"
 fileMenuList = ["New...", "Open", "Save", "Save as..."]
-fileWindowName = "File"
 expressionExplanationList = ["addition", "subtraction", "multiplication", "division",
                              "floor division (division rounded down)", "modulo (rest number of division)",
                              "exponentiation", "Bitwise shift left", "Bitwise shift right", "Bitwise OR", "Bitwise XOR",
@@ -31,6 +30,7 @@ functionExplanationList2 = ["waits for a specified amount of time (in seconds)",
 
 
 windowName = "robotarm"
+fileWindowName = "File"
 commandWindowName = "command"
 expressionWindowName = "expression"
 equationWindowName = "equation"
@@ -38,6 +38,7 @@ functionWindowName = "standard functions"
 functionWindow2Name = "external functions"
 armWindowName = "part"
 movementWindowName = "direction"
+saveAsWindowText = "File name:"
 
 helpInfo = "command explanation: "
 helpInfoDefault = "right click a command to get an explanation of it"
