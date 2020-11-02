@@ -1,6 +1,7 @@
 import os
 import tkinter as tk
 import tkinter.filedialog as filedialog
+import tkinter.scrolledtext as scrolledtext
 import GPIOArm
 import localisationdata as ld
 import configparser
@@ -8,10 +9,10 @@ import configparser
 
 class Interface(object):
     iniReader = configparser.ConfigParser()
-    SCREEN_WIDTH = 640
-    SCREEN_HEIGHT = 480
-    arm = GPIOArm.Arm()
     window = tk.Tk()
+    SCREEN_WIDTH = int(window.winfo_screenwidth())
+    SCREEN_HEIGHT = int(window.winfo_screenheight())
+    arm = GPIOArm.Arm()
 
     # lists of menu items
     commandList = ["if", "elif", "else", "for", "while"]
@@ -31,6 +32,7 @@ class Interface(object):
     helpText = tk.StringVar(window)
     tipWindow = None
     fileName = ""
+    fullScreen = 1
 
     def __init__(self):
         # read state of advanced mode and implement if needed
@@ -44,12 +46,14 @@ class Interface(object):
 
         # setup window
         self.window.geometry(str(self.SCREEN_WIDTH)+"x"+str(self.SCREEN_HEIGHT))
+        self.window.attributes("-fullscreen", True)
+        self.window.bind("<F11>", self.swapFullScreen)
         self.window.title(ld.windowName)
 
         # setup menu bar
         self.menuBar = tk.Menu(self.window)
 
-        # setup file menu (only decorative except for advanced mode for now)
+        # setup file menu
         self.fileMenu = tk.Menu(self.menuBar, tearoff=0)
         for i in ld.fileMenuList:
             self.fileMenu.add_command(label=i, command=lambda item=i: self.fileClick(item))
@@ -98,7 +102,7 @@ class Interface(object):
         self.menuBar.add_cascade(label=ld.movementWindowName, menu=self.moveMenu)
 
         # setup textbox
-        self.textBox = tk.Text(self.window, width=79)
+        self.textBox = scrolledtext.ScrolledText(self.window, width=self.SCREEN_WIDTH//8-3, height=self.SCREEN_HEIGHT//18)
         self.textBox.grid(row=2, columnspan=6)
 
         # setup help text
@@ -110,10 +114,18 @@ class Interface(object):
         self.window.config(menu=self.menuBar)
         self.window.mainloop()
 
+    def swapFullScreen(self, *_args):
+        self.fullScreen ^= 1
+        if self.fullScreen:
+            self.window.attributes("-fullscreen", True)
+        else:
+            self.window.attributes("-fullscreen", False)
+
     def fileClick(self, item):
         itemId = ld.fileMenuList.index(item)
         if itemId == 0:  # new file
             self.textBox.delete(1.0, tk.END)
+            self.fileName = ""
         if itemId == 1:  # open file
             self.openFile()
         if itemId == 2:  # save file
@@ -122,7 +134,7 @@ class Interface(object):
             self.saveFile(True)
 
     def openFile(self):
-        fileOpenPopup = filedialog.askopenfile(mode="r", initialdir=os.getcwd()+"/saves", initialfile=self.fileName)
+        fileOpenPopup = filedialog.askopenfile(parent=self.window, mode="r", initialdir=os.getcwd()+"/saves")
         if fileOpenPopup is None:
             return
         self.fileName = fileOpenPopup.name
@@ -133,7 +145,7 @@ class Interface(object):
 
     def saveFile(self, newName=False):
         if newName | (self.fileName == ""):
-            fileSavePopup = filedialog.asksaveasfile(mode="w", initialdir=os.getcwd()+"/saves", initialfile=self.fileName, defaultextension=".py", filetypes=(("python files", "*.py"), ("text files", "*.txt")))
+            fileSavePopup = filedialog.asksaveasfile(parent=self.window, mode="w", initialdir=os.getcwd()+"/saves", defaultextension=".py", filetypes=(("python files", "*.py"), ("text files", "*.txt")))
             if fileSavePopup is None:
                 return
             self.fileName = fileSavePopup.name
@@ -207,6 +219,3 @@ class Interface(object):
 
     def moveClick(self, item):
         self.textBox.insert(tk.INSERT, self.selectedPart.name + "." + item + "()")
-
-
-# interface = Interface()
