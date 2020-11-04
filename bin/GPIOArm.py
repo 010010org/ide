@@ -11,7 +11,7 @@ class Arm(object):
 	_M3 = (17, 18)
 	_M4 = (27, 22)
 	_M5 = (23, 24)
-	_M_LIGHT = 25,
+	_M_LIGHT = (25, 25)
 	_channel_list = list(_M1) + list(_M2) + list(_M3) + list(_M4) + list(_M5) + list(_M_LIGHT)
 	_threads = []
 	_partList = ["base", "shoulder", "elbow", "wrist", "grip", "light"]
@@ -46,11 +46,11 @@ class Arm(object):
 		# De functie kan met of zonder timer aangestuurd worden. als er een timer meegegeven wordt gaat de motor uit
 		# zodra de timer afgelopen is. Zo niet, dan blijft de motor aan staan tot hij weer uitgezet wordt.
 		def move(self, pin, power=0, timer=0):
-			self.tempPWM = gpio.PWM(pin, 8000)
+			self.tempPWM = gpio.PWM(pin, 50)
 			if power > 0 & power < 100:
-				self.tempPWM.start(power//100)
+				self.tempPWM.start(power)
 			else:
-				self.tempPWM.start(1)
+				self.tempPWM.start(100)
 			if timer <= 0:
 				return
 			time.sleep(timer)
@@ -111,10 +111,9 @@ class Arm(object):
 	# Omdat het lampje alleen aan of uit kan in plaats van omhoog en omlaag (en dus ook maar 1 pin in plaats van 2)
 	# gebruikt deze alleen een hernoemde versie van up(). down() zet het lampje ook aan. off() staat al in Part().
 	class Light(Part):
-		def __init__(self, pin, name):
+		def __init__(self, pins, name):
 			self.name = name
-			super().__init__((pin, pin))
+			super().__init__(pins)
 
 		def on(self, power=0, timer=0):
 			self.up(power, timer)
-
