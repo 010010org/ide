@@ -89,7 +89,7 @@ class Interface(object):
 
     def setPowerValue(self, *_args):
         try:
-            self.powerValue = int(self.powerVar.get())//25
+            self.powerValue = int(self.powerVar.get())
         except ValueError:
             if len(self.powerVar.get()) < 1:
                 return
