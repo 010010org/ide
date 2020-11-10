@@ -1,4 +1,4 @@
-import RPi.GPIO as gpio
+#import RPi.GPIO as gpio
 import time
 import localisationdata as ld
 
@@ -21,10 +21,10 @@ class Arm(object):
 	# Ook maakt de Arm threads aan voor alle verschillende onderdelen, zodat deze tegelijk (met naam) aangestuurd
 	# kunnen worden.
 	def __init__(self):
-		gpio.setmode(gpio.BCM)
-		for i in self._channel_list:
-			gpio.setup(i, gpio.OUT)
-			gpio.output(i, gpio.LOW)
+		#gpio.setmode(gpio.BCM)
+		#for i in self._channel_list:
+		#	gpio.setup(i, gpio.OUT)
+		#	gpio.output(i, gpio.LOW)
 
 		self.base = self.Base(self._M5, ld.partList[0])
 		self.shoulder = self.Shoulder(self._M4, ld.partList[1])
@@ -46,15 +46,15 @@ class Arm(object):
 		# De functie kan met of zonder timer aangestuurd worden. als er een timer meegegeven wordt gaat de motor uit
 		# zodra de timer afgelopen is. Zo niet, dan blijft de motor aan staan tot hij weer uitgezet wordt.
 		def move(self, pin, power=0, timer=0):
-			self.tempPWM = gpio.PWM(pin, 50)
-			if power > 0 & power < 100:
-				self.tempPWM.start(power)
-			else:
-				self.tempPWM.start(100)
+			#self.tempPWM = gpio.PWM(pin, 50)
+			#if power > 0 & power < 100:
+				#self.tempPWM.start(power)
+			#else:
+				#self.tempPWM.start(100)
 			if timer <= 0:
 				return
 			time.sleep(timer)
-			self.tempPWM.stop()
+			#self.tempPWM.stop()
 
 		def up(self, power=0, timer=0):
 			self.move(self.pins[0], power, timer)

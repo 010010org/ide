@@ -10,8 +10,8 @@ import configparser
 class Interface(object):
     iniReader = configparser.ConfigParser()
     window = tk.Tk()
-    SCREEN_WIDTH = int(window.winfo_screenwidth())
-    SCREEN_HEIGHT = int(window.winfo_screenheight())
+    SCREEN_WIDTH = 640  # int(window.winfo_screenwidth())
+    SCREEN_HEIGHT = 480  # int(window.winfo_screenheight())
     arm = GPIOArm.Arm()
 
     # lists of menu items

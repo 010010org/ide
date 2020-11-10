@@ -3,7 +3,7 @@ startMenuMessage = "choose a program to start"
 controlArmOption = "control robot arm with keyboard"
 programOption = "start programming interface"
 
-duplicatesWarning = "You used the same key multiple times"
+duplicatesWarning = "You used the same key multiple times!"
 timerButtonText = "Timer"
 powerButtonText = "Power"
 startButtonText = "save and start controlling robot arm"
