@@ -1,8 +1,8 @@
-import tkinter as tk
-import localisationdata as ld
-import configparser
-import GPIOArm
-import string
+import tkinter as tk  # used to create the interface
+import localisationdata as ld  # contains all displayed text
+import configparser  # used to read and write to ini file
+import GPIOArm  # controls the robotic arm
+import string  # only used to get a list of letters and numbers
 
 
 class Interface(object):
