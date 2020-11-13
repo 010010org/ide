@@ -59,7 +59,7 @@ class Arm(object):
 				return
 			# "Simulation code" for when the code is run on a different device. Prints to the console.
 			print("Powering pin", pin, end=" ")
-			if timer >= 0:
+			if timer > 0:
 				print("for", timer, "seconds", end=" ")
 			if power > 0 & power < 100:
 				print("at " + str(power) + "% power", end=" ")
@@ -73,7 +73,7 @@ class Arm(object):
 		def down(self, power=0, timer=0):
 			self.move(self.pins[1], power, timer)
 
-		# Turns off a part if running on a pi. Only prints to the console otherwise
+		# Turns off a part if running on a pi. Only prints to the console otherwise.
 		def off(self):
 			if ctypes.util.find_library("RPi.GPIO"):
 				self.tempPWM.stop()
