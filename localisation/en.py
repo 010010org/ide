@@ -1,3 +1,4 @@
+# startMenu
 startMenuName = "start menu"
 startMenuMessage = "choose a program to start"
 setupOption = "Setup"
@@ -6,13 +7,11 @@ advancedControlArmOption = "advanced robot arm control"
 programOption = "start programming interface"
 AdvancedProgramOption = "advanced programming interface"
 
-duplicatesWarning = "You used the same key multiple times!"
-timerButtonText = "Timer"
-powerButtonText = "Power"
-startButtonText = "save and start controlling robot arm"
-timerInfo = "enter a number of seconds"
-powerInfo = "enter a percentage (0-100)"
+# setupUsedIO
+infoTextBox = "select the Devices you want to use"
+saveButton = "Save"
 
+# tkinterTest
 advanced = "Advanced mode"
 fileMenuList = ["New...", "Open", "Save", "Save as..."]
 expressionExplanationList = ["addition", "subtraction", "multiplication", "division",
@@ -54,6 +53,14 @@ offMovement = "off"
 
 partList = ["base", "shoulder", "elbow", "wrist", "grip", "light"]
 
+# tkArmInterface
+duplicatesWarning = "You used the same key multiple times!"
+timerButtonText = "Timer"
+powerButtonText = "Power"
+startButtonText = "save and start controlling robot arm"
+timerInfo = "enter a number of seconds"
+powerInfo = "enter a percentage (0-100)"
+
 partDictionary = {
     "base": partList[0],
     "shoulder": partList[1],
@@ -71,6 +78,7 @@ partDictionary = {
     "off": offMovement
 }
 
+# Unused
 upDownErrorMessage = "can't move up or down!"
 leftRightErrorMessage = "can't move left or right!"
 openCloseErrorMessage = "can't open or close!"

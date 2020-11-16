@@ -37,6 +37,7 @@ class Interface(object):
     _powerValue = 0
 
     def __init__(self, advancedMode=0):
+        self._window.title = ld.controlArmOption
         # Read controls from ini
         self._iniWriter.read(self._iniFile)
         for i in self._iniWriter:
@@ -56,6 +57,8 @@ class Interface(object):
             self._rowNumber = i
 
         if advancedMode:
+            self._window.title = ld.advancedControlArmOption
+
             # Setup timer options
             self._timerCheckButton = tk.Checkbutton(self._window, text=ld.timerButtonText, variable=self._timerMode, onvalue=1, offvalue=0, command=self.setTimerMode)
             self._timerCheckButton.grid(sticky='w', row=0, column=3)

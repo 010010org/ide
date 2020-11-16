@@ -1,3 +1,4 @@
+# startMenu
 startMenuName = "startmenu"
 startMenuMessage = "kies een programma om te starten"
 setupOption = "Instellingen"
@@ -6,13 +7,11 @@ advancedControlArmOption = "geävanceerde besturing robotarm"
 programOption = "programmeerinterface starten"
 AdvancedProgramOption = "geävanceerde programmeerinterface"
 
-duplicatesWarning = "Dezelfde toets wordt voor meerdere dingen gebruikt."
-timerButtonText = "Timer"
-powerButtonText = "Kracht"
-startButtonText = "opslaan en besturen"
-timerInfo = "vul een aantal seconden in"
-powerInfo = "vul een percentage (0-100) in"
+# setupUsedIO
+infoTextBox = "Vink de apparaten aan die je wil aansturen"
+saveButton = "Opslaan"
 
+# tkinterTest
 advanced = "Geavanceerde modus"
 fileMenuList = ["Nieuw...", "Openen", "Opslaan", "Opslaan als..."]
 expressionExplanationList = ["optellen", "aftrekken", "vermenigvuldigen", "delen", "delen zonder rest",
@@ -55,6 +54,14 @@ offMovement = "uit"
 
 partList = ["basis", "schouder", "elleboog", "pols", "grijper", "lampje"]
 
+# tkArmInterface
+duplicatesWarning = "Dezelfde toets wordt voor meerdere dingen gebruikt."
+timerButtonText = "Timer"
+powerButtonText = "Kracht"
+startButtonText = "opslaan en besturen"
+timerInfo = "vul een aantal seconden in"
+powerInfo = "vul een percentage (0-100) in"
+
 partDictionary = {
     "base": partList[0],
     "shoulder": partList[1],
@@ -72,6 +79,7 @@ partDictionary = {
     "off": offMovement
 }
 
+# Unused
 upDownErrorMessage = "kan niet omhoog of omlaag!"
 leftRightErrorMessage = "kan niet naar links of rechts!"
 openCloseErrorMessage = "kan niet open of dicht!"
