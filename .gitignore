@@ -31,3 +31,6 @@ bin/armControls.ini
 
 # Save files
 saves/*.*
+
+# Annoying log file I can't seem to get rid of
+log_start.txt
