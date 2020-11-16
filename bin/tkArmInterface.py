@@ -5,7 +5,6 @@ import GPIOArm  # controls the robotic arm
 import string  # only used to get a list of letters and numbers
 
 
-# TODO: create advanced mode to hide timer and power settings behind
 class Interface(object):
     # Creates instance of robotarm class to control it.
     _arm = GPIOArm.Arm()
@@ -35,7 +34,7 @@ class Interface(object):
     _powerVar = tk.StringVar(_window, value="0")
     _powerValue = 0
 
-    def __init__(self):
+    def __init__(self, advancedMode=0):
         # Read controls from ini
         self._iniWriter.read(self._iniFile)
         for i in self._iniWriter:
@@ -54,23 +53,24 @@ class Interface(object):
             tk.Entry(self._window, textvariable=self._keyArray[i]).grid(row=i, column=2)
             self._rowNumber = i
 
-        # Setup timer options
-        self._timerCheckButton = tk.Checkbutton(self._window, text=ld.timerButtonText, variable=self._timerMode, onvalue=1, offvalue=0, command=self.setTimerMode)
-        self._timerCheckButton.grid(sticky='w', row=0, column=3)
-        self._timerEntry = tk.Entry(self._window, textvariable=self._timerVar, state='disabled')
-        self._timerEntry.grid(row=0, column=4)
-        self._timerEntry.bind("<FocusIn>", self.onTimerFocus)
-        self._timerEntry.bind("<FocusOut>", self.onFocusLoss)
-        self._timerVar.trace('w', self.setTimerValue)
+        if advancedMode:
+            # Setup timer options
+            self._timerCheckButton = tk.Checkbutton(self._window, text=ld.timerButtonText, variable=self._timerMode, onvalue=1, offvalue=0, command=self.setTimerMode)
+            self._timerCheckButton.grid(sticky='w', row=0, column=3)
+            self._timerEntry = tk.Entry(self._window, textvariable=self._timerVar, state='disabled')
+            self._timerEntry.grid(row=0, column=4)
+            self._timerEntry.bind("<FocusIn>", self.onTimerFocus)
+            self._timerEntry.bind("<FocusOut>", self.onFocusLoss)
+            self._timerVar.trace('w', self.setTimerValue)
 
-        # Setup power options
-        self._powerCheckButton = tk.Checkbutton(self._window, text=ld.powerButtonText, variable=self._powerMode, onvalue=1, offvalue=0, command=self.setPowerMode)
-        self._powerCheckButton.grid(sticky='w', row=1, column=3)
-        self._powerEntry = tk.Entry(self._window, textvariable=self._powerVar, state='disabled')
-        self._powerEntry.grid(row=1, column=4)
-        self._powerEntry.bind("<FocusIn>", self.onPowerFocus)
-        self._powerEntry.bind("<FocusOut>", self.onFocusLoss)
-        self._powerVar.trace('w', self.setPowerValue)
+            # Setup power options
+            self._powerCheckButton = tk.Checkbutton(self._window, text=ld.powerButtonText, variable=self._powerMode, onvalue=1, offvalue=0, command=self.setPowerMode)
+            self._powerCheckButton.grid(sticky='w', row=1, column=3)
+            self._powerEntry = tk.Entry(self._window, textvariable=self._powerVar, state='disabled')
+            self._powerEntry.grid(row=1, column=4)
+            self._powerEntry.bind("<FocusIn>", self.onPowerFocus)
+            self._powerEntry.bind("<FocusOut>", self.onFocusLoss)
+            self._powerVar.trace('w', self.setPowerValue)
 
         # Adds the start button and info textbox. Refreshes all entry fields and start the main loop.
         self._startButton = tk.Button(self._window, text=ld.startButtonText, command=self.startProgram).grid(sticky='w', row=self._rowNumber + 2, column=1, columnspan=2)
