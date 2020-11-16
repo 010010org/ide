@@ -5,7 +5,6 @@ import GPIOArm  # controls the robotic arm
 import string  # only used to get a list of letters and numbers
 
 
-# TODO: fix inconsistent use of private and public variables
 # TODO: create advanced mode to hide timer and power settings behind
 class Interface(object):
     # Creates instance of robotarm class to control it.
@@ -141,8 +140,8 @@ class Interface(object):
 
     # Starts controlling controlling the robotic arm.
     def startProgram(self):
-        # Removes all possible keybinds in case they were changed. #TODO: test non-letter keybinds
-        for i in string.ascii_letters+string.digits:
+        # Removes all possible keybinds in case they were changed.
+        for i in string.printable:
             self._window.unbind('<' + i[0] + '>')
             self._window.unbind('<KeyRelease-' + i[0] + '>')
 
