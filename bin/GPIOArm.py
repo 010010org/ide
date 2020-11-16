@@ -1,6 +1,6 @@
-import time  # used to wait for a specified time
-import localisationdata as ld  # contains all displayed text
-import ctypes.util  # used to detect if we're running on a raspberry pi or a different os
+import time  # library used to wait for a specified time
+import localisationdata as ld  # library that contains all displayed text
+import ctypes.util  # library used to detect if we're running on a raspberry pi or a different os
 
 
 class Arm(object):
@@ -11,8 +11,8 @@ class Arm(object):
 	_M3 = (17, 18)
 	_M4 = (27, 22)
 	_M5 = (23, 24)
-	_M_LIGHT = (25, 25)  # written twice to be able to reuse code for the other parts
-	_channel_list = list(_M1) + list(_M2) + list(_M3) + list(_M4) + list(_M5) + list(_M_LIGHT)  # creates a list of all used pins so I can run through them with a for loop.
+	_M_LIGHT = (25, 25)  # written twice because the Part class expects a tuple with two integers.
+	_channel_list = list(_M1) + list(_M2) + list(_M3) + list(_M4) + list(_M5) + list(_M_LIGHT)  # creates a list of all used pins so you can run through them with a for loop.
 	_partList = ["base", "shoulder", "elbow", "wrist", "grip", "light"]  # not used internally, so should not be private (or even exist). TODO: fix
 
 	def __init__(self):
@@ -67,6 +67,7 @@ class Arm(object):
 			return
 
 		# up() and down() only specify the pin they want to move to the move function.
+		# these are mapped to the keyboard in tkArmInterface.
 		def up(self, power=0, timer=0):
 			self.move(self.pins[0], power, timer)
 
