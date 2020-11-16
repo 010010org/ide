@@ -4,11 +4,9 @@ import tkinter.filedialog as filedialog
 import tkinter.scrolledtext as scrolledtext
 import GPIOArm
 import localisationdata as ld
-import configparser
 
 
 class Interface(object):
-    iniReader = configparser.ConfigParser()
     window = tk.Tk()
     SCREEN_WIDTH = 640  # int(window.winfo_screenwidth())
     SCREEN_HEIGHT = 480  # int(window.winfo_screenheight())
@@ -34,10 +32,9 @@ class Interface(object):
     fileName = ""
     fullScreen = 0
 
-    def __init__(self):
+    def __init__(self, advancedMode=0):
         # read state of advanced mode and implement if needed
-        self.iniReader.read('config.ini')
-        self.advancedMode = int(self.iniReader['OPTIONS']['ADVANCED_MODE'])
+        self.advancedMode = advancedMode
         if self.advancedMode:
             self.expressionList += self.advancedExpressionList
             self.commandList += self.advancedCommandList
