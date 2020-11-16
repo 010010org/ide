@@ -1,6 +1,7 @@
 startMenuName = "start menu"
 startMenuMessage = "choose a program to start"
 controlArmOption = "control robot arm with keyboard"
+advancedControlArmOption = "advanced robot arm control"
 programOption = "start programming interface"
 
 duplicatesWarning = "You used the same key multiple times!"

@@ -1,6 +1,7 @@
 startMenuName = "startmenu"
 startMenuMessage = "kies een programma om te starten"
 controlArmOption = "robotarm besturen met toetsenbord"
+advancedControlArmOption = "geävanceerde besturing robotarm"
 programOption = "programmeerinterface starten"
 
 duplicatesWarning = "Dezelfde toets wordt voor meerdere dingen gebruikt."
