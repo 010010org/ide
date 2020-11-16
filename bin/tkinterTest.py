@@ -2,8 +2,10 @@ import os
 import tkinter as tk
 import tkinter.filedialog as filedialog
 import tkinter.scrolledtext as scrolledtext
-import GPIOArm
 import localisationdata as ld
+import sys
+sys.path.append('lib/robotArm')
+import GPIOArm  # controls the robotic arm
 
 
 class Interface(object):

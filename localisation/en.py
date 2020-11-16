@@ -1,5 +1,6 @@
 startMenuName = "start menu"
 startMenuMessage = "choose a program to start"
+setupOption = "Setup"
 controlArmOption = "control robot arm with keyboard"
 advancedControlArmOption = "advanced robot arm control"
 programOption = "start programming interface"

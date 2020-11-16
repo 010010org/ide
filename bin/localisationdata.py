@@ -1,5 +1,6 @@
 startMenuName = "startmenu"
 startMenuMessage = "kies een programma om te starten"
+setupOption = "Instellingen"
 controlArmOption = "robotarm besturen met toetsenbord"
 advancedControlArmOption = "geävanceerde besturing robotarm"
 programOption = "programmeerinterface starten"

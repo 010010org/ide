@@ -1,8 +1,10 @@
 import tkinter as tk  # used to create the interface
 import localisationdata as ld  # contains all displayed text
 import configparser  # used to read and write to ini file
-import GPIOArm  # controls the robotic arm
 import string  # only used to get a list of letters and numbers
+import sys
+sys.path.append('lib/robotArm')
+import GPIOArm  # controls the robotic arm
 
 
 class Interface(object):
@@ -11,7 +13,7 @@ class Interface(object):
 
     # opens .ini file containing the controls of the robot arm
     _iniWriter = configparser.ConfigParser()
-    _iniFile = 'bin/armControls.ini'
+    _iniFile = 'lib/robotArm/armControls.ini'
 
     # opens window to create interface in
     _window = tk.Tk()
@@ -152,8 +154,8 @@ class Interface(object):
         # Writes the keys to the ini file to save them for the next time the program is started
         for i in self._partArray:
             self._iniWriter[i[0]][i[1]] = i[2]
-        with open(self._iniFile, 'w') as _configFile:
-            self._iniWriter.write(_configFile)
+        with open(self._iniFile, 'w') as configFile:
+            self._iniWriter.write(configFile)
 
         # Adds events to the specified keys. This is ugly code, see the explanation below.
         for i in self._partArray:
