@@ -4,7 +4,7 @@ import tkinter.filedialog as filedialog
 import tkinter.scrolledtext as scrolledtext
 import localisationdata as ld
 import sys
-sys.path.append('lib/robotArm')
+sys.path.append('lib/robotArm')  # TODO: implement setupUsedIO
 import GPIOArm  # controls the robotic arm
 
 
@@ -30,7 +30,6 @@ class Interface(object):
     selectedPart = None
     moveList = []
     helpText = tk.StringVar(window)
-    tipWindow = None
     fileName = ""
     fullScreen = 0
 
@@ -113,6 +112,7 @@ class Interface(object):
         self.window.config(menu=self.menuBar)
         self.window.mainloop()
 
+    # Toggles fullscreen
     def swapFullScreen(self, *_args):
         self.fullScreen ^= 1
         if self.fullScreen:
@@ -120,6 +120,7 @@ class Interface(object):
         else:
             self.window.attributes("-fullscreen", False)
 
+    # Setup what happens when file menu is clicked
     def fileClick(self, item):
         itemId = ld.fileMenuList.index(item)
         if itemId == 0:  # new file
@@ -132,26 +133,33 @@ class Interface(object):
         if itemId == 3:  # save as
             self.saveFile(True)
 
+    # Open a file
     def openFile(self):
+        # Shows file selection popup
         fileOpenPopup = filedialog.askopenfile(parent=self.window, mode="r", initialdir=os.getcwd()+"/saves")
         if fileOpenPopup is None:
             return
+        # Opens file to textbox. Old data gets deleted.
         self.fileName = fileOpenPopup.name
         file = open(self.fileName, "r")
         self.textBox.delete(1.0, tk.END)
         self.textBox.insert(1.0, file.read())
         file.close()
 
+    # Saves the file
     def saveFile(self, newName=False):
+        # If the file isn't named yet or "Save as..." is clicked, the user gets a popup to choose a filename and location.
         if newName | (self.fileName == ""):
             fileSavePopup = filedialog.asksaveasfile(parent=self.window, mode="w", initialdir=os.getcwd()+"/saves", defaultextension=".py", filetypes=(("python files", "*.py"), ("text files", "*.txt")))
             if fileSavePopup is None:
                 return
             self.fileName = fileSavePopup.name
+        # Saves textbox to that file
         file = open(self.fileName, "w")
         file.write(self.textBox.get(1.0, tk.END))
         file.close()
 
+    # Setup what happens when command menu is clicked
     def commandClick(self, item):
         startIndex = self.textBox.index(tk.INSERT)
         self.textBox.insert(tk.INSERT, item)
@@ -162,26 +170,31 @@ class Interface(object):
         # self.textBox.mark_set(tk.INSERT, tk.END)
         return "break"
 
+    # Setup what happens when expression menu is clicked
     def expressionClick(self, item):
         self.textBox.insert(tk.INSERT, item)
         self.helpText.set(ld.helpInfo + ld.expressionExplanationList[self.expressionList.index(item)])
         return "break"
 
+    # Setup what happens when equation menu is clicked
     def equationClick(self, item):
         self.textBox.insert(tk.INSERT, item)
         self.helpText.set(ld.helpInfo + ld.equationExplanationList[self.equationList.index(item)])
         return "break"
 
+    # Setup what happens when regular function menu is clicked
     def functionClick(self, item):
         self.textBox.insert(tk.INSERT, item)
         self.helpText.set(ld.helpInfo + ld.functionExplanationList[self.functionList.index(item)])
         return "break"
 
+    # Setup what happens when external function menu is clicked
     def function2Click(self, item):
         self.textBox.insert(tk.INSERT, item)
         self.helpText.set(ld.helpInfo + ld.functionExplanationList2[self.functionList2.index(item)])
         return "break"
 
+    # Sets up advanced mode
     def setAdvancedMode(self):
         self.commandMenu.delete(0, 'end')
         self.expressionMenu.delete(0, 'end')
@@ -203,6 +216,7 @@ class Interface(object):
         for i in self.expressionList:
             self.expressionMenu.add_command(label=i)
 
+    # Setup what happens when Arm menu is clicked/part is selected
     def armClick(self, item):
         self.selectedPart = getattr(self.arm, item)
         self.moveList = []
@@ -221,5 +235,6 @@ class Interface(object):
             self.moveMenu.add_command(label=i, command=lambda moveItem=i: self.moveClick(moveItem))
         return "break"
 
+    # Setup what happens when move menu is clicked: prints selected part and direction to textbox as one would use it in code.
     def moveClick(self, item):
         self.textBox.insert(tk.INSERT, self.selectedPart.name + "." + item + "()")

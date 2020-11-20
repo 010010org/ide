@@ -10,6 +10,7 @@ iniFile = "config.ini"
 iniWriter.read(iniFile)
 progress = int(iniWriter["OPTIONS"]["PROGRESS"])
 
+# TODO: save start stop buttons
 
 def runSetup():
     global progress

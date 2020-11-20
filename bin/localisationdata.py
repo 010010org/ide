@@ -1,66 +1,69 @@
 # startMenu
-startMenuName = "startmenu"
-startMenuMessage = "kies een programma om te starten"
-setupOption = "Instellingen"
-controlArmOption = "robotarm besturen met toetsenbord"
-advancedControlArmOption = "geävanceerde besturing robotarm"
-programOption = "programmeerinterface starten"
-AdvancedProgramOption = "geävanceerde programmeerinterface"
+startMenuName = "start menu"
+startMenuMessage = "choose a program to start"
+setupOption = "Setup"
+controlArmOption = "control robot arm with keyboard"
+advancedControlArmOption = "advanced robot arm control"
+programOption = "start programming interface"
+AdvancedProgramOption = "advanced programming interface"
 
 # setupUsedIO
-infoTextBox = "Vink de apparaten aan die je wil aansturen"
-saveButton = "Opslaan"
+infoTextBox = "select the Devices you want to use"
+saveButton = "Save"
+
+# setupPinout
+pinoutTextbox = "Please enter the pins you used to connect the selected devices."
+pinoutTextbox2 = "In the case of multiple cables the coloured cable is the one on the left, the other one is the one on the right."
 
 # tkinterTest
-advanced = "Geavanceerde modus"
-fileMenuList = ["Nieuw...", "Openen", "Opslaan", "Opslaan als..."]
-expressionExplanationList = ["optellen", "aftrekken", "vermenigvuldigen", "delen", "delen zonder rest",
-                             "modulo (rest van deling)", "machtsverheffen", "Bitwise shift naar links",
-                             "Bitwise shift naar rechts", "Bitwise OR", "Bitwise XOR", "Bitwise AND", "Bitwise NOT",
-                             "Matrix vermenigvuldiging"]
-equationExplanationList = ["is gelijk aan", "niet gelijk aan", "kleiner dan", "kleiner dan of gelijk aan", "groter dan",
-                           "groter dan of gelijk aan", "is dezelfde variabele", "niet dezelfde variabele",
-                           "is een onderdeel van", "geen onderdeel van"]
-functionExplanationList = ["schrijft tekst naar de console", "leest tekst uit de console tot de enter-toets ingedrukt wordt", "zet data om in tekst",
-                           "zet data om in een geheel getal (rondt omlaag af)", "zet data om in een kommagetal",
-                           "rondt een kommagetal af naar het dichtstbijzijnde gehele getal",
-                           "geeft een \"range\" van getallen tussen de twee ingevoerde getallen. Als je maar één getal invult wordt als ander getal 0 gebruikt. Wordt gebruikt in for loops",
-                           "geeft de lengte van een lijst of string. Handig voor for loops", "geeft het laagste getal in een lijst",
-                           "geeft het hoogste getal in een lijst"]
-functionExplanationList2 = ["wacht voor de ingevoerde tijd (in seconden)", "geeft het aantal seconden sinds 1 januari 1970. Handig voor vergelijkingen",
-                            "geeft een willekeurig kommagetal tussen 0.0 en 1.0",
-                            "geeft een willekeurig geheel getal tussen de twee getallen die je ingevoerd hebt. Als je maar één getal invult wordt als ander getal 0 gebruikt"]
+advanced = "Advanced mode"
+fileMenuList = ["New...", "Open", "Save", "Save as..."]
+expressionExplanationList = ["addition", "subtraction", "multiplication", "division",
+                             "floor division (division rounded down)", "modulo (rest number of division)",
+                             "exponentiation", "Bitwise shift left", "Bitwise shift right", "Bitwise OR", "Bitwise XOR",
+                             "Bitwise AND", "Bitwise NOT", "Matrix multiplication"]
+equationExplanationList = ["equal to", "not equal to", "smaller than", "smaller than or equal to", "bigger than",
+                           "bigger than or equal to", "is the same variable", "not the same variable", "is a part of",
+                           "not a part of"]
+functionExplanationList = ["prints text to the console", "takes input from console until the return key is pressed", "turns data into text",
+                           "turns data into whole number (rounded down)", "turns data into a float (a number with a decimal point)",
+                           "rounds a float to the nearest whole number",
+                           "gives a range of numbers between two entered numbers. If only one number is entered the other one is set to 0. used in for loops",
+                           "returns the length of a list or string. Useful in for loops", "returns the lowest number in a list",
+                           "returns the highest number in a list"]
+functionExplanationList2 = ["waits for a specified amount of time (in seconds)", "returns the number of seconds since jan 1st 1970. Useful for comparisons",
+                            "returns a random number between 0.0 and 1.0", "returns a random number between two specified values. If you only use one value, the other one is set to 0"]
 
 
 windowName = "robotarm"
-fileWindowName = "Bestand"
-commandWindowName = "commando"
-expressionWindowName = "berekening"
-equationWindowName = "vergelijking"
-functionWindowName = "standaard functies"
-functionWindow2Name = "externe functies"
-armWindowName = "onderdeel"
-movementWindowName = "beweegrichting"
-saveAsWindowText = "Bestandsnaam:"
+fileWindowName = "File"
+commandWindowName = "command"
+expressionWindowName = "expression"
+equationWindowName = "equation"
+functionWindowName = "standard functions"
+functionWindow2Name = "external functions"
+armWindowName = "part"
+movementWindowName = "direction"
+saveAsWindowText = "File name:"
 
-helpInfo = "commando-uitleg: "
-helpInfoDefault = "klik met je rechtermuisknop op een commando voor uitleg"
+helpInfo = "command explanation: "
+helpInfoDefault = "right click a command to get an explanation of it"
 
-baseMovements = ["met de klok mee", "tegen de klok in"]
-gripMovements = ["open", "dicht"]
-ledMovement = "aan"
-normalMovements = ["omhoog", "omlaag"]
-offMovement = "uit"
+baseMovements = ["clockwise", "counterclockwise"]
+gripMovements = ["open", "close"]
+ledMovement = "on"
+normalMovements = ["up", "down"]
+offMovement = "off"
 
-partList = ["basis", "schouder", "elleboog", "pols", "grijper", "lampje"]
+partList = ["base", "shoulder", "elbow", "wrist", "grip", "light"]
 
 # tkArmInterface
-duplicatesWarning = "Dezelfde toets wordt voor meerdere dingen gebruikt."
+duplicatesWarning = "You used the same key multiple times!"
 timerButtonText = "Timer"
-powerButtonText = "Kracht"
-startButtonText = "opslaan en besturen"
-timerInfo = "vul een aantal seconden in"
-powerInfo = "vul een percentage (0-100) in"
+powerButtonText = "Power"
+startButtonText = "save and start controlling robot arm"
+timerInfo = "enter a number of seconds"
+powerInfo = "enter a percentage (0-100)"
 
 partDictionary = {
     "base": partList[0],
@@ -80,7 +83,7 @@ partDictionary = {
 }
 
 # Unused
-upDownErrorMessage = "kan niet omhoog of omlaag!"
-leftRightErrorMessage = "kan niet naar links of rechts!"
-openCloseErrorMessage = "kan niet open of dicht!"
-turnOnErrorMessage = "kan niet gewoon aan!"
+upDownErrorMessage = "can't move up or down!"
+leftRightErrorMessage = "can't move left or right!"
+openCloseErrorMessage = "can't open or close!"
+turnOnErrorMessage = "can't just turn on!"
