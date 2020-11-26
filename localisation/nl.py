@@ -14,7 +14,7 @@ saveButton = "Opslaan"
 # setupPinout
 pinoutTextbox = "Vul de pins in waarop je de apparaten hebt aangesloten."
 pinoutTextbox2 = "In het geval van meerdere kabels vul je de gekleurde kabel links in en de andere rechts."
-pinoutButton = "Opslaan en terug naar startmenu"
+pinoutButton = "Opslaan en afsluiten"
 
 # tkinterTest
 advanced = "Geavanceerde modus"

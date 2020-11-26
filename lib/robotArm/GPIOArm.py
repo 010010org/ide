@@ -1,44 +1,50 @@
 import time  # library used to wait for a specified time
 import localisationdata as ld  # library that contains all displayed text
 import ctypes.util  # library used to detect if we're running on a raspberry pi or a different os
+import configparser  # library used to read ini file
 
 
 class Arm(object):
-	# These are the GPIO pins the parts of the arm are connected to.
-	# TODO: read and save from/to an .ini file
-	_M1 = (2, 3)
-	_M2 = (14, 15)
-	_M3 = (17, 18)
-	_M4 = (27, 22)
-	_M5 = (23, 24)
-	_M_LIGHT = (25, 25)  # written twice because the Part class expects a tuple with two integers.
-	_channel_list = list(_M1) + list(_M2) + list(_M3) + list(_M4) + list(_M5) + list(_M_LIGHT)  # creates a list of all used pins so you can run through them with a for loop.
-	_partList = ["base", "shoulder", "elbow", "wrist", "grip", "light"]  # not used internally, so should not be private (or even exist). TODO: fix
+	_iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
+	_iniWriter.optionxform = str
+	_iniFile = "lib/robotArm/pinout.ini"
 
 	def __init__(self):
+		# read configured pins from ini file
+		self._iniWriter.read(self._iniFile)
+		_M1 = self._iniWriter["robotArm"]["M1"].split(",")
+		_M2 = self._iniWriter["robotArm"]["M2"].split(",")
+		_M3 = self._iniWriter["robotArm"]["M3"].split(",")
+		_M4 = self._iniWriter["robotArm"]["M4"].split(",")
+		_M5 = self._iniWriter["robotArm"]["M5"].split(",")
+		_M_LIGHT = self._iniWriter["robotArm"]["M_LIGHT"].split(",")
+		_channel_list = _M1 + _M2 + _M3 + _M4 + _M5 + _M_LIGHT  # creates a list of all used pins so you can run through them with a for loop.
 		# If running on a pi, set all used pins to output and turn off their power
 		if ctypes.util.find_library("RPi.GPIO"):
 			import RPi.GPIO as GPIO
 			GPIO.setmode(GPIO.BCM)
-			for i in self._channel_list:
+			for i in _channel_list:
 				GPIO.setup(i, GPIO.OUT)
 				GPIO.output(i, GPIO.LOW)
 
 		# create the different parts of the arm
-		self.base = self.Base(self._M5, ld.partList[0])
-		self.shoulder = self.Shoulder(self._M4, ld.partList[1])
-		self.elbow = self.Elbow(self._M3, ld.partList[2])
-		self.wrist = self.Wrist(self._M2, ld.partList[3])
-		self.grip = self.Grip(self._M1, ld.partList[4])
-		self.light = self.Light(self._M_LIGHT, ld.partList[5])
+		self.base = self.Base(_M5, ld.partList[0])
+		self.shoulder = self.Shoulder(_M4, ld.partList[1])
+		self.elbow = self.Elbow(_M3, ld.partList[2])
+		self.wrist = self.Wrist(_M2, ld.partList[3])
+		self.grip = self.Grip(_M1, ld.partList[4])
+		self.light = self.Light(_M_LIGHT, ld.partList[5])
 
 	# This is the parent class of all parts. This contains the functions that actually move the part.
 	class Part(object):
 		tempPWM = None
-		pins = (0, 0)
+		pins = []
 
 		def __init__(self, pins):
 			self.pins = pins
+			# Needed to not break when down() function is called for a part that only has one pin.
+			if len(self.pins) == 1:
+				self.pins += self.pins
 
 		# This is the only real function to move one the motors, all the other functions just give this function a different name for ease of use.
 		def move(self, pin, power=0, timer=0):

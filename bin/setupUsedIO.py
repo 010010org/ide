@@ -4,7 +4,6 @@ import os
 import configparser
 
 
-# TODO: implement pinout
 class Interface (object):
     _window = tk.Tk()
 
@@ -70,7 +69,6 @@ class Interface (object):
     def _saveData(self):
         with open(self._iniFile, 'w') as configFile:
             self._iniWriter.write(configFile, space_around_delimiters=False)
-        import setupPinout
         self._window.destroy()
+        import setupPinout
         setupPinout.Interface(self._libraryList)
-        # TODO: back to start menu

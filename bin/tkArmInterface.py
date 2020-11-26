@@ -7,6 +7,7 @@ sys.path.append('lib/robotArm')
 import GPIOArm  # controls the robotic arm
 
 
+# TODO: save start stop buttons
 class Interface(object):
     # Creates instance of robotarm class to control it.
     _arm = GPIOArm.Arm()

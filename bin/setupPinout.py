@@ -58,5 +58,14 @@ class Interface(object):
     def _saveSettings(self, *args):
         folder = ""
         for i in self._pinoutList:
-            self._iniFile = "lib/" + i[0] + "/pinout.ini"
-            self._iniWriter.write(self._iniFile)
+            if i[0] != folder:
+                if folder != "":
+                    self._iniFile = "lib/" + folder + "/pinout.ini"
+                    with open(self._iniFile, 'w') as configFile:
+                        self._iniWriter.write(configFile, space_around_delimiters=False)
+                folder = i[0]
+            self._iniWriter[folder][i[1]] = i[2]
+        with open(self._iniFile, 'w') as configFile:
+            self._iniWriter.write(configFile, space_around_delimiters=False)
+
+        self._window.destroy()

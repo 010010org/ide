@@ -14,6 +14,7 @@ saveButton = "Save"
 # setupPinout
 pinoutTextbox = "Please enter the pins you used to connect the selected devices."
 pinoutTextbox2 = "In the case of multiple cables the coloured cable is the one on the left, the other one is the one on the right."
+pinoutButton = "Save and exit"
 
 # tkinterTest
 advanced = "Advanced mode"
