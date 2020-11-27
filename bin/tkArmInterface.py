@@ -4,8 +4,7 @@ import configparser  # used to read and write to ini file
 import string  # only used to get a list of letters and numbers
 import importlib.util
 
-
-# TODO: save start stop buttons
+# TODO: combine save & start, move stop to advanced mode, use frame instead of window
 class Interface(object):
     _advancedMode = 0
     _iniWriter = configparser.ConfigParser()
