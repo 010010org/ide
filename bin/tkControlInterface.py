@@ -4,7 +4,8 @@ import configparser  # used to read and write to ini file
 import string  # only used to get a list of letters and numbers
 import importlib.util
 
-# TODO: combine save & start, move stop to advanced mode, use frame instead of window
+
+# TODO: use frame instead of window
 class Interface(object):
     _advancedMode = 0
     _iniWriter = configparser.ConfigParser()
@@ -102,15 +103,15 @@ class Interface(object):
             self._powerEntry.bind("<FocusOut>", self.onFocusLoss)
             self._powerVar.trace('w', self.setPowerValue)
 
-        # Adds the save, start and stop buttons and info textbox. Refreshes all entry fields and start the main loop.
+            # adds stop button
+            self._stopButton = tk.Button(self._window, text=ld.stopButtonText, command=self._stopProgram)
+            self._stopButton.grid(sticky='w', row=self._rowNumber + 2, column=2)
+            self._stopButton['state'] = tk.DISABLED
+
+        # Adds the save button and info textbox. Refreshes all entry fields and start the main loop.
         self._saveButton = tk.Button(self._window, text=ld.saveButtonText, command=self._saveProgram)
         self._saveButton.grid(sticky='w', row=self._rowNumber + 2, column=1)
-        self._startButton = tk.Button(self._window, text=ld.startButtonText, command=self._startProgram)
-        self._startButton.grid(sticky='w', row=self._rowNumber + 2, column=2)
-        self._startButton['state'] = tk.DISABLED
-        self._stopButton = tk.Button(self._window, text=ld.stopButtonText, command=self._stopProgram)
-        self._stopButton.grid(sticky='w', row=self._rowNumber + 2, column=3)
-        self._stopButton['state'] = tk.DISABLED
+
         self._warningLabel.grid(sticky='w', row=self._rowNumber + 3, column=1, columnspan=3)
         self.updateEntries()
         self._window.mainloop()
@@ -200,6 +201,21 @@ class Interface(object):
             with open(_iniFile, 'w') as configFile:
                 self._iniWriter.write(configFile)
 
+            # Adds events to the specified keys. This is ugly code, see the explanation below.
+            for i in self._partArray:
+                self._window.bind('<' + i[3] + '>', lambda event=None, device=self._deviceArray[self._libraryArray.index(i[0])], part=i[1], direction=i[2]: (getattr(getattr(device, part), direction)(self._powerMode.get() * self._powerValue, self._timerMode.get() * self._timerValue)))
+                self._window.bind('<KeyRelease-' + i[3] + '>', lambda event=None, device=self._deviceArray[self._libraryArray.index(i[0])], part=i[1]: (getattr(getattr(device, part), 'off')()))
+            # i[3] is the key in question. We bind an event to it that runs the code written after "lambda" when the key is pressed.
+            # event is used to ignore the useless data tkinter sends us without us asking for it.
+            # device is the class used for the device that needs to be controlled, robotArm.Arm for example.
+            # part and direction are the part and direction the specified key needs to control.
+            # getattr() allows us to turn a piece of text into code. For example, if device = robotArm and part = "base", getattr(device, part) would return robotArm.Arm.base
+            # doing this twice (with direction = "counter", for example), we get getattr(getattr(device, part), direction), which would return robotArm.Arm.base.counter
+            # the next part adds the power and timer data. Since these function the same, I'll use power to explain:
+            # self.powerMode.get() returns the state if our checkbox. if it's checked, it returns a 1. If it's unchecked, it returns a 0.
+            # self.powerValue returns the number the user added to the entry field.
+            # By multiplying these two, we are only sending the data if the checkbox is checked, and 0 if it's unchecked.
+
             # disables editing the controls after saving
             for i in self._entryArray:
                 i['state'] = tk.DISABLED
@@ -208,10 +224,8 @@ class Interface(object):
                 self._timerEntry['state'] = tk.DISABLED
                 self._powerCheckButton['state'] = tk.DISABLED
                 self._powerEntry['state'] = tk.DISABLED
-
-            # enables the Start and Stop buttons
-            self._startButton['state'] = tk.NORMAL
-            self._stopButton['state'] = tk.NORMAL
+            # enables the stop button
+                self._stopButton['state'] = tk.NORMAL
 
             # Changes the Save button to now be an Edit button
             self._saveButton['text'] = ld.editButtonText
@@ -225,32 +239,13 @@ class Interface(object):
                     self._timerEntry['state'] = tk.NORMAL
                 if self._powerMode:
                     self._powerEntry['state'] = tk.NORMAL
-
-            # disables the Start and Stop buttons
-            self._startButton['state'] = tk.DISABLED
-            self._stopButton['state'] = tk.DISABLED
+                self._stopButton['state'] = tk.DISABLED
 
             # Changes the button text back to 'Save'
             self._saveButton['text'] = ld.saveButtonText
 
         # Switches from save mode to edit mode
         self._editMode ^= 1
-
-    def _startProgram(self):
-        # Adds events to the specified keys. This is ugly code, see the explanation below.
-        for i in self._partArray:
-            self._window.bind('<' + i[3] + '>', lambda event=None, device=self._deviceArray[self._libraryArray.index(i[0])], part=i[1], direction=i[2]: (getattr(getattr(device, part), direction)(self._powerMode.get() * self._powerValue, self._timerMode.get() * self._timerValue)))
-            self._window.bind('<KeyRelease-' + i[3] + '>', lambda event=None, device=self._deviceArray[self._libraryArray.index(i[0])], part=i[1]: (getattr(getattr(device, part), 'off')()))
-        # i[3] is the key in question. We bind an event to it that runs the code written after "lambda" when the key is pressed.
-        # event is used to ignore the useless data tkinter sends us without us asking for it.
-        # device is the class used for the device that needs to be controlled, robotArm.Arm for example.
-        # part and direction are the part and direction the specified key needs to control.
-        # getattr() allows us to turn a piece of text into code. For example, if device = robotArm and part = "base", getattr(device, part) would return robotArm.Arm.base
-        # doing this twice (with direction = "counter", for example), we get getattr(getattr(device, part), direction), which would return robotArm.Arm.base.counter
-        # the next part adds the power and timer data. Since these function the same, I'll use power to explain:
-        # self.powerMode.get() returns the state if our checkbox. if it's checked, it returns a 1. If it's unchecked, it returns a 0.
-        # self.powerValue returns the number the user added to the entry field.
-        # By multiplying these two, we are only sending the data if the checkbox is checked, and 0 if it's unchecked.
 
     def _stopProgram(self):
         # Removes all keybinds

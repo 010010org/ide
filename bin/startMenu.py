@@ -49,10 +49,9 @@ class Interface(object):
         with open(self._iniFile, 'w') as configFile:
             self._iniWriter.write(configFile, space_around_delimiters=False)
 
-        self._window.withdraw()
-        import tkArmInterface
-        tkArmInterface.Interface(advancedMode)
-        self._window.deiconify()
+        self._window.destroy()
+        import tkControlInterface
+        tkControlInterface.Interface(advancedMode)
 
     def drawWindow(self):
         welcomeMessage = tk.Label(self._window, text=ld.startMenuMessage)

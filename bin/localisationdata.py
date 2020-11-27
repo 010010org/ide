@@ -8,7 +8,7 @@ programOption = "start programming interface"
 AdvancedProgramOption = "advanced programming interface"
 
 # setupUsedIO
-infoTextBox = "select the Devices you want to use"
+infoTextBox = "select the devices you want to use"
 saveButton = "Save"
 
 # setupPinout
@@ -62,10 +62,9 @@ partList = ["base", "shoulder", "elbow", "wrist", "grip", "light"]
 duplicatesWarning = "You used the same key multiple times!"
 timerButtonText = "Timer"
 powerButtonText = "Power"
-saveButtonText = "Save"
-editButtonText = "Edit"
-startButtonText = "Start"
-stopButtonText = "Stop"
+saveButtonText = "Save and start"
+editButtonText = "Stop and edit"
+stopButtonText = "Emergency stop"
 timerInfo = "enter a number of seconds"
 powerInfo = "enter a percentage (0-100)"
 
