@@ -80,4 +80,5 @@ class Interface(object):
                     if self._progress >= 4:
                         AdvancedProgrammingButton['state'] = tk.NORMAL
 
+
 Interface()

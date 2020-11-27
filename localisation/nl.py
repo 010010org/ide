@@ -59,7 +59,7 @@ offMovement = "uit"
 
 partList = ["basis", "schouder", "elleboog", "pols", "grijper", "lampje"]
 
-# tkArmInterface
+# tkControlInterface
 duplicatesWarning = "Dezelfde toets wordt voor meerdere dingen gebruikt."
 timerButtonText = "Timer"
 powerButtonText = "Kracht"
@@ -85,9 +85,3 @@ partDictionary = {
     "on": ledMovement,
     "off": offMovement
 }
-
-# Unused
-upDownErrorMessage = "kan niet omhoog of omlaag!"
-leftRightErrorMessage = "kan niet naar links of rechts!"
-openCloseErrorMessage = "kan niet open of dicht!"
-turnOnErrorMessage = "kan niet gewoon aan!"
