@@ -62,7 +62,10 @@ partList = ["base", "shoulder", "elbow", "wrist", "grip", "light"]
 duplicatesWarning = "You used the same key multiple times!"
 timerButtonText = "Timer"
 powerButtonText = "Power"
-startButtonText = "save and start controlling robot arm"
+saveButtonText = "Save"
+editButtonText = "Edit"
+startButtonText = "Start"
+stopButtonText = "Stop"
 timerInfo = "enter a number of seconds"
 powerInfo = "enter a percentage (0-100)"
 

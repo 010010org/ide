@@ -1,6 +1,6 @@
 import tkinter as tk
 import localisationdata as ld
-import os
+import os.path
 import configparser
 import string
 
@@ -34,10 +34,11 @@ class Interface(object):
     def _getPinouts(self):
         for i in self._libraryList:
             self._iniFile = "lib/" + i + "/pinout.ini"
-            self._iniWriter.read(self._iniFile)
-            for j in self._iniWriter:
-                for k in self._iniWriter[j]:
-                    self._pinoutList.append([j, k, self._iniWriter[j][k]])
+            if os.path.isfile(self._iniFile):
+                self._iniWriter.read(self._iniFile)
+                for j in self._iniWriter:
+                    for k in self._iniWriter[j]:
+                        self._pinoutList.append([j, k, self._iniWriter[j][k]])
 
     def _updateEntries(self, *args):
         previousEntry = ""

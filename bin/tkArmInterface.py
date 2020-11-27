@@ -2,19 +2,17 @@ import tkinter as tk  # used to create the interface
 import localisationdata as ld  # contains all displayed text
 import configparser  # used to read and write to ini file
 import string  # only used to get a list of letters and numbers
-import sys
-sys.path.append('lib/robotArm')
-import GPIOArm  # controls the robotic arm
+import importlib.util
 
 
 # TODO: save start stop buttons
 class Interface(object):
-    # Creates instance of robotarm class to control it.
-    _arm = GPIOArm.Arm()
-
-    # opens .ini file containing the controls of the robot arm
+    _advancedMode = 0
     _iniWriter = configparser.ConfigParser()
-    _iniFile = 'lib/robotArm/armControls.ini'
+
+    # Used to call the various libraries
+    _libraryArray = []
+    _deviceArray = []
 
     # opens window to create interface in
     _window = tk.Tk()
@@ -22,6 +20,8 @@ class Interface(object):
     # These are used to iterate through the configured keys and text fields
     _partArray = []
     _keyArray = []
+
+    _entryArray = []
 
     _rowNumber = 0  # Used to put every option on a new line
     # creates info textbox
@@ -37,24 +37,49 @@ class Interface(object):
     _powerVar = tk.StringVar(_window, value="0")
     _powerValue = 0
 
+    # Tracker to see if the user is editing the keybinds or wants to control the devices
+    _editMode = 1
+
     def __init__(self, advancedMode=0):
+        self._advancedMode = advancedMode
+        libReader = configparser.ConfigParser()
+        libReader.optionxform = str
+        configIni = "config.ini"
+        libReader.read(configIni)
+        for i in libReader["LIBRARIES"]:
+            if libReader["LIBRARIES"][i] == "1":
+                self._libraryArray.append(i)
+                module_name = i
+                file_path = "lib/" + i + "/" + i + ".py"
+                spec = importlib.util.spec_from_file_location(module_name, file_path)
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                for objname in dir(module):
+                    if type(eval("module." + objname)) is type:
+                        self._deviceArray.append(getattr(module, objname)())
+
+        for i in self._libraryArray:
+            _iniFile = 'lib/' + i + '/controls.ini'
+            self._iniWriter.read(_iniFile)
+            for j in self._iniWriter:
+                if j != "DEFAULT":
+                    for k in self._iniWriter[j]:
+                        self._partArray.append([i, j, k, self._iniWriter[j][k]])
+                        # partArray looks like this:
+                        # [device1, part1, direction1, keybind], [device1, part1, direction2, keybind], [device1, part2, ...
+
+        # Creates instance of robotarm class to control it.
+        self._arm = self._deviceArray[0]
         self._window.title = ld.controlArmOption
-        # Read controls from ini
-        self._iniWriter.read(self._iniFile)
-        for i in self._iniWriter:
-            if i != "DEFAULT":
-                for j in self._iniWriter[i]:
-                    self._partArray.append([i, j, self._iniWriter[i][j]])
-                    # partArray looks like this:
-                    # [part1, direction1, keybind], [part1, direction2, keybind], [part2, ...
 
         # Creates an "entry" (editable text field) for every move-action. Also fills in the keys read from the ini file.
         for i in range(len(self._partArray)):
             self._keyArray.append(tk.StringVar(self._window))
-            self._keyArray[i].set(self._partArray[i][2])
+            self._keyArray[i].set(self._partArray[i][3])
             self._keyArray[i].trace_add('write', self.updateEntries)
-            tk.Label(self._window, text=ld.partDictionary[self._partArray[i][0]] + " " + ld.partDictionary[self._partArray[i][1]]).grid(row=i, column=1)
-            tk.Entry(self._window, textvariable=self._keyArray[i]).grid(row=i, column=2)
+            tk.Label(self._window, text=ld.partDictionary[self._partArray[i][1]] + " " + ld.partDictionary[self._partArray[i][2]]).grid(sticky='w', row=i, column=1)
+            self._entryArray.append(tk.Entry(self._window, textvariable=self._keyArray[i]))
+            self._entryArray[i].grid(sticky='w', row=i, column=2)
             self._rowNumber = i
 
         if advancedMode:
@@ -78,9 +103,16 @@ class Interface(object):
             self._powerEntry.bind("<FocusOut>", self.onFocusLoss)
             self._powerVar.trace('w', self.setPowerValue)
 
-        # Adds the start button and info textbox. Refreshes all entry fields and start the main loop.
-        self._startButton = tk.Button(self._window, text=ld.startButtonText, command=self.startProgram).grid(sticky='w', row=self._rowNumber + 2, column=1, columnspan=2)
-        self._warningLabel.grid(sticky='w', row=self._rowNumber + 3, column=1, columnspan=2)
+        # Adds the save, start and stop buttons and info textbox. Refreshes all entry fields and start the main loop.
+        self._saveButton = tk.Button(self._window, text=ld.saveButtonText, command=self._saveProgram)
+        self._saveButton.grid(sticky='w', row=self._rowNumber + 2, column=1)
+        self._startButton = tk.Button(self._window, text=ld.startButtonText, command=self._startProgram)
+        self._startButton.grid(sticky='w', row=self._rowNumber + 2, column=2)
+        self._startButton['state'] = tk.DISABLED
+        self._stopButton = tk.Button(self._window, text=ld.stopButtonText, command=self._stopProgram)
+        self._stopButton.grid(sticky='w', row=self._rowNumber + 2, column=3)
+        self._stopButton['state'] = tk.DISABLED
+        self._warningLabel.grid(sticky='w', row=self._rowNumber + 3, column=1, columnspan=3)
         self.updateEntries()
         self._window.mainloop()
 
@@ -145,32 +177,88 @@ class Interface(object):
             self._warningLabel.config(text="")
 
     # Starts controlling controlling the robotic arm.
-    def startProgram(self):
+    def _saveProgram(self):
         # Removes all possible keybinds in case they were changed.
         for i in string.printable:
-            self._window.unbind('<' + i[0] + '>')
-            self._window.unbind('<KeyRelease-' + i[0] + '>')
+            self._window.unbind('<' + i + '>')
+            self._window.unbind('<KeyRelease-' + i + '>')
+        if self._editMode:
+            # Writes the keys the user selected to the array of configured keys.
+            for i in range(len(self._keyArray)):
+                self._partArray[i][3] = self._keyArray[i].get()
 
-        # Writes the keys the user selected to the array of configured keys.
-        for i in range(len(self._keyArray)):
-            self._partArray[i][2] = self._keyArray[i].get()
+            # Writes the keys to the ini file to save them for the next time the program is started
+            _device = ""
+            _iniFile = "temp.ini"
+            for i in self._partArray:
+                if i[0] != _device:
+                    if _device != "":
+                        _iniFile = "lib/"+_device+"/controls.ini"
+                        with open(_iniFile, 'w') as configFile:
+                            self._iniWriter.write(configFile, space_around_delimiters=False)
+                    _device = i[0]
+                self._iniWriter[i[1]][i[2]] = i[3]
+            with open(_iniFile, 'w') as configFile:
+                self._iniWriter.write(configFile)
 
-        # Writes the keys to the ini file to save them for the next time the program is started
-        for i in self._partArray:
-            self._iniWriter[i[0]][i[1]] = i[2]
-        with open(self._iniFile, 'w') as configFile:
-            self._iniWriter.write(configFile)
+            # disables editing the controls after saving
+            for i in self._entryArray:
+                i['state'] = tk.DISABLED
+            if self._advancedMode:
+                self._timerCheckButton['state'] = tk.DISABLED
+                self._timerEntry['state'] = tk.DISABLED
+                self._powerCheckButton['state'] = tk.DISABLED
+                self._powerEntry['state'] = tk.DISABLED
 
+            # enables the Start and Stop buttons
+            self._startButton['state'] = tk.NORMAL
+            self._stopButton['state'] = tk.NORMAL
+
+            # Changes the Save button to now be an Edit button
+            self._saveButton['text'] = ld.editButtonText
+        else:
+            for i in self._entryArray:
+                i['state'] = tk.NORMAL
+            if self._advancedMode:
+                self._timerCheckButton['state'] = tk.NORMAL
+                self._powerCheckButton['state'] = tk.NORMAL
+                if self._timerMode:
+                    self._timerEntry['state'] = tk.NORMAL
+                if self._powerMode:
+                    self._powerEntry['state'] = tk.NORMAL
+
+            # disables the Start and Stop buttons
+            self._startButton['state'] = tk.DISABLED
+            self._stopButton['state'] = tk.DISABLED
+
+            # Changes the button text back to 'Save'
+            self._saveButton['text'] = ld.saveButtonText
+
+        # Switches from save mode to edit mode
+        self._editMode ^= 1
+
+    def _startProgram(self):
         # Adds events to the specified keys. This is ugly code, see the explanation below.
         for i in self._partArray:
-            self._window.bind('<' + i[2] + '>', lambda event=None, part=i[0], direction=i[1]: (getattr(getattr(self._arm, part), direction)(self._powerMode.get() * self._powerValue, self._timerMode.get() * self._timerValue)))
-            self._window.bind('<KeyRelease-' + i[2] + '>', lambda event=None, part=i[0]: (getattr(getattr(self._arm, part), 'off')()))
-        # i[2] is the key in question. We bind an event to it that runs the code written after "lambda" when the key is pressed.
+            self._window.bind('<' + i[3] + '>', lambda event=None, device=self._deviceArray[self._libraryArray.index(i[0])], part=i[1], direction=i[2]: (getattr(getattr(device, part), direction)(self._powerMode.get() * self._powerValue, self._timerMode.get() * self._timerValue)))
+            self._window.bind('<KeyRelease-' + i[3] + '>', lambda event=None, device=self._deviceArray[self._libraryArray.index(i[0])], part=i[1]: (getattr(getattr(device, part), 'off')()))
+        # i[3] is the key in question. We bind an event to it that runs the code written after "lambda" when the key is pressed.
         # event is used to ignore the useless data tkinter sends us without us asking for it.
+        # device is the class used for the device that needs to be controlled, robotArm.Arm for example.
         # part and direction are the part and direction the specified key needs to control.
-        # getattr() allows us to turn a piece of text into code. For example, if part = "base", getattr(self._arm, part) would return _arm.base
-        # doing this twice (with direction = "counter", for example), we get getattr(getattr(self._arm, part), direction), which would return _arm.base.counter
+        # getattr() allows us to turn a piece of text into code. For example, if device = robotArm and part = "base", getattr(device, part) would return robotArm.Arm.base
+        # doing this twice (with direction = "counter", for example), we get getattr(getattr(device, part), direction), which would return robotArm.Arm.base.counter
         # the next part adds the power and timer data. Since these function the same, I'll use power to explain:
         # self.powerMode.get() returns the state if our checkbox. if it's checked, it returns a 1. If it's unchecked, it returns a 0.
         # self.powerValue returns the number the user added to the entry field.
         # By multiplying these two, we are only sending the data if the checkbox is checked, and 0 if it's unchecked.
+
+    def _stopProgram(self):
+        # Removes all keybinds
+        for i in string.printable:
+            self._window.unbind('<' + i + '>')
+            self._window.unbind('<KeyRelease-' + i + '>')
+
+        # Turns every part of every device off.
+        for i in self._partArray:
+            getattr(getattr(self._deviceArray[self._libraryArray.index(i[0])], i[1]), 'off')()

@@ -5,14 +5,14 @@ import tkinter.scrolledtext as scrolledtext
 import localisationdata as ld
 import sys
 sys.path.append('lib/robotArm')  # TODO: implement setupUsedIO
-import GPIOArm  # controls the robotic arm
+import robotArm  # controls the robotic arm
 
 
 class Interface(object):
     window = tk.Tk()
     SCREEN_WIDTH = 640  # int(window.winfo_screenwidth())
     SCREEN_HEIGHT = 480  # int(window.winfo_screenheight())
-    arm = GPIOArm.Arm()
+    arm = robotArm.Arm()
 
     # lists of menu items
     commandList = ["if", "elif", "else", "for", "while"]

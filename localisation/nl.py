@@ -63,7 +63,10 @@ partList = ["basis", "schouder", "elleboog", "pols", "grijper", "lampje"]
 duplicatesWarning = "Dezelfde toets wordt voor meerdere dingen gebruikt."
 timerButtonText = "Timer"
 powerButtonText = "Kracht"
-startButtonText = "opslaan en besturen"
+saveButtonText = "Opslaan"
+editButtonText = "Aanpassen"
+startButtonText = "Start"
+stopButtonText = "Stop"
 timerInfo = "vul een aantal seconden in"
 powerInfo = "vul een percentage (0-100) in"
 

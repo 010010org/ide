@@ -1,6 +1,8 @@
 import tkinter as tk
 import localisationdata as ld
 import os
+import os.path
+import glob
 import configparser
 
 
@@ -36,9 +38,12 @@ class Interface (object):
         realLibraryList = []
         iniLibraryList = []
 
-        # Look for installed libraries. TODO: test for existence of required files
+        # Look for installed libraries.
         for i in os.listdir(path="lib"):
-            realLibraryList.append(i)
+            if os.path.isfile("lib/"+i+"/pinout.ini") & os.path.isfile("lib/" + i + "/controls.ini") & len(glob.glob("lib/" + i + "/*.py")) > 0:
+                realLibraryList.append(i)
+            else:
+                print("ERROR: required files not found in potential library: " + i)
 
         # Look for list of libraries in ini file.
         self._iniWriter.read(self._iniFile)

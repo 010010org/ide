@@ -4,8 +4,12 @@
   call :get-ini config.ini OPTIONS LANGUAGE result
   copy localisation\%result%.py bin\localisationdata.py >NUL
   
-  IF NOT EXIST ./lib/robotArm/armControls.ini (
-    copy lib\robotArm\defaultArmControls.ini lib\robotArm\armControls.ini >NUL
+  IF NOT EXIST ./lib/robotArm/controls.ini (
+    copy lib\robotArm\defaultControls.ini lib\robotArm\controls.ini >NUL
+  )
+
+  IF NOT EXIST ./lib/robotArm/pinout.ini (
+    copy lib\robotArm\defaultPinout.ini lib\robotArm\pinout.ini >NUL
   )
   
   python3 ./bin/startMenu.py
