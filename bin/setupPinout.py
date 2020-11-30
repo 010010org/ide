@@ -22,6 +22,7 @@ class Interface(object):
         tk.Label(self._window, text=ld.pinoutTextbox).grid(row=0, column=1, columnspan=3, sticky='w')
         tk.Label(self._window, text=ld.pinoutTextbox2).grid(row=1, column=1, columnspan=3, sticky='w')
         rowNumber = 0
+        self._entryList = []
         for i in range(len(self._pinoutList)):
             tk.Label(self._window, text=self._pinoutList[i][0]+': '+self._pinoutList[i][1]).grid(row=2+i, column=1, sticky='w')
             for j in range(len(self._pinoutList[i][2].split(','))):
@@ -35,6 +36,7 @@ class Interface(object):
         self._window.grid(row=0, column=0)
 
     def _getPinouts(self):
+        self._pinoutList = []
         for i in self._libraryList:
             self._iniFile = "lib/" + i + "/pinout.ini"
             if os.path.isfile(self._iniFile):
