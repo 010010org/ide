@@ -187,8 +187,8 @@ class Interface(object):
     def _saveProgram(self):
         # Removes all possible keybinds in case they were changed.
         for i in string.printable:
-            self._window.unbind('<' + i + '>')
-            self._window.unbind('<KeyRelease-' + i + '>')
+            self._window.master.unbind('<' + i + '>')
+            self._window.master.unbind('<KeyRelease-' + i + '>')
         if self._editMode:
             # Writes the keys the user selected to the array of configured keys.
             for i in range(len(self._keyArray)):
@@ -257,8 +257,8 @@ class Interface(object):
     def _stopProgram(self):
         # Removes all keybinds
         for i in string.printable:
-            self._window.unbind('<' + i + '>')
-            self._window.unbind('<KeyRelease-' + i + '>')
+            self._window.master.unbind('<' + i + '>')
+            self._window.master.unbind('<KeyRelease-' + i + '>')
 
         # Turns every part of every device off.
         for i in self._partArray:
