@@ -4,27 +4,27 @@ import configparser
 
 
 class Interface(object):
-    _window = tk.Tk()
+    _root = tk.Tk()
     _iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
     _iniFile = "config.ini"
 
     def __init__(self):
+        self._window = tk.Frame(self._root)
         self._window.title = ld.startMenuName
         self._iniWriter.optionxform = str
         self._iniWriter.read(self._iniFile)
         self._progress = int(self._iniWriter["OPTIONS"]["PROGRESS"])
         self.drawWindow()
-        self._window.mainloop()
+        self._window.grid(row=0, column=0)
+        self._root.mainloop()
 
     def runSetup(self):
         self._progress = max(self._progress, 1)
         self._iniWriter["OPTIONS"]["PROGRESS"] = str(self._progress)
         with open(self._iniFile, 'w') as configFile:
             self._iniWriter.write(configFile, space_around_delimiters=False)
-
-        self._window.destroy()
         import setupUsedIO
-        setupUsedIO.Interface()
+        setupUsedIO.Interface(tk.Toplevel(self._root))
 
     def runProgrammer(self, advancedMode):
         if advancedMode:
@@ -35,10 +35,9 @@ class Interface(object):
         with open(self._iniFile, 'w') as configFile:
             self._iniWriter.write(configFile, space_around_delimiters=False)
 
-        self._window.withdraw()
+        self._window.grid_remove()
         import tkinterTest
-        tkinterTest.Interface(advancedMode)
-        self._window.deiconify()
+        tkinterTest.Interface(self._root, advancedMode)
 
     def runControlProgram(self, advancedMode):
         if advancedMode:
@@ -49,9 +48,9 @@ class Interface(object):
         with open(self._iniFile, 'w') as configFile:
             self._iniWriter.write(configFile, space_around_delimiters=False)
 
-        self._window.destroy()
+        self._window.grid_remove()
         import tkControlInterface
-        tkControlInterface.Interface(advancedMode)
+        tkControlInterface.Interface(self._root, advancedMode)
 
     def drawWindow(self):
         welcomeMessage = tk.Label(self._window, text=ld.startMenuMessage)

@@ -58,7 +58,7 @@ offMovement = "off"
 
 partList = ["base", "shoulder", "elbow", "wrist", "grip", "light"]
 
-# tkArmInterface
+# tkControlInterface
 duplicatesWarning = "You used the same key multiple times!"
 timerButtonText = "Timer"
 powerButtonText = "Power"
@@ -84,9 +84,3 @@ partDictionary = {
     "on": ledMovement,
     "off": offMovement
 }
-
-# Unused
-upDownErrorMessage = "can't move up or down!"
-leftRightErrorMessage = "can't move left or right!"
-openCloseErrorMessage = "can't open or close!"
-turnOnErrorMessage = "can't just turn on!"

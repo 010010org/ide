@@ -6,7 +6,7 @@ import string
 
 
 class Interface(object):
-    _window = tk.Tk()
+
     _iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
     _iniWriter.optionxform = str
     _iniFile = None
@@ -15,11 +15,13 @@ class Interface(object):
     _entryList = []
     _entryCounter = 0
 
-    def __init__(self, libraryList):
+    def __init__(self, parent, libraryList):
+        self._window = tk.Frame(parent)
         self._libraryList = libraryList
         self._getPinouts()
         tk.Label(self._window, text=ld.pinoutTextbox).grid(row=0, column=1, columnspan=3, sticky='w')
         tk.Label(self._window, text=ld.pinoutTextbox2).grid(row=1, column=1, columnspan=3, sticky='w')
+        rowNumber = 0
         for i in range(len(self._pinoutList)):
             tk.Label(self._window, text=self._pinoutList[i][0]+': '+self._pinoutList[i][1]).grid(row=2+i, column=1, sticky='w')
             for j in range(len(self._pinoutList[i][2].split(','))):
@@ -28,8 +30,9 @@ class Interface(object):
                 self._entryList[self._entryCounter][1].trace_add('write', self._updateEntries)
                 tk.Entry(self._window, textvariable=self._entryList[self._entryCounter][1]).grid(row=2+i, column=2+j, sticky='w')
                 self._entryCounter += 1
-        tk.Button(self._window, text=ld.pinoutButton, command=self._saveSettings).grid(row=3+i, column=1, columnspan=3, sticky='w')
-        self._window.mainloop()
+            rowNumber = i
+        tk.Button(self._window, text=ld.pinoutButton, command=self._saveSettings).grid(row=3+rowNumber, column=1, columnspan=3, sticky='w')
+        self._window.grid(row=0, column=0)
 
     def _getPinouts(self):
         for i in self._libraryList:
@@ -40,7 +43,7 @@ class Interface(object):
                     for k in self._iniWriter[j]:
                         self._pinoutList.append([j, k, self._iniWriter[j][k]])
 
-    def _updateEntries(self, *args):
+    def _updateEntries(self, *_args):
         previousEntry = ""
         tempList = []
         for i in self._entryList:
@@ -56,7 +59,7 @@ class Interface(object):
         for i in range(len(tempList)):
             self._pinoutList[i][2] = tempList[i]
 
-    def _saveSettings(self, *args):
+    def _saveSettings(self, *_args):
         folder = ""
         for i in self._pinoutList:
             if i[0] != folder:
@@ -69,4 +72,4 @@ class Interface(object):
         with open(self._iniFile, 'w') as configFile:
             self._iniWriter.write(configFile, space_around_delimiters=False)
 
-        self._window.destroy()
+        self._window.master.destroy()

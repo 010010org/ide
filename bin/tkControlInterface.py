@@ -14,9 +14,6 @@ class Interface(object):
     _libraryArray = []
     _deviceArray = []
 
-    # opens window to create interface in
-    _window = tk.Tk()
-
     # These are used to iterate through the configured keys and text fields
     _partArray = []
     _keyArray = []
@@ -24,23 +21,12 @@ class Interface(object):
     _entryArray = []
 
     _rowNumber = 0  # Used to put every option on a new line
-    # creates info textbox
-    _warningLabel = tk.Label(_window, text="")
-
-    # Trackers for timer checkbox and text field
-    _timerMode = tk.IntVar(_window, value=0)
-    _timerVar = tk.StringVar(_window, value="0")
-    _timerValue = 0
-
-    # Trackers for power checkbox and text field
-    _powerMode = tk.IntVar(_window, value=0)
-    _powerVar = tk.StringVar(_window, value="0")
-    _powerValue = 0
 
     # Tracker to see if the user is editing the keybinds or wants to control the devices
     _editMode = 1
 
-    def __init__(self, advancedMode=0):
+    def __init__(self, parent, advancedMode=0):
+        self._window = tk.Frame(parent)
         self._advancedMode = advancedMode
         libReader = configparser.ConfigParser()
         libReader.optionxform = str
@@ -71,6 +57,19 @@ class Interface(object):
         # Creates instance of robotarm class to control it.
         self._arm = self._deviceArray[0]
         self._window.title = ld.controlArmOption
+
+        # creates info textbox
+        self._warningLabel = tk.Label(self._window, text="")
+
+        # Trackers for timer checkbox and text field
+        self._timerMode = tk.IntVar(self._window, value=0)
+        self._timerVar = tk.StringVar(self._window, value="0")
+        self._timerValue = 0
+
+        # Trackers for power checkbox and text field
+        self._powerMode = tk.IntVar(self._window, value=0)
+        self._powerVar = tk.StringVar(self._window, value="0")
+        self._powerValue = 0
 
         # Creates an "entry" (editable text field) for every move-action. Also fills in the keys read from the ini file.
         for i in range(len(self._partArray)):
@@ -114,7 +113,7 @@ class Interface(object):
 
         self._warningLabel.grid(sticky='w', row=self._rowNumber + 3, column=1, columnspan=3)
         self.updateEntries()
-        self._window.mainloop()
+        self._window.grid(row=0, column=0)
 
     # Activate the timer entry field if the checkbox is checked, disable when unchecked.
     def setTimerMode(self):

@@ -7,21 +7,22 @@ import configparser
 
 
 class Interface (object):
-    _window = tk.Tk()
-
     # Open ini file to get list of libraries
     _iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
     _iniWriter.optionxform = str
     _iniFile = "config.ini"
 
-    _infoText = tk.Label(_window, text=ld.infoTextBox)
     _libraryList = []
     _checkBoxList = []
 
-    def __init__(self):
+    def __init__(self, parent):
+        self._parent = parent
+        self._window = tk.Frame(parent)
         self._window.title = ld.setupOption
-        self._infoText.grid(row=0, column=1)
         self._libraryList = self._updateINI()
+
+        self._infoText = tk.Label(self._window, text=ld.infoTextBox)
+        self._infoText.grid(row=0, column=1)
 
         i = 0  # Not needed, but PyCharm complains if removed.
         for i in range(len(self._libraryList)):
@@ -31,7 +32,7 @@ class Interface (object):
         self._saveButton.grid(row=i+2, column=1, sticky='w')
 
         # Start program.
-        self._window.mainloop()
+        self._window.grid(row=0, column=0)
 
     # Update ini file and return list of installed libraries.
     def _updateINI(self):
@@ -76,4 +77,4 @@ class Interface (object):
             self._iniWriter.write(configFile, space_around_delimiters=False)
         self._window.destroy()
         import setupPinout
-        setupPinout.Interface(self._libraryList)
+        setupPinout.Interface(self._parent, self._libraryList)
