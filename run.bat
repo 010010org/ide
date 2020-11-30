@@ -2,7 +2,11 @@
 :main
   setlocal enabledelayedexpansion
   call :get-ini config.ini OPTIONS LANGUAGE result
-  copy localisation\%result%.py bin\localisationdata.py >NUL
+  IF EXIST localisation\%result%.py (
+    copy localisation\%result%.py bin\localisationdata.py >NUL
+  ) ELSE (
+    copy localisation\en.py bin\localisationdata.py >NUL
+  )
 
   FOR /D %%G IN (lib/*) DO (
   
@@ -14,7 +18,11 @@
       copy lib\%%G\defaultPinout.ini lib\%%G\pinout.ini >NUL
     )
 
-    copy lib\%%G\localisation\%result%.py lib\%%G\%%GLocalisationdata.py >NUL
+    IF EXIST lib\%%G\localisation\%result%.py (
+      copy lib\%%G\localisation\%result%.py lib\%%G\%%GLocalisationdata.py >NUL
+    ) ELSE (
+      copy lib\%%G\localisation\en.py lib\%%G\%%GLocalisationdata.py >NUL
+    )
   )
   
   python3 ./bin/startMenu.py
