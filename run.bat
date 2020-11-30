@@ -3,13 +3,18 @@
   setlocal enabledelayedexpansion
   call :get-ini config.ini OPTIONS LANGUAGE result
   copy localisation\%result%.py bin\localisationdata.py >NUL
-  
-  IF NOT EXIST ./lib/robotArm/controls.ini (
-    copy lib\robotArm\defaultControls.ini lib\robotArm\controls.ini >NUL
-  )
 
-  IF NOT EXIST ./lib/robotArm/pinout.ini (
-    copy lib\robotArm\defaultPinout.ini lib\robotArm\pinout.ini >NUL
+  FOR /D %%G IN (lib/*) DO (
+  
+    IF NOT EXIST ./lib/%%G/controls.ini (
+      copy lib\%%G\defaultControls.ini lib\%%G\controls.ini >NUL
+    )
+
+    IF NOT EXIST ./lib/%%G/pinout.ini (
+      copy lib\%%G\defaultPinout.ini lib\%%G\pinout.ini >NUL
+    )
+
+    copy lib\%%G\localisation\%result%.py lib\%%G\%%GLocalisationdata.py >NUL
   )
   
   python3 ./bin/startMenu.py

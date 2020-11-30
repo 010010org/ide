@@ -50,7 +50,7 @@ class Interface(object):
         tempList = []
         for i in self._entryList:
             if i[1].get()[-1] not in string.digits:
-                i[1].set(i[i].get()[:-1])
+                i[1].set(i[1].get()[:-1])
             if i[0] == 0:
                 if previousEntry != "":
                     tempList.append(previousEntry)

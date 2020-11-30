@@ -9,7 +9,6 @@ import robotArm  # controls the robotic arm
 
 
 class Interface(object):
-    window = tk.Tk()
     SCREEN_WIDTH = 640  # int(window.winfo_screenwidth())
     SCREEN_HEIGHT = 480  # int(window.winfo_screenheight())
     arm = robotArm.Arm()
@@ -29,11 +28,13 @@ class Interface(object):
 
     selectedPart = None
     moveList = []
-    helpText = tk.StringVar(window)
+
     fileName = ""
     fullScreen = 0
 
-    def __init__(self, advancedMode=0):
+    def __init__(self, parent, advancedMode=0):
+        self.window = tk.Toplevel(parent)
+        self.helpText = tk.StringVar(self.window)
         # read state of advanced mode and implement if needed
         self.advancedMode = advancedMode
         if self.advancedMode:
@@ -110,7 +111,6 @@ class Interface(object):
 
         # start program loop
         self.window.config(menu=self.menuBar)
-        self.window.mainloop()
 
     # Toggles fullscreen
     def swapFullScreen(self, *_args):

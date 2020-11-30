@@ -50,14 +50,6 @@ saveAsWindowText = "File name:"
 helpInfo = "command explanation: "
 helpInfoDefault = "right click a command to get an explanation of it"
 
-baseMovements = ["clockwise", "counterclockwise"]
-gripMovements = ["open", "close"]
-ledMovement = "on"
-normalMovements = ["up", "down"]
-offMovement = "off"
-
-partList = ["base", "shoulder", "elbow", "wrist", "grip", "light"]
-
 # tkControlInterface
 duplicatesWarning = "You used the same key multiple times!"
 timerButtonText = "Timer"
@@ -67,20 +59,3 @@ editButtonText = "Stop and edit"
 stopButtonText = "Emergency stop"
 timerInfo = "enter a number of seconds"
 powerInfo = "enter a percentage (0-100)"
-
-partDictionary = {
-    "base": partList[0],
-    "shoulder": partList[1],
-    "elbow": partList[2],
-    "wrist": partList[3],
-    "grip": partList[4],
-    "light": partList[5],
-    "clock": baseMovements[0],
-    "counter": baseMovements[1],
-    "up": normalMovements[0],
-    "down": normalMovements[1],
-    "open": gripMovements[0],
-    "close": gripMovements[1],
-    "on": ledMovement,
-    "off": offMovement
-}

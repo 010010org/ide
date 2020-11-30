@@ -1,5 +1,4 @@
 import time  # library used to wait for a specified time
-import localisationdata as ld  # library that contains all displayed text
 import ctypes.util  # library used to detect if we're running on a raspberry pi or a different os
 import configparser  # library used to read ini file
 
@@ -28,12 +27,12 @@ class Arm(object):
 				GPIO.output(i, GPIO.LOW)
 
 		# create the different parts of the arm
-		self.base = self.Base(_M5, ld.partList[0])
-		self.shoulder = self.Shoulder(_M4, ld.partList[1])
-		self.elbow = self.Elbow(_M3, ld.partList[2])
-		self.wrist = self.Wrist(_M2, ld.partList[3])
-		self.grip = self.Grip(_M1, ld.partList[4])
-		self.light = self.Light(_M_LIGHT, ld.partList[5])
+		self.base = self.Base(_M5)
+		self.shoulder = self.Shoulder(_M4)
+		self.elbow = self.Elbow(_M3)
+		self.wrist = self.Wrist(_M2)
+		self.grip = self.Grip(_M1)
+		self.light = self.Light(_M_LIGHT)
 
 	# This is the parent class of all parts. This contains the functions that actually move the part.
 	class Part(object):
@@ -91,8 +90,7 @@ class Arm(object):
 	# Because the base moves horizontally instead of vertically, up and down have been renamed to counter and clock.
 	# You can still use up and down if you'd want to for whatever reason.
 	class Base(Part):
-		def __init__(self, pins, name):
-			self.name = name
+		def __init__(self, pins):
 			super().__init__(pins)
 
 		def counter(self, power=0, timer=0):
@@ -103,24 +101,20 @@ class Arm(object):
 
 	# Shoulder, Elbow and Wrist don't have any special functions. They're only individual classes to make the code easier to read.
 	class Shoulder(Part):
-		def __init__(self, pins, name):
-			self.name = name
+		def __init__(self, pins):
 			super().__init__(pins)
 
 	class Elbow(Part):
-		def __init__(self, pins, name):
-			self.name = name
+		def __init__(self, pins):
 			super().__init__(pins)
 
 	class Wrist(Part):
-		def __init__(self, pins, name):
-			self.name = name
+		def __init__(self, pins):
 			super().__init__(pins)
 
 	# Just like the Base, the Grip moves differently. As such, the functions have been renamed.
 	class Grip(Part):
-		def __init__(self, pins, name):
-			self.name = name
+		def __init__(self, pins):
 			super().__init__(pins)
 
 		def close(self, power=0, timer=0):
@@ -132,8 +126,7 @@ class Arm(object):
 	# Because the light can only go on or off, directions don't matter. Calling either up() or down() will turn it on.
 	# I chose to use up because it was shorter.
 	class Light(Part):
-		def __init__(self, pins, name):
-			self.name = name
+		def __init__(self, pins):
 			super().__init__(pins)
 
 		def on(self, power=0, timer=0):

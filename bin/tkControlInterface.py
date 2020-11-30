@@ -5,7 +5,6 @@ import string  # only used to get a list of letters and numbers
 import importlib.util
 
 
-# TODO: use frame instead of window
 class Interface(object):
     _advancedMode = 0
     _iniWriter = configparser.ConfigParser()
@@ -13,6 +12,7 @@ class Interface(object):
     # Used to call the various libraries
     _libraryArray = []
     _deviceArray = []
+    _ldArray = []
 
     # These are used to iterate through the configured keys and text fields
     _partArray = []
@@ -40,6 +40,13 @@ class Interface(object):
                 spec = importlib.util.spec_from_file_location(module_name, file_path)
                 module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(module)
+
+                ld_module_name = i + "Localisationdata"
+                ld_file_path = "lib/" + i + "/" + ld_module_name + ".py"
+                ld_spec = importlib.util.spec_from_file_location(ld_module_name, ld_file_path)
+                ld_module = importlib.util.module_from_spec(ld_spec)
+                ld_spec.loader.exec_module(ld_module)
+                self._ldArray.append(ld_module)
                 for objname in dir(module):
                     if type(eval("module." + objname)) is type:
                         self._deviceArray.append(getattr(module, objname)())
@@ -73,10 +80,11 @@ class Interface(object):
 
         # Creates an "entry" (editable text field) for every move-action. Also fills in the keys read from the ini file.
         for i in range(len(self._partArray)):
+            locLib = self._ldArray[self._libraryArray.index(self._partArray[i][0])]
             self._keyArray.append(tk.StringVar(self._window))
             self._keyArray[i].set(self._partArray[i][3])
             self._keyArray[i].trace_add('write', self.updateEntries)
-            tk.Label(self._window, text=ld.partDictionary[self._partArray[i][1]] + " " + ld.partDictionary[self._partArray[i][2]]).grid(sticky='w', row=i, column=1)
+            tk.Label(self._window, text=locLib.partDictionary[self._partArray[i][1]] + " " + locLib.partDictionary[self._partArray[i][2]]).grid(sticky='w', row=i, column=1)
             self._entryArray.append(tk.Entry(self._window, textvariable=self._keyArray[i]))
             self._entryArray[i].grid(sticky='w', row=i, column=2)
             self._rowNumber = i
@@ -202,8 +210,8 @@ class Interface(object):
 
             # Adds events to the specified keys. This is ugly code, see the explanation below.
             for i in self._partArray:
-                self._window.bind('<' + i[3] + '>', lambda event=None, device=self._deviceArray[self._libraryArray.index(i[0])], part=i[1], direction=i[2]: (getattr(getattr(device, part), direction)(self._powerMode.get() * self._powerValue, self._timerMode.get() * self._timerValue)))
-                self._window.bind('<KeyRelease-' + i[3] + '>', lambda event=None, device=self._deviceArray[self._libraryArray.index(i[0])], part=i[1]: (getattr(getattr(device, part), 'off')()))
+                self._window.master.bind('<' + i[3] + '>', lambda event=None, device=self._deviceArray[self._libraryArray.index(i[0])], part=i[1], direction=i[2]: (getattr(getattr(device, part), direction)(self._powerMode.get() * self._powerValue, self._timerMode.get() * self._timerValue)))
+                self._window.master.bind('<KeyRelease-' + i[3] + '>', lambda event=None, device=self._deviceArray[self._libraryArray.index(i[0])], part=i[1]: (getattr(getattr(device, part), 'off')()))
             # i[3] is the key in question. We bind an event to it that runs the code written after "lambda" when the key is pressed.
             # event is used to ignore the useless data tkinter sends us without us asking for it.
             # device is the class used for the device that needs to be controlled, robotArm.Arm for example.

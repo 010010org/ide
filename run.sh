@@ -1,6 +1,8 @@
 #!/bin/bash
 . config.ini
 
+for folder in ./lib/*/ ; do
+	echo $folder
 cp  ./localisation/${LANGUAGE}.py ./bin/localisationdata.py
 if !(test -f "./lib/robotArm/controls.ini"); then
 	cp ./lib/robotArm/defaultControls.ini ./lib/robotArm/controls.ini
