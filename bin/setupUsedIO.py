@@ -41,10 +41,21 @@ class Interface (object):
 
         # Look for installed libraries.
         for i in os.listdir(path="lib"):
-            if os.path.isfile("lib/"+i+"/pinout.ini") & os.path.isfile("lib/" + i + "/controls.ini") & len(glob.glob("lib/" + i + "/*.py")) > 0:
+            errorsFound = 0
+            if not os.path.isfile("lib/"+i+"/pinout.ini"):
+                print("ERROR: pinout.ini not found in potential library: " + i)
+                errorsFound += 1
+            if not os.path.isfile("lib/" + i + "/controls.ini"):
+                print("ERROR: controls.ini not found in potential library: " + i)
+                errorsFound += 1
+            if not os.path.isfile("lib/" + i + "/" + i + ".py"):
+                print("ERROR: main code file not found in potential library: " + i)
+                errorsFound += 1
+            if not os.path.isfile("lib/" + i + "/" + i + "Localisationdata.py"):
+                print("ERROR: localisation data not found in potential library: " + i)
+                errorsFound += 1
+            if errorsFound == 0:
                 realLibraryList.append(i)
-            else:
-                print("ERROR: required files not found in potential library: " + i)
 
         # Look for list of libraries in ini file.
         self._iniWriter.read(self._iniFile)

@@ -6,17 +6,17 @@ import configparser  # library used to read ini file
 class Arm(object):
 	_iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
 	_iniWriter.optionxform = str
-	_iniFile = "lib/robotArm/pinout.ini"
+	_iniFile = "lib/testLib/pinout.ini"
 
 	def __init__(self):
 		# read configured pins from ini file
 		self._iniWriter.read(self._iniFile)
-		_M1 = self._iniWriter["robotArm"]["M1"].split(",")
-		_M2 = self._iniWriter["robotArm"]["M2"].split(",")
-		_M3 = self._iniWriter["robotArm"]["M3"].split(",")
-		_M4 = self._iniWriter["robotArm"]["M4"].split(",")
-		_M5 = self._iniWriter["robotArm"]["M5"].split(",")
-		_M_LIGHT = self._iniWriter["robotArm"]["M_LIGHT"].split(",")
+		_M1 = self._iniWriter["testLib"]["M1"].split(",")
+		_M2 = self._iniWriter["testLib"]["M2"].split(",")
+		_M3 = self._iniWriter["testLib"]["M3"].split(",")
+		_M4 = self._iniWriter["testLib"]["M4"].split(",")
+		_M5 = self._iniWriter["testLib"]["M5"].split(",")
+		_M_LIGHT = self._iniWriter["testLib"]["M_LIGHT"].split(",")
 		_channel_list = _M1 + _M2 + _M3 + _M4 + _M5 + _M_LIGHT  # creates a list of all used pins so you can run through them with a for loop.
 		# If running on a pi, set all used pins to output and turn off their power
 		if ctypes.util.find_library("RPi.GPIO"):
@@ -27,12 +27,12 @@ class Arm(object):
 				GPIO.output(i, GPIO.LOW)
 
 		# create the different parts of the arm
-		self.base = self.Base(_M5)
-		self.shoulder = self.Shoulder(_M4)
-		self.elbow = self.Elbow(_M3)
-		self.wrist = self.Wrist(_M2)
-		self.grip = self.Grip(_M1)
-		self.light = self.Light(_M_LIGHT)
+		self.bike = self.Bike(_M5)
+		self.car = self.Car(_M4)
+		self.boat = self.Boat(_M3)
+		self.plane = self.Plane(_M2)
+		self.skateboard = self.Skateboard(_M1)
+		self.flashlight = self.Flashlight(_M_LIGHT)
 
 	# This is the parent class of all parts. This contains the functions that actually move the part.
 	class Part(object):
@@ -63,7 +63,7 @@ class Arm(object):
 				self.tempPWM.stop()
 				return
 			# "Simulation code" for when the code is run on a different device. Prints to the console.
-			print("robotArm powering pin", pin, "of part", self.__class__.__name__, end=" ")
+			print("testLib powering pin", pin, "of part", self.__class__.__name__, end=" ")
 			if timer > 0:
 				print("for", timer, "seconds", end=" ")
 			if power > 0 & power < 100:
@@ -73,10 +73,10 @@ class Arm(object):
 
 		# up() and down() only specify the pin they want to move to the move function.
 		# these are mapped to the keyboard in tkArmInterface.
-		def up(self, power=0, timer=0):
+		def forward(self, power=0, timer=0):
 			self.move(self.pins[0], power, timer)
 
-		def down(self, power=0, timer=0):
+		def backwards(self, power=0, timer=0):
 			self.move(self.pins[1], power, timer)
 
 		# Turns off a part if running on a pi. Only prints to the console otherwise.
@@ -89,45 +89,39 @@ class Arm(object):
 
 	# Because the base moves horizontally instead of vertically, up and down have been renamed to counter and clock.
 	# You can still use up and down if you'd want to for whatever reason.
-	class Base(Part):
+	class Bike(Part):
 		def __init__(self, pins):
 			super().__init__(pins)
-
-		def counter(self, power=0, timer=0):
-			self.up(power, timer)
-
-		def clock(self, power=0, timer=0):
-			self.down(power, timer)
 
 	# Shoulder, Elbow and Wrist don't have any special functions. They're only individual classes to make the code easier to read.
-	class Shoulder(Part):
+	class Car(Part):
 		def __init__(self, pins):
 			super().__init__(pins)
 
-	class Elbow(Part):
+	class Boat(Part):
 		def __init__(self, pins):
 			super().__init__(pins)
 
-	class Wrist(Part):
+	class Plane(Part):
 		def __init__(self, pins):
 			super().__init__(pins)
+
+		def up(self, power=0, timer=0):
+			self.move(self.pins[2], power, timer)
+
+		def down(self, power=0, timer=0):
+			self.move(self.pins[3], power, timer)
 
 	# Just like the Base, the Grip moves differently. As such, the functions have been renamed.
-	class Grip(Part):
+	class Skateboard(Part):
 		def __init__(self, pins):
 			super().__init__(pins)
-
-		def close(self, power=0, timer=0):
-			self.up(power, timer)
-
-		def open(self, power=0, timer=0):
-			self.down(power, timer)
 
 	# Because the light can only go on or off, directions don't matter. Calling either up() or down() will turn it on.
 	# I chose to use up because it was shorter.
-	class Light(Part):
+	class Flashlight(Part):
 		def __init__(self, pins):
 			super().__init__(pins)
 
 		def on(self, power=0, timer=0):
-			self.up(power, timer)
+			self.forward(power, timer)

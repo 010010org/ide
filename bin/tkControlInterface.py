@@ -52,6 +52,7 @@ class Interface(object):
                         self._deviceArray.append(getattr(module, objname)())
 
         for i in self._libraryArray:
+            self._iniWriter = configparser.ConfigParser()
             _iniFile = 'lib/' + i + '/controls.ini'
             self._iniWriter.read(_iniFile)
             for j in self._iniWriter:
@@ -84,7 +85,7 @@ class Interface(object):
             self._keyArray.append(tk.StringVar(self._window))
             self._keyArray[i].set(self._partArray[i][3])
             self._keyArray[i].trace_add('write', self.updateEntries)
-            tk.Label(self._window, text=locLib.partDictionary[self._partArray[i][1]] + " " + locLib.partDictionary[self._partArray[i][2]]).grid(sticky='w', row=i, column=1)
+            tk.Label(self._window, text=self._partArray[i][0] + ": " + locLib.partDictionary[self._partArray[i][1]] + " " + locLib.partDictionary[self._partArray[i][2]]).grid(sticky='w', row=i, column=1)
             self._entryArray.append(tk.Entry(self._window, textvariable=self._keyArray[i]))
             self._entryArray[i].grid(sticky='w', row=i, column=2)
             self._rowNumber = i
@@ -197,14 +198,21 @@ class Interface(object):
             # Writes the keys to the ini file to save them for the next time the program is started
             _device = ""
             _iniFile = "temp.ini"
+            self._iniWriter = configparser.ConfigParser()
             for i in self._partArray:
                 if i[0] != _device:
+                    if _device == "":
+                        self._iniWriter = configparser.ConfigParser()
+                        self._iniWriter.read("lib/"+i[0]+"/controls.ini")
                     if _device != "":
                         _iniFile = "lib/"+_device+"/controls.ini"
                         with open(_iniFile, 'w') as configFile:
                             self._iniWriter.write(configFile, space_around_delimiters=False)
+                        self._iniWriter = configparser.ConfigParser()
+                        self._iniWriter.read("lib/" + i[0] + "/controls.ini")
                     _device = i[0]
                 self._iniWriter[i[1]][i[2]] = i[3]
+            _iniFile = "lib/"+self._partArray[-1][0]+"/controls.ini"
             with open(_iniFile, 'w') as configFile:
                 self._iniWriter.write(configFile)
 

@@ -41,9 +41,11 @@ class Interface(object):
             self._iniFile = "lib/" + i + "/pinout.ini"
             if os.path.isfile(self._iniFile):
                 self._iniWriter.read(self._iniFile)
-                for j in self._iniWriter:
-                    for k in self._iniWriter[j]:
-                        self._pinoutList.append([j, k, self._iniWriter[j][k]])
+            else:
+                print("pinout.ini somehow disappeared while the program was running.")  # Freak error, should never happen unless user deletes the file on purpose while the program si running.
+        for j in self._iniWriter:
+            for k in self._iniWriter[j]:
+                self._pinoutList.append([j, k, self._iniWriter[j][k]])
 
     def _updateEntries(self, *_args):
         previousEntry = ""
@@ -65,12 +67,20 @@ class Interface(object):
         folder = ""
         for i in self._pinoutList:
             if i[0] != folder:
+                if folder == "":
+                    self._iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
+                    self._iniWriter.optionxform = str
+                    self._iniWriter.read("lib/" + i[0] + "/pinout.ini")
                 if folder != "":
                     self._iniFile = "lib/" + folder + "/pinout.ini"
                     with open(self._iniFile, 'w') as configFile:
                         self._iniWriter.write(configFile, space_around_delimiters=False)
+                    self._iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
+                    self._iniWriter.optionxform = str
+                    self._iniWriter.read("lib/" + i[0] + "/pinout.ini")
                 folder = i[0]
             self._iniWriter[folder][i[1]] = i[2]
+        self._iniFile = "lib/" + self._pinoutList[-1][0] + "/pinout.ini"
         with open(self._iniFile, 'w') as configFile:
             self._iniWriter.write(configFile, space_around_delimiters=False)
 
