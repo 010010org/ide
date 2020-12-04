@@ -42,7 +42,7 @@ class Interface(object):
             if os.path.isfile(self._iniFile):
                 self._iniWriter.read(self._iniFile)
             else:
-                print("pinout.ini somehow disappeared while the program was running.")  # Freak error, should never happen unless user deletes the file on purpose while the program si running.
+                print("pinout.ini for " + i + " library somehow disappeared while the program was running.")  # Freak error, should never happen unless user deletes the file on purpose while the program is running.
         for j in self._iniWriter:
             for k in self._iniWriter[j]:
                 self._pinoutList.append([j, k, self._iniWriter[j][k]])
@@ -51,8 +51,9 @@ class Interface(object):
         previousEntry = ""
         tempList = []
         for i in self._entryList:
-            if i[1].get()[-1] not in string.digits:
-                i[1].set(i[1].get()[:-1])
+            if len(i[1].get()) > 0:
+                if i[1].get()[-1] not in string.digits:
+                    i[1].set(i[1].get()[:-1])
             if i[0] == 0:
                 if previousEntry != "":
                     tempList.append(previousEntry)

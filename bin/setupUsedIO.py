@@ -2,7 +2,6 @@ import tkinter as tk
 import localisationdata as ld
 import os
 import os.path
-import glob
 import configparser
 
 
