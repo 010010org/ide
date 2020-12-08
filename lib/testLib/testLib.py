@@ -46,7 +46,7 @@ class Arm(object):
 				self.pins += self.pins
 
 		# This is the only real function to move one the motors, all the other functions just give this function a different name for ease of use.
-		def move(self, pin, power=0, timer=0):
+		def _move(self, pin, power=0, timer=0):
 			# This code actually powers the motors. It only runs if the program is running on a pi
 			if ctypes.util.find_library("RPi.GPIO"):
 				import RPi.GPIO as GPIO
@@ -71,14 +71,6 @@ class Arm(object):
 			print("")  # creates a new line (yes, really) to keep the console log readable
 			return
 
-		# up() and down() only specify the pin they want to move to the move function.
-		# these are mapped to the keyboard in tkArmInterface.
-		def forward(self, power=0, timer=0):
-			self.move(self.pins[0], power, timer)
-
-		def backwards(self, power=0, timer=0):
-			self.move(self.pins[1], power, timer)
-
 		# Turns off a part if running on a pi. Only prints to the console otherwise.
 		def off(self):
 			if ctypes.util.find_library("RPi.GPIO"):
@@ -89,31 +81,41 @@ class Arm(object):
 
 	# Because the base moves horizontally instead of vertically, up and down have been renamed to counter and clock.
 	# You can still use up and down if you'd want to for whatever reason.
-	class Bike(Part):
+
+	class Vehicle(Part):
 		def __init__(self, pins):
 			super().__init__(pins)
 
-	# Shoulder, Elbow and Wrist don't have any special functions. They're only individual classes to make the code easier to read.
-	class Car(Part):
+		def forward(self, power=0, timer=0):
+			self._move(self.pins[0], power, timer)
+
+		def backwards(self, power=0, timer=0):
+			self._move(self.pins[1], power, timer)
+
+	class Bike(Vehicle):
 		def __init__(self, pins):
 			super().__init__(pins)
 
-	class Boat(Part):
+	class Car(Vehicle):
 		def __init__(self, pins):
 			super().__init__(pins)
 
-	class Plane(Part):
+	class Boat(Vehicle):
+		def __init__(self, pins):
+			super().__init__(pins)
+
+	class Plane(Vehicle):
 		def __init__(self, pins):
 			super().__init__(pins)
 
 		def up(self, power=0, timer=0):
-			self.move(self.pins[2], power, timer)
+			self._move(self.pins[2], power, timer)
 
 		def down(self, power=0, timer=0):
-			self.move(self.pins[3], power, timer)
+			self._move(self.pins[3], power, timer)
 
 	# Just like the Base, the Grip moves differently. As such, the functions have been renamed.
-	class Skateboard(Part):
+	class Skateboard(Vehicle):
 		def __init__(self, pins):
 			super().__init__(pins)
 
@@ -124,4 +126,4 @@ class Arm(object):
 			super().__init__(pins)
 
 		def on(self, power=0, timer=0):
-			self.forward(power, timer)
+			self._move(self.pins[0], power, timer)

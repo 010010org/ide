@@ -47,6 +47,7 @@ functionWindow2Name = "externe functies"
 armWindowName = "onderdeel"
 movementWindowName = "beweegrichting"
 saveAsWindowText = "Bestandsnaam:"
+runButtonText = "uitvoeren"
 
 helpInfo = "commando-uitleg: "
 helpInfoDefault = "klik met je rechtermuisknop op een commando voor uitleg"

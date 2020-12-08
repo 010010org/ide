@@ -28,9 +28,9 @@ class Arm(object):
 
 		# create the different parts of the arm
 		self.base = self.Base(_M5)
-		self.shoulder = self.Shoulder(_M4)
-		self.elbow = self.Elbow(_M3)
-		self.wrist = self.Wrist(_M2)
+		self.shoulder = self.GenericPart(_M4)
+		self.elbow = self.GenericPart(_M3)
+		self.wrist = self.GenericPart(_M2)
 		self.grip = self.Grip(_M1)
 		self.light = self.Light(_M_LIGHT)
 
@@ -41,12 +41,10 @@ class Arm(object):
 
 		def __init__(self, pins):
 			self.pins = pins
-			# Needed to not break when down() function is called for a part that only has one pin.
-			if len(self.pins) == 1:
-				self.pins += self.pins
 
 		# This is the only real function to move one the motors, all the other functions just give this function a different name for ease of use.
-		def move(self, pin, power=0, timer=0):
+		# Do NOT attempt to call this function directly, it's only meant for internal use.
+		def _move(self, pin, power=0, timer=0):
 			# This code actually powers the motors. It only runs if the program is running on a pi
 			if ctypes.util.find_library("RPi.GPIO"):
 				import RPi.GPIO as GPIO
@@ -71,14 +69,6 @@ class Arm(object):
 			print("")  # creates a new line (yes, really) to keep the console log readable
 			return
 
-		# up() and down() only specify the pin they want to move to the move function.
-		# these are mapped to the keyboard in tkArmInterface.
-		def up(self, power=0, timer=0):
-			self.move(self.pins[0], power, timer)
-
-		def down(self, power=0, timer=0):
-			self.move(self.pins[1], power, timer)
-
 		# Turns off a part if running on a pi. Only prints to the console otherwise.
 		def off(self):
 			if ctypes.util.find_library("RPi.GPIO"):
@@ -87,47 +77,44 @@ class Arm(object):
 			print("power off pins:", self.pins[0], self.pins[1])
 			pass
 
-	# Because the base moves horizontally instead of vertically, up and down have been renamed to counter and clock.
-	# You can still use up and down if you'd want to for whatever reason.
+	# shoulder, elbow and wrist don't have any special functions. They're just the same part, but with different names.
+	class GenericPart(Part):
+		def __init__(self, pins):
+			super().__init__(pins)
+
+		# up() and down() only specify the pin they want to move to the _move function.
+		def up(self, power=0, timer=0):
+			self._move(self.pins[0], power, timer)
+
+		def down(self, power=0, timer=0):
+			self._move(self.pins[1], power, timer)
+
+	# Because the base moves horizontally instead of vertically, it has clock and counter functions instead of up and down.
 	class Base(Part):
 		def __init__(self, pins):
 			super().__init__(pins)
 
 		def counter(self, power=0, timer=0):
-			self.up(power, timer)
+			self._move(self.pins[0], power, timer)
 
 		def clock(self, power=0, timer=0):
-			self.down(power, timer)
+			self._move(self.pins[1], power, timer)
 
-	# Shoulder, Elbow and Wrist don't have any special functions. They're only individual classes to make the code easier to read.
-	class Shoulder(Part):
-		def __init__(self, pins):
-			super().__init__(pins)
-
-	class Elbow(Part):
-		def __init__(self, pins):
-			super().__init__(pins)
-
-	class Wrist(Part):
-		def __init__(self, pins):
-			super().__init__(pins)
-
-	# Just like the Base, the Grip moves differently. As such, the functions have been renamed.
+	# Just like the Base, the Grip moves differently. As such, it has different functions.
 	class Grip(Part):
 		def __init__(self, pins):
 			super().__init__(pins)
 
 		def close(self, power=0, timer=0):
-			self.up(power, timer)
+			self._move(self.pins[0], power, timer)
 
 		def open(self, power=0, timer=0):
-			self.down(power, timer)
+			self._move(self.pins[1], power, timer)
 
-	# Because the light can only go on or off, directions don't matter. Calling either up() or down() will turn it on.
-	# I chose to use up because it was shorter.
+	# Because the light can only go on or off, it only has one "movement" function.
 	class Light(Part):
 		def __init__(self, pins):
 			super().__init__(pins)
 
 		def on(self, power=0, timer=0):
-			self.up(power, timer)
+			self._move(self.pins[0], power, timer)

@@ -46,6 +46,7 @@ functionWindow2Name = "external functions"
 armWindowName = "part"
 movementWindowName = "direction"
 saveAsWindowText = "File name:"
+runButtonText = "run"
 
 helpInfo = "command explanation: "
 helpInfoDefault = "right click a command to get an explanation of it"

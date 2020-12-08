@@ -3,6 +3,8 @@ import tkinter as tk
 import tkinter.filedialog as filedialog
 import tkinter.scrolledtext as scrolledtext
 import localisationdata as ld
+import configparser
+import importlib.util
 import sys
 sys.path.append('lib/robotArm')  # TODO: implement setupUsedIO
 import robotArm  # controls the robotic arm
@@ -12,6 +14,10 @@ class Interface(object):
     SCREEN_WIDTH = 640  # int(window.winfo_screenwidth())
     SCREEN_HEIGHT = 480  # int(window.winfo_screenheight())
     arm = robotArm.Arm()
+
+    _libraryArray = []
+    _ldArray = []
+    _deviceArray = []
 
     # lists of menu items
     commandList = ["if", "elif", "else", "for", "while"]
@@ -33,8 +39,8 @@ class Interface(object):
     fullScreen = 0
 
     def __init__(self, parent, advancedMode=0):
-        self.window = tk.Toplevel(parent)
-        self.helpText = tk.StringVar(self.window)
+        self._window = tk.Toplevel(parent)
+        self.helpText = tk.StringVar(self._window)
         # read state of advanced mode and implement if needed
         self.advancedMode = advancedMode
         if self.advancedMode:
@@ -44,14 +50,40 @@ class Interface(object):
             self.logicGateList += self.advancedLogicGateList
 
         # setup window
-        self.window.geometry(str(self.SCREEN_WIDTH)+"x"+str(self.SCREEN_HEIGHT))
+        self._window.geometry(str(self.SCREEN_WIDTH) + "x" + str(self.SCREEN_HEIGHT))
         if self.fullScreen:
-            self.window.attributes("-fullscreen", True)
-        self.window.bind("<F11>", self.swapFullScreen)
-        self.window.title(ld.windowName)
+            self._window.attributes("-fullscreen", True)
+        self._window.bind("<F11>", self.swapFullScreen)
+        self._window.title(ld.windowName)
+
+        # setup library imports
+        libReader = configparser.ConfigParser()
+        libReader.optionxform = str
+        configIni = "config.ini"
+        libReader.read(configIni)
+        for i in libReader["LIBRARIES"]:
+            if libReader["LIBRARIES"][i] == "1":
+                self._libraryArray.append(i)
+                module_name = i
+                file_path = "lib/" + i + "/" + i + ".py"
+                spec = importlib.util.spec_from_file_location(module_name, file_path)
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+
+                ld_module_name = i + "Localisationdata"
+                ld_file_path = "lib/" + i + "/" + ld_module_name + ".py"
+                ld_spec = importlib.util.spec_from_file_location(ld_module_name, ld_file_path)
+                ld_module = importlib.util.module_from_spec(ld_spec)
+                ld_spec.loader.exec_module(ld_module)
+                self._ldArray.append(ld_module)
+                tempDeviceArray = []
+                for objname in dir(module):
+                    if type(eval("module." + objname)) is type:
+                        tempDeviceArray.append(getattr(module, objname)())
+                self._deviceArray.append(tempDeviceArray)
 
         # setup menu bar
-        self.menuBar = tk.Menu(self.window)
+        self.menuBar = tk.Menu(self._window)
 
         # setup file menu
         self.fileMenu = tk.Menu(self.menuBar, tearoff=0)
@@ -90,6 +122,32 @@ class Interface(object):
             self.functionMenu2.add_command(label=i, command=lambda item=i: self.function2Click(item))
         self.menuBar.add_cascade(label=ld.functionWindow2Name, menu=self.functionMenu2)
 
+        # setup library imports
+        libReader = configparser.ConfigParser()
+        libReader.optionxform = str
+        configIni = "config.ini"
+        libReader.read(configIni)
+        for i in libReader["LIBRARIES"]:
+            if libReader["LIBRARIES"][i] == "1":
+                self._libraryArray.append(i)
+                module_name = i
+                file_path = "lib/" + i + "/" + i + ".py"
+                spec = importlib.util.spec_from_file_location(module_name, file_path)
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+
+                ld_module_name = i + "Localisationdata"
+                ld_file_path = "lib/" + i + "/" + ld_module_name + ".py"
+                ld_spec = importlib.util.spec_from_file_location(ld_module_name, ld_file_path)
+                ld_module = importlib.util.module_from_spec(ld_spec)
+                ld_spec.loader.exec_module(ld_module)
+                self._ldArray.append(ld_module)
+                tempDeviceArray = []
+                for objname in dir(module):
+                    if type(eval("module." + objname)) is type:
+                        tempDeviceArray.append(getattr(module, objname)())
+                self._deviceArray.append(tempDeviceArray)
+
         # setup arm menu
         self.armMenu = tk.Menu(self.menuBar, tearoff=0)
         for i in ld.partList:
@@ -101,24 +159,28 @@ class Interface(object):
         self.menuBar.add_cascade(label=ld.movementWindowName, menu=self.moveMenu)
 
         # setup textbox
-        self.textBox = scrolledtext.ScrolledText(self.window, width=self.SCREEN_WIDTH//8-3, height=self.SCREEN_HEIGHT//18)
+        self.textBox = scrolledtext.ScrolledText(self._window, width=self.SCREEN_WIDTH // 8 - 3, height=self.SCREEN_HEIGHT // 18)
         self.textBox.grid(row=2, columnspan=6)
+
+        # setup run button
+        self.runButton = tk.Button(self._window, text=ld.runButtonText, command=self.runCode)
+        self.runButton.grid(row=3, column=0)
 
         # setup help text
         self.helpText.set(ld.helpInfo+ld.helpInfoDefault)
-        self.helpLabel = tk.Label(self.window, textvar=self.helpText)
-        self.helpLabel.grid(sticky=tk.W, row=3, column=0, columnspan=6)
+        self.helpLabel = tk.Label(self._window, textvar=self.helpText)
+        self.helpLabel.grid(sticky=tk.W, row=4, column=0, columnspan=6)
 
         # start program loop
-        self.window.config(menu=self.menuBar)
+        self._window.config(menu=self.menuBar)
 
     # Toggles fullscreen
     def swapFullScreen(self, *_args):
         self.fullScreen ^= 1
         if self.fullScreen:
-            self.window.attributes("-fullscreen", True)
+            self._window.attributes("-fullscreen", True)
         else:
-            self.window.attributes("-fullscreen", False)
+            self._window.attributes("-fullscreen", False)
 
     # Setup what happens when file menu is clicked
     def fileClick(self, item):
@@ -133,10 +195,14 @@ class Interface(object):
         if itemId == 3:  # save as
             self.saveFile(True)
 
+    # Run the code in the textbox
+    def runCode(self):
+        exec(self.textBox.get(0, tk.END))
+
     # Open a file
     def openFile(self):
         # Shows file selection popup
-        fileOpenPopup = filedialog.askopenfile(parent=self.window, mode="r", initialdir=os.getcwd()+"/saves")
+        fileOpenPopup = filedialog.askopenfile(parent=self._window, mode="r", initialdir=os.getcwd() + "/saves")
         if fileOpenPopup is None:
             return
         # Opens file to textbox. Old data gets deleted.
@@ -150,7 +216,7 @@ class Interface(object):
     def saveFile(self, newName=False):
         # If the file isn't named yet or "Save as..." is clicked, the user gets a popup to choose a filename and location.
         if newName | (self.fileName == ""):
-            fileSavePopup = filedialog.asksaveasfile(parent=self.window, mode="w", initialdir=os.getcwd()+"/saves", defaultextension=".py", filetypes=(("python files", "*.py"), ("text files", "*.txt")))
+            fileSavePopup = filedialog.asksaveasfile(parent=self._window, mode="w", initialdir=os.getcwd() + "/saves", defaultextension=".py", filetypes=(("python files", "*.py"), ("text files", "*.txt")))
             if fileSavePopup is None:
                 return
             self.fileName = fileSavePopup.name
