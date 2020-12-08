@@ -33,8 +33,9 @@ class Interface(object):
                 self._entryCounter += 1
             rowNumber = i
         tk.Button(self._window, text=ld.pinoutButton, command=self._saveSettings).grid(row=3+rowNumber, column=1, columnspan=1, sticky='w')
+        tk.Button(self._window, text=ld.resetButton, command=self._resetClick).grid(row=3+rowNumber, column=2, columnspan=1, sticky='w')
         self._warningLabel = tk.Label(self._window, text="")
-        self._warningLabel.grid(row=3+rowNumber, column=2, columnspan=3, sticky='w')
+        self._warningLabel.grid(row=3+rowNumber, column=3, columnspan=3, sticky='w')
         self._window.grid(row=0, column=0)
 
     def _getPinouts(self):
@@ -95,4 +96,14 @@ class Interface(object):
         with open(self._iniFile, 'w') as configFile:
             self._iniWriter.write(configFile, space_around_delimiters=False)
 
+        self._window.master.destroy()
+
+    def _resetClick(self):
+        for i in self._libraryList:
+            self._iniFile = "lib/" + i + "/defaultPinout.ini"
+            self._iniWriter.read(self._iniFile)
+            self._iniFile = "lib/" + i + "/pinout.ini"
+            with open(self._iniFile, 'w') as configFile:
+                self._iniWriter.write(configFile, space_around_delimiters=False)
+        self._getPinouts()
         self._window.master.destroy()
