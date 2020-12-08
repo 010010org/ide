@@ -80,7 +80,10 @@ class Interface (object):
 
     def _updateCheckbox(self):
         for i in range(len(self._checkBoxList)):
-            self._iniWriter["LIBRARIES"][self._libraryList[i]] = str(self._checkBoxList[i].get())
+            try:
+                self._iniWriter["LIBRARIES"][self._libraryList[i]] = str(self._checkBoxList[i].get())
+            except IndexError:
+                pass
 
     def _saveData(self):
         for i in self._iniWriter["LIBRARIES"]:
