@@ -36,11 +36,10 @@ class Arm(object):
 
 	# This is the parent class of all parts. This contains the functions that actually move the part.
 	class Part(object):
-		tempPWM = None
-		pins = []
+		_pins = []
 
 		def __init__(self, pins):
-			self.pins = pins
+			self._pins = pins
 
 		# This is the only real function to move one the motors, all the other functions just give this function a different name for ease of use.
 		# Do NOT attempt to call this function directly, it's only meant for internal use.
@@ -74,7 +73,7 @@ class Arm(object):
 			if ctypes.util.find_library("RPi.GPIO"):
 				self.tempPWM.stop()
 				return
-			print("power off pins:", self.pins[0], self.pins[1])
+			print("power off pins:", self._pins[0], self._pins[1])
 			pass
 
 	# shoulder, elbow and wrist don't have any special functions. They're just the same part, but with different names.
@@ -84,10 +83,10 @@ class Arm(object):
 
 		# up() and down() only specify the pin they want to move to the _move function.
 		def up(self, power=0, timer=0):
-			self._move(self.pins[0], power, timer)
+			self._move(self._pins[0], power, timer)
 
 		def down(self, power=0, timer=0):
-			self._move(self.pins[1], power, timer)
+			self._move(self._pins[1], power, timer)
 
 	# Because the base moves horizontally instead of vertically, it has clock and counter functions instead of up and down.
 	class Base(Part):
@@ -95,10 +94,10 @@ class Arm(object):
 			super().__init__(pins)
 
 		def counter(self, power=0, timer=0):
-			self._move(self.pins[0], power, timer)
+			self._move(self._pins[0], power, timer)
 
 		def clock(self, power=0, timer=0):
-			self._move(self.pins[1], power, timer)
+			self._move(self._pins[1], power, timer)
 
 	# Just like the Base, the Grip moves differently. As such, it has different functions.
 	class Grip(Part):
@@ -106,10 +105,10 @@ class Arm(object):
 			super().__init__(pins)
 
 		def close(self, power=0, timer=0):
-			self._move(self.pins[0], power, timer)
+			self._move(self._pins[0], power, timer)
 
 		def open(self, power=0, timer=0):
-			self._move(self.pins[1], power, timer)
+			self._move(self._pins[1], power, timer)
 
 	# Because the light can only go on or off, it only has one "movement" function.
 	class Light(Part):
@@ -117,4 +116,4 @@ class Arm(object):
 			super().__init__(pins)
 
 		def on(self, power=0, timer=0):
-			self._move(self.pins[0], power, timer)
+			self._move(self._pins[0], power, timer)

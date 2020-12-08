@@ -83,6 +83,9 @@ class Interface (object):
             self._iniWriter["LIBRARIES"][self._libraryList[i]] = str(self._checkBoxList[i].get())
 
     def _saveData(self):
+        for i in self._iniWriter["LIBRARIES"]:
+            if self._iniWriter["LIBRARIES"][i] == "0":
+                self._libraryList.remove(i)
         with open(self._iniFile, 'w') as configFile:
             self._iniWriter.write(configFile, space_around_delimiters=False)
         self._window.destroy()

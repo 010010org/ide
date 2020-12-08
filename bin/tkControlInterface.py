@@ -27,6 +27,7 @@ class Interface(object):
 
     def __init__(self, parent, advancedMode=0):
         self._window = tk.Frame(parent)
+        self._window.title = ld.controlArmOption
         self._advancedMode = advancedMode
         libReader = configparser.ConfigParser()
         libReader.optionxform = str
@@ -61,10 +62,6 @@ class Interface(object):
                         self._partArray.append([i, j, k, self._iniWriter[j][k]])
                         # partArray looks like this:
                         # [device1, part1, direction1, keybind], [device1, part1, direction2, keybind], [device1, part2, ...
-
-        # Creates instance of robotarm class to control it.
-        self._arm = self._deviceArray[0]
-        self._window.title = ld.controlArmOption
 
         # creates info textbox
         self._warningLabel = tk.Label(self._window, text="")

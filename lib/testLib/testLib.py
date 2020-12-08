@@ -3,7 +3,7 @@ import ctypes.util  # library used to detect if we're running on a raspberry pi 
 import configparser  # library used to read ini file
 
 
-class Arm(object):
+class Devices(object):
 	_iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
 	_iniWriter.optionxform = str
 	_iniFile = "lib/testLib/pinout.ini"

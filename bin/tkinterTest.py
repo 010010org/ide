@@ -5,15 +5,11 @@ import tkinter.scrolledtext as scrolledtext
 import localisationdata as ld
 import configparser
 import importlib.util
-import sys
-sys.path.append('lib/robotArm')  # TODO: implement setupUsedIO
-import robotArm  # controls the robotic arm
 
 
 class Interface(object):
     SCREEN_WIDTH = 640  # int(window.winfo_screenwidth())
     SCREEN_HEIGHT = 480  # int(window.winfo_screenheight())
-    arm = robotArm.Arm()
 
     _libraryArray = []
     _ldArray = []
@@ -76,11 +72,9 @@ class Interface(object):
                 ld_module = importlib.util.module_from_spec(ld_spec)
                 ld_spec.loader.exec_module(ld_module)
                 self._ldArray.append(ld_module)
-                tempDeviceArray = []
                 for objname in dir(module):
                     if type(eval("module." + objname)) is type:
-                        tempDeviceArray.append(getattr(module, objname)())
-                self._deviceArray.append(tempDeviceArray)
+                        self._deviceArray.append(getattr(module, objname)())
 
         # setup menu bar
         self.menuBar = tk.Menu(self._window)
@@ -122,41 +116,22 @@ class Interface(object):
             self.functionMenu2.add_command(label=i, command=lambda item=i: self.function2Click(item))
         self.menuBar.add_cascade(label=ld.functionWindow2Name, menu=self.functionMenu2)
 
-        # setup library imports
-        libReader = configparser.ConfigParser()
-        libReader.optionxform = str
-        configIni = "config.ini"
-        libReader.read(configIni)
-        for i in libReader["LIBRARIES"]:
-            if libReader["LIBRARIES"][i] == "1":
-                self._libraryArray.append(i)
-                module_name = i
-                file_path = "lib/" + i + "/" + i + ".py"
-                spec = importlib.util.spec_from_file_location(module_name, file_path)
-                module = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(module)
-
-                ld_module_name = i + "Localisationdata"
-                ld_file_path = "lib/" + i + "/" + ld_module_name + ".py"
-                ld_spec = importlib.util.spec_from_file_location(ld_module_name, ld_file_path)
-                ld_module = importlib.util.module_from_spec(ld_spec)
-                ld_spec.loader.exec_module(ld_module)
-                self._ldArray.append(ld_module)
-                tempDeviceArray = []
-                for objname in dir(module):
-                    if type(eval("module." + objname)) is type:
-                        tempDeviceArray.append(getattr(module, objname)())
-                self._deviceArray.append(tempDeviceArray)
-
-        # setup arm menu
-        self.armMenu = tk.Menu(self.menuBar, tearoff=0)
-        for i in ld.partList:
-            self.armMenu.add_command(label=i, command=lambda item=i: self.armClick(item))
-        self.menuBar.add_cascade(label=ld.armWindowName, menu=self.armMenu)
-
-        # setup move menu; actual values get added once a part has been selected in the arm menu.
-        self.moveMenu = tk.Menu(self.menuBar, tearoff=0)
-        self.menuBar.add_cascade(label=ld.movementWindowName, menu=self.moveMenu)
+        # setup device menu
+        self.deviceMenu = tk.Menu(self.menuBar, tearoff=0)
+        for libraryCounter in range(len(self._libraryArray)):  # You know it'll get difficult when you stop using 'i' as your iterator ;)
+            library = self._libraryArray[libraryCounter]
+            device = self._deviceArray[libraryCounter]
+            locData = self._ldArray[libraryCounter]
+            specificPartMenu = tk.Menu(self.deviceMenu, tearoff=0)
+            for part in vars(device):
+                specificMoveMenu = tk.Menu(specificPartMenu, tearoff=0)
+                partPointer = getattr(device, part)
+                for movement in dir(partPointer):
+                    if callable(getattr(partPointer, movement)) and not movement.startswith("_"):
+                        specificMoveMenu.add_command(label=locData.partDictionary[movement], command=lambda lib_=library, device_=device, part_=part, move_=movement: self.moveClick(lib_, device_, part_, move_))
+                specificPartMenu.add_cascade(label=locData.partDictionary[part], menu=specificMoveMenu)
+            self.deviceMenu.add_cascade(label=library, menu=specificPartMenu)
+        self.menuBar.add_cascade(label=ld.connectedDeviceWindowName, menu=self.deviceMenu)
 
         # setup textbox
         self.textBox = scrolledtext.ScrolledText(self._window, width=self.SCREEN_WIDTH // 8 - 3, height=self.SCREEN_HEIGHT // 18)
@@ -197,7 +172,8 @@ class Interface(object):
 
     # Run the code in the textbox
     def runCode(self):
-        exec(self.textBox.get(0, tk.END))
+        # libHelper = "import os\nimport sys\nfor dir in os.listdir(path='lib'):\n\tsys.path.append('lib/'+dir)\n"
+        exec(self.textBox.get("1.0", tk.END))
 
     # Open a file
     def openFile(self):
@@ -282,25 +258,11 @@ class Interface(object):
         for i in self.expressionList:
             self.expressionMenu.add_command(label=i)
 
-    # Setup what happens when Arm menu is clicked/part is selected
-    def armClick(self, item):
-        self.selectedPart = getattr(self.arm, item)
-        self.moveList = []
-        self.moveMenu.delete(0, 'end')
-        if hasattr(self.selectedPart, "clock"):
-            self.moveList = ld.baseMovements
-        elif hasattr(self.selectedPart, "open"):
-            self.moveList = ld.gripMovements
-        elif hasattr(self.selectedPart, "on"):
-            self.moveList.append(ld.ledMovement)
-        else:
-            self.moveList = ld.normalMovements
-        self.moveList.append(ld.offMovement)
-
-        for i in self.moveList:
-            self.moveMenu.add_command(label=i, command=lambda moveItem=i: self.moveClick(moveItem))
-        return "break"
-
     # Setup what happens when move menu is clicked: prints selected part and direction to textbox as one would use it in code.
-    def moveClick(self, item):
-        self.textBox.insert(tk.INSERT, self.selectedPart.name + "." + item + "()")
+    def moveClick(self, library, device, part, movement):
+        if "import " + library not in self.textBox.get("1.0", tk.END):
+            if "import sys" not in self.textBox.get("1.0", tk.END):
+                self.textBox.insert("1.0", "import sys\n")
+            self.textBox.insert("2.0", "sys.path.append('lib/" + library + "')\nimport " + library + "\n")
+            self.textBox.insert(tk.INSERT, "CHANGE_ME = " + str(device).split(' ', 1)[0].replace('<', '') + "()\n")
+        self.textBox.insert(tk.INSERT, "CHANGE_ME." + part + "." + movement + "()")
