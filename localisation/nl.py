@@ -15,6 +15,7 @@ saveButton = "Opslaan"
 pinoutTextbox = "Vul de pins in waarop je de apparaten hebt aangesloten."
 pinoutTextbox2 = "In het geval van meerdere kabels vul je de gekleurde kabel links in en de andere rechts."
 pinoutButton = "Opslaan en afsluiten"
+duplicateWarning = "Je hebt dezelfde pin meerdere keren gebruikt!"
 
 # tkinterTest
 advanced = "Geavanceerde modus"

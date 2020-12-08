@@ -19,20 +19,22 @@ class Interface(object):
         self._window = tk.Frame(parent)
         self._libraryList = libraryList
         self._getPinouts()
-        tk.Label(self._window, text=ld.pinoutTextbox).grid(row=0, column=1, columnspan=3, sticky='w')
-        tk.Label(self._window, text=ld.pinoutTextbox2).grid(row=1, column=1, columnspan=3, sticky='w')
+        tk.Label(self._window, text=ld.pinoutTextbox).grid(row=0, column=1, columnspan=4, sticky='w')
+        tk.Label(self._window, text=ld.pinoutTextbox2).grid(row=1, column=1, columnspan=4, sticky='w')
         rowNumber = 0
         self._entryList = []
         for i in range(len(self._pinoutList)):
-            tk.Label(self._window, text=self._pinoutList[i][0]+': '+self._pinoutList[i][1]).grid(row=2+i, column=1, sticky='w')
+            tk.Label(self._window, text=self._pinoutList[i][0]+': '+self._pinoutList[i][1]).grid(row=2+i, column=1, columnspan=1, sticky='w')
             for j in range(len(self._pinoutList[i][2].split(','))):
                 self._entryList.append([j, tk.StringVar(self._window)])
                 self._entryList[self._entryCounter][1].set(self._pinoutList[i][2].split(',')[j])
                 self._entryList[self._entryCounter][1].trace_add('write', self._updateEntries)
-                tk.Entry(self._window, textvariable=self._entryList[self._entryCounter][1]).grid(row=2+i, column=2+j, sticky='w')
+                tk.Entry(self._window, textvariable=self._entryList[self._entryCounter][1]).grid(row=2+i, column=2+j, columnspan=1, sticky='w')
                 self._entryCounter += 1
             rowNumber = i
-        tk.Button(self._window, text=ld.pinoutButton, command=self._saveSettings).grid(row=3+rowNumber, column=1, columnspan=3, sticky='w')
+        tk.Button(self._window, text=ld.pinoutButton, command=self._saveSettings).grid(row=3+rowNumber, column=1, columnspan=1, sticky='w')
+        self._warningLabel = tk.Label(self._window, text="")
+        self._warningLabel.grid(row=3+rowNumber, column=2, columnspan=3, sticky='w')
         self._window.grid(row=0, column=0)
 
     def _getPinouts(self):
@@ -50,9 +52,13 @@ class Interface(object):
     def _updateEntries(self, *_args):
         previousEntry = ""
         tempList = []
+        entryStringArray = []
         for i in self._entryList:
+            entryStringArray.append(i[1].get())
             if len(i[1].get()) > 0:
                 if i[1].get()[-1] not in string.digits:
+                    i[1].set(i[1].get()[:-1])
+                if int(i[1].get()) > 40:
                     i[1].set(i[1].get()[:-1])
             if i[0] == 0:
                 if previousEntry != "":
@@ -63,6 +69,10 @@ class Interface(object):
         tempList.append(previousEntry)
         for i in range(len(tempList)):
             self._pinoutList[i][2] = tempList[i]
+        if len(self._entryList) > len(set(entryStringArray)):
+            self._warningLabel.config(text=ld.duplicatesWarning)
+        else:
+            self._warningLabel.config(text="")
 
     def _saveSettings(self, *_args):
         folder = ""
