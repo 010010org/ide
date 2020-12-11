@@ -83,9 +83,13 @@ class Interface(object):
             self._keyArray[i].set(self._partArray[i][3])
             self._keyArray[i].trace_add('write', self.updateEntries)
             tk.Label(self._window, text=self._partArray[i][0] + ": " + locLib.partDictionary[self._partArray[i][1]] + " " + locLib.partDictionary[self._partArray[i][2]]).grid(sticky='w', row=i, column=1)
-            self._entryArray.append(tk.Entry(self._window, textvariable=self._keyArray[i]))
+            self._entryArray.append(tk.Entry(self._window, textvariable=self._keyArray[i], width=2))
             self._entryArray[i].grid(sticky='w', row=i, column=2)
             self._rowNumber = i
+
+        # Adds the save button and info textbox. Refreshes all entry fields and start the main loop.
+        self._saveButton = tk.Button(self._window, text=ld.saveButtonText, command=self._saveProgram)
+        self._saveButton.grid(sticky='w', row=self._rowNumber + 2, column=1)
 
         if advancedMode:
             self._window.title = ld.advancedControlArmOption
@@ -102,22 +106,19 @@ class Interface(object):
             # Setup power options
             self._powerCheckButton = tk.Checkbutton(self._window, text=ld.powerButtonText, variable=self._powerMode, onvalue=1, offvalue=0, command=self.setPowerMode)
             self._powerCheckButton.grid(sticky='w', row=1, column=3)
-            self._powerEntry = tk.Entry(self._window, textvariable=self._powerVar, state='disabled')
-            self._powerEntry.grid(row=1, column=4)
-            self._powerEntry.bind("<FocusIn>", self.onPowerFocus)
-            self._powerEntry.bind("<FocusOut>", self.onFocusLoss)
-            self._powerVar.trace('w', self.setPowerValue)
+            self._powerSlider = tk.Scale(self._window, from_=30, to=100, showvalue=False, state='disabled', command=self.setPowerValue, orient=tk.HORIZONTAL)
+            self._powerSlider.grid(row=1, column=4)
 
             # adds stop button
             self._stopButton = tk.Button(self._window, text=ld.stopButtonText, command=self._stopProgram)
             self._stopButton.grid(sticky='w', row=self._rowNumber + 2, column=2)
             self._stopButton['state'] = tk.DISABLED
 
-        # Adds the save button and info textbox. Refreshes all entry fields and start the main loop.
-        self._saveButton = tk.Button(self._window, text=ld.saveButtonText, command=self._saveProgram)
-        self._saveButton.grid(sticky='w', row=self._rowNumber + 2, column=1)
+            # put warninglabel under power and timer button
+            self._warningLabel.grid(sticky='w', row=2, column=3, columnspan=3)
+        else:
+            self._warningLabel.grid(sticky='w', row=self._rowNumber + 3, column=1, columnspan=3)
 
-        self._warningLabel.grid(sticky='w', row=self._rowNumber + 3, column=1, columnspan=3)
         self.updateEntries()
         self._window.grid(row=0, column=0)
 
@@ -131,9 +132,9 @@ class Interface(object):
     # Activate the power entry field if the checkbox is checked, disable when unchecked.
     def setPowerMode(self):
         if self._powerMode.get():
-            self._powerEntry.configure(state='normal')
+            self._powerSlider.configure(state='normal')
         else:
-            self._powerEntry.configure(state='disabled')
+            self._powerSlider.configure(state='disabled')
 
     # Sets the timer value. If a character is added that isn't a number or a decimal point, it is removed.
     def setTimerValue(self, *_args):
@@ -147,24 +148,17 @@ class Interface(object):
                 self._timerVar.set(self._timerVar.get()[:-1])
 
     # Sets the power value. If a character is added that isn't a number or a decimal point, it is removed. Rounds down to whole numbers.
-    def setPowerValue(self, *_args):
+    def setPowerValue(self, value):
         try:
-            self._powerValue = int(self._powerVar.get())
+            self._powerValue = int(value)
         except ValueError:
-            if len(self._powerVar.get()) < 1:
-                return
-            else:
-                self._powerVar.set(self._powerVar.get()[:-1])
+            return  # Should never happen
 
     # Displays help info if the timer entry field is clicked.
     def onTimerFocus(self, *_args):
         self._warningLabel.config(text=ld.timerInfo)
 
-    # Displays help info if the power entry field is clicked.
-    def onPowerFocus(self, *_args):
-        self._warningLabel.config(text=ld.powerInfo)
-
-    # Removes help info when user clicks away from timer or power entry field.
+    # Removes help info when user clicks away from timer entry field.
     def onFocusLoss(self, *_args):
         self._warningLabel.config(text="")
 
@@ -235,7 +229,7 @@ class Interface(object):
                 self._timerCheckButton['state'] = tk.DISABLED
                 self._timerEntry['state'] = tk.DISABLED
                 self._powerCheckButton['state'] = tk.DISABLED
-                self._powerEntry['state'] = tk.DISABLED
+                self._powerSlider['state'] = tk.DISABLED
             # enables the stop button
                 self._stopButton['state'] = tk.NORMAL
 
@@ -250,7 +244,7 @@ class Interface(object):
                 if self._timerMode:
                     self._timerEntry['state'] = tk.NORMAL
                 if self._powerMode:
-                    self._powerEntry['state'] = tk.NORMAL
+                    self._powerSlider['state'] = tk.NORMAL
                 self._stopButton['state'] = tk.DISABLED
 
             # Changes the button text back to 'Save'
