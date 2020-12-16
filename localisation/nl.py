@@ -12,7 +12,7 @@ infoTextBox = "Vink de apparaten aan die je wil aansturen"
 saveButton = "Opslaan"
 
 # setupPinout
-pinoutTextbox = "Vul de pins in waarop je de apparaten hebt aangesloten."
+pinoutTextbox = "Vul de GPIO pins in waarop je de apparaten hebt aangesloten."
 pinoutTextbox2 = "In het geval van meerdere kabels vul je de gekleurde kabel links in en de andere rechts."
 pinoutButton = "Opslaan en afsluiten"
 resetButton = "Reset pins naar default waardes"
