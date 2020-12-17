@@ -118,7 +118,7 @@ class Interface(object):
 
         # setup device menu
         self.deviceMenu = tk.Menu(self.menuBar, tearoff=0)
-        for libraryCounter in range(len(self._libraryArray)):  # You know it'll get difficult when you stop using 'i' as your iterator ;)
+        for libraryCounter in range(len(self._libraryArray)):
             library = self._libraryArray[libraryCounter]
             device = self._deviceArray[libraryCounter]
             locData = self._ldArray[libraryCounter]

@@ -12,7 +12,7 @@ infoTextBox = "select the devices you want to use"
 saveButton = "Save"
 
 # setupPinout
-pinoutTextbox = "Please enter the pins you used to connect the selected devices."
+pinoutTextbox = "Please enter the GPIO pins you used to connect the selected devices."
 pinoutTextbox2 = "In the case of multiple cables the coloured cable is the one on the left, the other one is the one on the right."
 pinoutButton = "Save and exit"
 resetButton = "Reset pins to default values"
