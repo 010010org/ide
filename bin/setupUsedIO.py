@@ -23,12 +23,13 @@ class Interface (object):
         self._infoText = tk.Label(self._window, text=ld.infoTextBox)
         self._infoText.grid(row=0, column=1)
 
-        i = 0  # Not needed, but PyCharm complains if removed.
+        rownumber = 0  # Not needed, but PyCharm complains if removed.
         for i in range(len(self._libraryList)):
             self._checkBoxList.append(tk.IntVar(self._window, value=int(self._iniWriter["LIBRARIES"][self._libraryList[i]])))
             tk.Checkbutton(self._window, text=self._libraryList[i], variable=self._checkBoxList[i], onvalue=1, offvalue=0, command=self._updateCheckbox).grid(row=i+1, column=1, sticky='w')
+            rownumber = i
         self._saveButton = tk.Button(self._window, text=ld.saveButton, command=self._saveData)
-        self._saveButton.grid(row=i+2, column=1, sticky='w')
+        self._saveButton.grid(row=rownumber+2, column=1, sticky='w')
 
         # Start program.
         self._window.grid(row=0, column=0)
@@ -40,21 +41,22 @@ class Interface (object):
 
         # Look for installed libraries.
         for i in os.listdir(path="lib"):
-            errorsFound = 0
-            if not os.path.isfile("lib/"+i+"/pinout.ini"):
-                print("ERROR: pinout.ini not found in potential library: " + i)
-                errorsFound += 1
-            if not os.path.isfile("lib/" + i + "/controls.ini"):
-                print("ERROR: controls.ini not found in potential library: " + i)
-                errorsFound += 1
-            if not os.path.isfile("lib/" + i + "/" + i + ".py"):
-                print("ERROR: main code file not found in potential library: " + i)
-                errorsFound += 1
-            if not os.path.isfile("lib/" + i + "/" + i + "Localisationdata.py"):
-                print("ERROR: localisation data not found in potential library: " + i)
-                errorsFound += 1
-            if errorsFound == 0:
-                realLibraryList.append(i)
+            if os.path.isdir("lib/"+i):
+                errorsFound = 0
+                if not os.path.isfile("lib/"+i+"/pinout.ini"):
+                    print("ERROR: pinout.ini not found in potential library: " + i)
+                    errorsFound += 1
+                if not os.path.isfile("lib/" + i + "/controls.ini"):
+                    print("ERROR: controls.ini not found in potential library: " + i)
+                    errorsFound += 1
+                if not os.path.isfile("lib/" + i + "/" + i + ".py"):
+                    print("ERROR: main code file not found in potential library: " + i)
+                    errorsFound += 1
+                if not os.path.isfile("lib/" + i + "/" + i + "Localisationdata.py"):
+                    print("ERROR: localisation data not found in potential library: " + i)
+                    errorsFound += 1
+                if errorsFound == 0:
+                    realLibraryList.append(i)
 
         # Look for list of libraries in ini file.
         self._iniWriter.read(self._iniFile)
