@@ -6,30 +6,30 @@ import configparser
 
 
 class Interface (object):
-    # Open ini file to get list of libraries
-    _iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
-    _iniWriter.optionxform = str
-    _iniFile = "config.ini"
-
-    _libraryList = []
-    _checkBoxList = []
-
     def __init__(self, parent):
+        # Open ini file to get list of libraries
+        self._iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
+        self._iniWriter.optionxform = str
+        self._iniFile = "config.ini"
+
         self._parent = parent
         self._window = tk.Frame(parent)
         self._window.title = ld.setupOption
         self._libraryList = self._updateINI()
+        self._checkBoxList = []
 
         self._infoText = tk.Label(self._window, text=ld.infoTextBox)
         self._infoText.grid(row=0, column=1)
 
-        rownumber = 0  # Not needed, but PyCharm complains if removed.
+        rownumber = 0
         for i in range(len(self._libraryList)):
+            rownumber += 1
             self._checkBoxList.append(tk.IntVar(self._window, value=int(self._iniWriter["LIBRARIES"][self._libraryList[i]])))
-            tk.Checkbutton(self._window, text=self._libraryList[i], variable=self._checkBoxList[i], onvalue=1, offvalue=0, command=self._updateCheckbox).grid(row=i+1, column=1, sticky='w')
-            rownumber = i
+            print(self._iniWriter["LIBRARIES"][self._libraryList[i]])
+            tk.Checkbutton(self._window, text=self._libraryList[i], variable=self._checkBoxList[i], onvalue=1, offvalue=0, command=self._updateCheckbox).grid(row=rownumber, column=1, sticky='w')
         self._saveButton = tk.Button(self._window, text=ld.saveButton, command=self._saveData)
-        self._saveButton.grid(row=rownumber+2, column=1, sticky='w')
+        rownumber += 1
+        self._saveButton.grid(row=rownumber, column=1, sticky='w')
 
         # Start program.
         self._window.grid(row=0, column=0)
@@ -86,7 +86,7 @@ class Interface (object):
             try:
                 self._iniWriter["LIBRARIES"][self._libraryList[i]] = str(self._checkBoxList[i].get())
             except IndexError:
-                pass
+                print('Something weird happened')  # Shouldn't happen since bugfix.
 
     def _saveData(self):
         for i in self._iniWriter["LIBRARIES"]:

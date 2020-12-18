@@ -36,8 +36,8 @@ class Interface(object):
             self._iniWriter.write(configFile, space_around_delimiters=False)
 
         self._window.grid_remove()
-        import tkinterTest
-        tkinterTest.Interface(self._root, advancedMode)
+        import tkProgrammerInterface
+        tkProgrammerInterface.Interface(self._root, advancedMode)
 
     def runControlProgram(self, advancedMode):
         if advancedMode:
