@@ -35,7 +35,7 @@ class Interface(object):
     fullScreen = 0
 
     def __init__(self, parent, advancedMode=0):
-        self._window = tk.Toplevel(parent)
+        self._window = tk.Frame(parent)
         self.helpText = tk.StringVar(self._window)
         # read state of advanced mode and implement if needed
         self.advancedMode = advancedMode
@@ -46,11 +46,11 @@ class Interface(object):
             self.logicGateList += self.advancedLogicGateList
 
         # setup window
-        self._window.geometry(str(self.SCREEN_WIDTH) + "x" + str(self.SCREEN_HEIGHT))
+        self._window.master.geometry(str(self.SCREEN_WIDTH) + "x" + str(self.SCREEN_HEIGHT))
         if self.fullScreen:
-            self._window.attributes("-fullscreen", True)
+            self._window.master.attributes("-fullscreen", True)
         self._window.bind("<F11>", self.swapFullScreen)
-        self._window.title(ld.windowName)
+        self._window.master.title(ld.windowName)
 
         # setup library imports
         libReader = configparser.ConfigParser()
@@ -135,7 +135,7 @@ class Interface(object):
         self.menuBar.add_cascade(label=ld.connectedDeviceWindowName, menu=self.deviceMenu)
 
         # setup textbox
-        self.textBox = scrolledtext.ScrolledText(self._window, width=self.SCREEN_WIDTH // 8 - 3, height=self.SCREEN_HEIGHT // 18)
+        self.textBox = scrolledtext.ScrolledText(self._window, width=self.SCREEN_WIDTH // 8 - 3, height=self.SCREEN_HEIGHT // 20)
         self.textBox.grid(row=2, columnspan=6)
 
         # setup run button
@@ -148,15 +148,16 @@ class Interface(object):
         self.helpLabel.grid(sticky=tk.W, row=4, column=0, columnspan=6)
 
         # start program loop
-        self._window.config(menu=self.menuBar)
+        self._window.master.config(menu=self.menuBar)
+        self._window.grid(row=0, column=0)
 
     # Toggles fullscreen
     def swapFullScreen(self, *_args):
         self.fullScreen ^= 1
         if self.fullScreen:
-            self._window.attributes("-fullscreen", True)
+            self._window.master.attributes("-fullscreen", True)
         else:
-            self._window.attributes("-fullscreen", False)
+            self._window.master.attributes("-fullscreen", False)
 
     # Setup what happens when file menu is clicked
     def fileClick(self, item):
@@ -205,12 +206,16 @@ class Interface(object):
     # Setup what happens when command menu is clicked
     def commandClick(self, item):
         startIndex = self.textBox.index(tk.INSERT)
+        tabCheckString = self.textBox.get(str(float(startIndex) // 1), startIndex)
+        tabCount = tabCheckString.count("\t")
         self.textBox.insert(tk.INSERT, item)
         if item != "else":
             self.textBox.insert(tk.INSERT, "()")
         self.textBox.insert(tk.INSERT, ":\n\t")
-        self.textBox.mark_set(tk.INSERT, str(float(startIndex)+(len(item)+1)/10))
-        # self.textBox.mark_set(tk.INSERT, tk.END)
+        for i in range(tabCount):
+            self.textBox.insert(tk.INSERT, "\t")
+        if item != "else":
+            self.textBox.mark_set(tk.INSERT, startIndex.split(".")[0] + "." + str(int(startIndex.split(".")[1])+len(item)+1))
         return "break"
 
     # Setup what happens when expression menu is clicked
@@ -233,6 +238,7 @@ class Interface(object):
 
     # Setup what happens when external function menu is clicked
     def function2Click(self, item):
+        self.textBox.insert("1.0", "import " + item.split(".")[0]+"\n")
         self.textBox.insert(tk.INSERT, item)
         self.helpText.set(ld.helpInfo + ld.functionExplanationList2[self.functionList2.index(item)])
         return "break"

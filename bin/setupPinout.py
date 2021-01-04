@@ -7,15 +7,15 @@ import string
 
 class Interface(object):
 
-    _iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
-    _iniWriter.optionxform = str
-    _iniFile = None
     _libraryList = []
     _pinoutList = []
     _entryList = []
     _entryCounter = 0
 
     def __init__(self, parent, libraryList):
+        self._iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
+        self._iniWriter.optionxform = str
+        self._iniFile = None
         self._window = tk.Frame(parent)
         self._libraryList = libraryList
         self._getPinouts()
@@ -39,6 +39,8 @@ class Interface(object):
         self._window.grid(row=0, column=0)
 
     def _getPinouts(self):
+        self._iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
+        self._iniWriter.optionxform = str
         self._pinoutList = []
         for i in self._libraryList:
             self._iniFile = "lib/" + i + "/pinout.ini"

@@ -11,7 +11,6 @@ class Interface (object):
         self._iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
         self._iniWriter.optionxform = str
         self._iniFile = "config.ini"
-
         self._parent = parent
         self._window = tk.Frame(parent)
         self._window.title = ld.setupOption
@@ -25,7 +24,6 @@ class Interface (object):
         for i in range(len(self._libraryList)):
             rownumber += 1
             self._checkBoxList.append(tk.IntVar(self._window, value=int(self._iniWriter["LIBRARIES"][self._libraryList[i]])))
-            print(self._iniWriter["LIBRARIES"][self._libraryList[i]])
             tk.Checkbutton(self._window, text=self._libraryList[i], variable=self._checkBoxList[i], onvalue=1, offvalue=0, command=self._updateCheckbox).grid(row=rownumber, column=1, sticky='w')
         self._saveButton = tk.Button(self._window, text=ld.saveButton, command=self._saveData)
         rownumber += 1
@@ -60,6 +58,8 @@ class Interface (object):
                     realLibraryList.append(i)
 
         # Look for list of libraries in ini file.
+        self._iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
+        self._iniWriter.optionxform = str
         self._iniWriter.read(self._iniFile)
         for i in self._iniWriter["LIBRARIES"]:
             iniLibraryList.append(i)
@@ -76,9 +76,6 @@ class Interface (object):
                 self._iniWriter.remove_option("LIBRARIES", i)
                 iniLibraryList.remove(i)
 
-        # Save ini file.
-        with open(self._iniFile, 'w') as configFile:
-            self._iniWriter.write(configFile, space_around_delimiters=False)
         return iniLibraryList
 
     def _updateCheckbox(self):
@@ -97,3 +94,4 @@ class Interface (object):
         self._window.destroy()
         import setupPinout
         setupPinout.Interface(self._parent, self._libraryList)
+        return "break"
