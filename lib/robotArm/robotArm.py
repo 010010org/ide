@@ -87,7 +87,7 @@ class Arm(object):
 					self._tempPWM.stop()
 				return
 			# Simulation code
-			print("power off pins:", self._pins[0], self._pins[1])
+			print("power off pins:", end=" "), [print(i, end=" ") for i in self._pins], print("")
 			return
 
 	# shoulder, elbow and wrist don't have any special functions. They're just the same part, but with different names.
