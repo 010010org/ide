@@ -129,7 +129,7 @@ class Interface(object):
                     partPointer = getattr(device, part)
                     for movement in dir(partPointer):
                         if callable(getattr(partPointer, movement)) and not movement.startswith("_"):
-                            specificMoveMenu.add_command(label=locData.partDictionary[movement], command=lambda lib_=library, device_=str(device), part_=part, move_=movement: self.moveClick(lib_, device_, part_, move_))
+                            specificMoveMenu.add_command(label=locData.partDictionary[movement], command=lambda lib_=library, device_=device, part_=part, move_=movement: self.moveClick(lib_, device_, part_, move_))
                     specificPartMenu.add_cascade(label=locData.partDictionary[part], menu=specificMoveMenu)
             self.deviceMenu.add_cascade(label=library, menu=specificPartMenu)
         self.menuBar.add_cascade(label=ld.connectedDeviceWindowName, menu=self.deviceMenu)
@@ -265,5 +265,5 @@ class Interface(object):
             if "import sys" not in self.textBox.get("1.0", tk.END):
                 self.textBox.insert("1.0", "import sys\n")
             self.textBox.insert("2.0", "sys.path.append('lib/" + library + "')\nimport " + library + "\n")
-            self.textBox.insert(tk.INSERT, "CHANGE_ME = " + device.split(' ', 1)[0].replace('<', '') + "()\n")
-        self.textBox.insert(tk.INSERT, "CHANGE_ME." + part + "." + movement + "()")
+            self.textBox.insert(tk.INSERT, type(device).__name__.lower() + " = " + library + "." + type(device).__name__ + "()\n")
+        self.textBox.insert(tk.INSERT, type(device).__name__.lower() + "." + part + "." + movement + "()\n")

@@ -72,7 +72,7 @@ class Arm(object):
 				self._tempPWM.stop()
 				return
 			# "Simulation code" for when the code is run on a different device. Prints to the console.
-			print("robotArm powering pin", pin, "of part", self.__class__.__name__, end=" ")
+			print("robotArm powering pin", pin, "of part", type(self).__name__, end=" ")
 			if timer > 0:
 				print("for", timer, "seconds", end=" ")
 			if power > 0 & power < 100:
