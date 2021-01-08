@@ -97,11 +97,10 @@ class Interface(object):
             # Setup timer options
             self._timerCheckButton = tk.Checkbutton(self._window, text=ld.timerButtonText, variable=self._timerMode, onvalue=1, offvalue=0, command=self.setTimerMode)
             self._timerCheckButton.grid(sticky='w', row=0, column=3)
-            self._timerEntry = tk.Entry(self._window, textvariable=self._timerVar, state='disabled')
-            self._timerEntry.grid(row=0, column=4)
-            self._timerEntry.bind("<FocusIn>", self.onTimerFocus)
-            self._timerEntry.bind("<FocusOut>", self.onFocusLoss)
-            self._timerVar.trace('w', self.setTimerValue)
+            self._timerSlider = tk.Scale(self._window, from_=0, to=2000, showvalue=False, state='disabled', command=self.setTimerValue, orient=tk.HORIZONTAL)
+            self._timerSlider.grid(row=0, column=4)
+            self._timerSlider.bind("<FocusIn>", self.onTimerFocus)
+            self._timerSlider.bind("<FocusOut>", self.onFocusLoss)
 
             # Setup power options
             self._powerCheckButton = tk.Checkbutton(self._window, text=ld.powerButtonText, variable=self._powerMode, onvalue=1, offvalue=0, command=self.setPowerMode)
@@ -125,9 +124,9 @@ class Interface(object):
     # Activate the timer entry field if the checkbox is checked, disable when unchecked.
     def setTimerMode(self):
         if self._timerMode.get():
-            self._timerEntry.configure(state='normal')
+            self._timerSlider.configure(state='normal')
         else:
-            self._timerEntry.configure(state='disabled')
+            self._timerSlider.configure(state='disabled')
 
     # Activate the power entry field if the checkbox is checked, disable when unchecked.
     def setPowerMode(self):
@@ -137,21 +136,19 @@ class Interface(object):
             self._powerSlider.configure(state='disabled')
 
     # Sets the timer value. If a character is added that isn't a number or a decimal point, it is removed.
-    def setTimerValue(self, *_args):
+    def setTimerValue(self, value):
         try:
-            self._timerValue = float(self._timerVar.get())
+            self._timerValue = int(value)/1000
         except ValueError:
-            if len(self._timerVar.get()) < 1:
-                self._timerValue = 0
-                return
-            else:
-                self._timerVar.set(self._timerVar.get()[:-1])
+            print("How did you do that?")
+            return
 
     # Sets the power value. If a character is added that isn't a number or a decimal point, it is removed. Rounds down to whole numbers.
     def setPowerValue(self, value):
         try:
             self._powerValue = int(value)
         except ValueError:
+            print("How did you do that?")
             return  # Should never happen
 
     # Displays help info if the timer entry field is clicked.
@@ -227,7 +224,7 @@ class Interface(object):
                 i['state'] = tk.DISABLED
             if self._advancedMode:
                 self._timerCheckButton['state'] = tk.DISABLED
-                self._timerEntry['state'] = tk.DISABLED
+                self._timerSlider['state'] = tk.DISABLED
                 self._powerCheckButton['state'] = tk.DISABLED
                 self._powerSlider['state'] = tk.DISABLED
             # enables the stop button
@@ -242,7 +239,7 @@ class Interface(object):
                 self._timerCheckButton['state'] = tk.NORMAL
                 self._powerCheckButton['state'] = tk.NORMAL
                 if self._timerMode:
-                    self._timerEntry['state'] = tk.NORMAL
+                    self._timerSlider['state'] = tk.NORMAL
                 if self._powerMode:
                     self._powerSlider['state'] = tk.NORMAL
                 self._stopButton['state'] = tk.DISABLED
