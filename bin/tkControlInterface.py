@@ -252,7 +252,7 @@ class Interface(object):
 
     def _keyPressed(self, device, part, direction='off', power=0, timer=0):
         if direction == 'off':
-            (getattr(getattr(device, part), direction))
+            (getattr(getattr(device, part), direction)())
             return
         (getattr(getattr(device, part), direction)(power=power))
         if timer:

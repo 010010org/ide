@@ -33,19 +33,16 @@ class Interface(object):
         setupUsedIO.Interface(tk.Toplevel(self._root))
         self.getProgress()
 
-    def runProgrammer(self, advancedMode):
+    def runProgrammer(self):
         self.getProgress()
-        if advancedMode:
-            self._progress = max(self._progress, 5)
-        else:
-            self._progress = max(self._progress, 4)
+        self._progress = max(self._progress, 4)
         self._iniWriter["OPTIONS"]["PROGRESS"] = str(self._progress)
         with open(self._iniFile, 'w') as configFile:
             self._iniWriter.write(configFile, space_around_delimiters=False)
 
         self._window.grid_remove()
         import tkProgrammerInterface
-        tkProgrammerInterface.Interface(self._root, advancedMode)
+        tkProgrammerInterface.Interface(self._root)
         self.getProgress()
 
     def runControlProgram(self, advancedMode):
@@ -74,12 +71,9 @@ class Interface(object):
         self._AdvancedControlButton = tk.Button(self._window, text=ld.advancedControlArmOption, command=lambda: self.runControlProgram(1))
         self._AdvancedControlButton.grid(row=1, column=3)
         self._AdvancedControlButton['state'] = tk.DISABLED
-        self._programmingButton = tk.Button(self._window, text=ld.programOption, command=lambda: self.runProgrammer(0))
+        self._programmingButton = tk.Button(self._window, text=ld.programOption, command=lambda: self.runProgrammer())
         self._programmingButton.grid(row=1, column=4)
         self._programmingButton['state'] = tk.DISABLED
-        self._AdvancedProgrammingButton = tk.Button(self._window, text=ld.AdvancedProgramOption, command=lambda: self.runProgrammer(1))
-        self._AdvancedProgrammingButton.grid(row=1, column=5)
-        self._AdvancedProgrammingButton['state'] = tk.DISABLED
 
     def getProgress(self):
         self._iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
@@ -92,8 +86,6 @@ class Interface(object):
                 self._AdvancedControlButton['state'] = tk.NORMAL
                 if self._progress >= 3:
                     self._programmingButton['state'] = tk.NORMAL
-                    if self._progress >= 4:
-                        self._AdvancedProgrammingButton['state'] = tk.NORMAL
 
 
 Interface()

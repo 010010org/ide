@@ -14,6 +14,7 @@ class Interface(object):
     _libraryArray = []
     _ldArray = []
     _deviceArray = []
+    advancedMode = 0
 
     # lists of menu items
     commandList = ["if", "elif", "else", "for", "while"]
@@ -34,16 +35,9 @@ class Interface(object):
     fileName = ""
     fullScreen = 0
 
-    def __init__(self, parent, advancedMode=0):
+    def __init__(self, parent):
         self._window = tk.Frame(parent)
         self.helpText = tk.StringVar(self._window)
-        # read state of advanced mode and implement if needed
-        self.advancedMode = advancedMode
-        if self.advancedMode:
-            self.expressionList += self.advancedExpressionList
-            self.commandList += self.advancedCommandList
-            self.equationList += self.advancedEquationList
-            self.logicGateList += self.advancedLogicGateList
 
         # setup window
         self._window.master.geometry(str(self.SCREEN_WIDTH) + "x" + str(self.SCREEN_HEIGHT))
