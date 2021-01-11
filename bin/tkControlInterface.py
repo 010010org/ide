@@ -207,7 +207,7 @@ class Interface(object):
             # Adds events to the specified keys. This is ugly code, see the explanation below.
             for i in self._partArray:
                 self._window.master.bind('<' + i[3] + '>', lambda event=None, device=self._deviceArray[self._libraryArray.index(i[0])], part=i[1], direction=i[2]: self._keyPressed(device, part, direction, power=self._powerMode.get()*self._powerValue, timer=self._timerMode.get()*self._timerValue))
-                self._window.master.bind('<KeyRelease-' + i[3] + '>', lambda event=None, device=self._deviceArray[self._libraryArray.index(i[0])], part=i[1]: self._keyPressed(device, part, direction='off'))
+                self._window.master.bind('<KeyRelease-' + i[3] + '>', lambda event=None, device=self._deviceArray[self._libraryArray.index(i[0])], part=i[1]: self._keyPressed(device, part))
             # i[3] is the key in question. We bind an event to it that runs the code written after "lambda" when the key is pressed.
             # event is used to ignore the useless data tkinter sends us without us asking for it.
             # device is the class used for the device that needs to be controlled, robotArm.Arm for example.
@@ -250,7 +250,7 @@ class Interface(object):
         # Switches from save mode to edit mode
         self._editMode ^= 1
 
-    def _keyPressed(self, device, part, direction, power=0, timer=0):
+    def _keyPressed(self, device, part, direction='off', power=0, timer=0):
         if direction == 'off':
             (getattr(getattr(device, part), direction))
             return
