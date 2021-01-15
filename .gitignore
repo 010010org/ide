@@ -27,7 +27,8 @@ __pycache__/
 *.save
 
 # Config files
-bin/armControls.ini
+lib/*/controls.ini
+lib/*/pinout.ini
 
 # Save files
 saves/*.*
