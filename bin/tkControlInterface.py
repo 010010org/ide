@@ -33,7 +33,7 @@ class Interface(object):
         libReader.optionxform = str
         configIni = "config.ini"
         libReader.read(configIni)
-        for i in libReader["LIBRARIES"]:
+        for i in libReader["LIBRARIES"]:    # Should be possible to do this easier now, but I'm too afraid to touch it.
             if libReader["LIBRARIES"][i] == "1":
                 self._libraryArray.append(i)
                 module_name = i

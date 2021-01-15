@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import Button
+import sys
+import os
 
 import localisationdata as ld
 import configparser
@@ -86,6 +87,13 @@ class Interface(object):
                 self._AdvancedControlButton['state'] = tk.NORMAL
                 if self._progress >= 3:
                     self._programmingButton['state'] = tk.NORMAL
+        self.fixImports()
+
+    def fixImports(self):  # This actually works?
+        for i in self._iniWriter["LIBRARIES"]:
+            if self._iniWriter["LIBRARIES"][i] == "1":
+                if os.getcwd()+"/lib/"+i not in sys.path:
+                    sys.path.append(os.getcwd()+"/lib/"+i)
 
 
 Interface()

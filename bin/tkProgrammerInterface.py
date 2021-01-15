@@ -262,8 +262,6 @@ class Interface(object):
     # Setup what happens when move menu is clicked: prints selected part and direction to textbox as one would use it in code.
     def moveClick(self, library, device, part, movement):
         if "import " + library not in self.textBox.get("1.0", tk.END):
-            if "import sys" not in self.textBox.get("1.0", tk.END):
-                self.textBox.insert("1.0", "import sys\n")
-            self.textBox.insert("2.0", "sys.path.append('lib/" + library + "')\nimport " + library + "\n")
+            self.textBox.insert("1.0", "import " + library + "\n")
             self.textBox.insert(tk.INSERT, type(device).__name__.lower() + " = " + library + "." + type(device).__name__ + "()\n")
         self.textBox.insert(tk.INSERT, type(device).__name__.lower() + "." + part + "." + movement + "()\n")
