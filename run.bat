@@ -24,6 +24,10 @@
       copy lib\%%G\localisation\en.py lib\%%G\%%GLocalisationdata.py >NUL
     )
   )
+
+  pip3 list | findstr pygments>nul || (
+	pip3 install pygments
+  )
   
   python3 ./bin/startMenu.py
 

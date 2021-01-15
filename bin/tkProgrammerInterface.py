@@ -289,7 +289,6 @@ class Interface(object):
 
         style = get_style_by_name('default')
         for ttype, ndef in style:
-            # print(ttype, ndef)
             tag_font = None
             if ndef['bold'] and ndef['italic']:
                 tag_font = bold_italic_font
@@ -327,8 +326,6 @@ class Interface(object):
 
                 for tagname in self.textBox.tag_names(index1):
                     self.textBox.tag_remove(tagname, index1, index2)
-
-                # print(ttype, repr(value), index1, index2)
                 self.textBox.tag_add(str(ttype), index1, index2)
 
             start_line = end_line

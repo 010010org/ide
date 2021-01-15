@@ -20,5 +20,9 @@ else
 	cp ./localisation/en.py ./bin/localisationdata.py
 fi
 
+if [[ ! $(pip3 list|grep "pygments") ]]; then
+    pip3 install pygments
+fi
+
 python3 ./bin/startMenu.py
 
