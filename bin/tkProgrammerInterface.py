@@ -2,9 +2,14 @@ import os
 import tkinter as tk
 import tkinter.filedialog as filedialog
 import tkinter.scrolledtext as scrolledtext
+from tkinter import font
+
 import localisationdata as ld
 import configparser
 import importlib.util
+
+from pygments.lexers.python import PythonLexer
+from pygments.styles import get_style_by_name
 
 
 class Interface(object):
@@ -36,6 +41,7 @@ class Interface(object):
     fullScreen = 0
 
     def __init__(self, parent):
+        self.lexer = PythonLexer()
         self._window = tk.Frame(parent)
         self.helpText = tk.StringVar(self._window)
 
@@ -144,6 +150,7 @@ class Interface(object):
         # start program loop
         self._window.master.config(menu=self.menuBar)
         self._window.grid(row=0, column=0)
+        self._window.master.bind("<KeyRelease-Return>", self.recolorize)
 
     # Toggles fullscreen
     def swapFullScreen(self, *_args):
@@ -168,7 +175,6 @@ class Interface(object):
 
     # Run the code in the textbox
     def runCode(self):
-        # libHelper = "import os\nimport sys\nfor dir in os.listdir(path='lib'):\n\tsys.path.append('lib/'+dir)\n"
         exec(self.textBox.get("1.0", tk.END))
 
     # Open a file
@@ -183,6 +189,7 @@ class Interface(object):
         self.textBox.delete(1.0, tk.END)
         self.textBox.insert(1.0, file.read())
         file.close()
+        self.recolorize()
 
     # Saves the file
     def saveFile(self, newName=False):
@@ -265,3 +272,64 @@ class Interface(object):
             self.textBox.insert("1.0", "import " + library + "\n")
             self.textBox.insert(tk.INSERT, type(device).__name__.lower() + " = " + library + "." + type(device).__name__ + "()\n")
         self.textBox.insert(tk.INSERT, type(device).__name__.lower() + "." + part + "." + movement + "()\n")
+
+    """
+    copyleft 2014 by Jens Diemer
+    licensed under GNU GPL v3
+    """
+    def create_tags(self):
+        bold_font = font.Font(self.textBox, self.textBox.cget("font"))
+        bold_font.configure(weight=font.BOLD)
+
+        italic_font = font.Font(self.textBox, self.textBox.cget("font"))
+        italic_font.configure(slant=font.ITALIC)
+
+        bold_italic_font = font.Font(self.textBox, self.textBox.cget("font"))
+        bold_italic_font.configure(weight=font.BOLD, slant=font.ITALIC)
+
+        style = get_style_by_name('default')
+        for ttype, ndef in style:
+            # print(ttype, ndef)
+            tag_font = None
+            if ndef['bold'] and ndef['italic']:
+                tag_font = bold_italic_font
+            elif ndef['bold']:
+                tag_font = bold_font
+            elif ndef['italic']:
+                tag_font = italic_font
+
+            if ndef['color']:
+                foreground = "#%s" % ndef['color']
+            else:
+                foreground = None
+
+            self.textBox.tag_configure(str(ttype), foreground=foreground, font=tag_font)
+
+    def recolorize(self, _event=None):
+        self.create_tags()
+        code = self.textBox.get("1.0", "end-1c")
+        tokensource = self.lexer.get_tokens(code)
+
+        start_line = 1
+        start_index = 0
+        end_line = 1
+        end_index = 0
+        for ttype, value in tokensource:
+            if "\n" in value:
+                end_line += value.count("\n")
+                end_index = len(value.rsplit("\n", 1)[1])
+            else:
+                end_index += len(value)
+
+            if value not in (" ", "\n"):
+                index1 = "%s.%s" % (start_line, start_index)
+                index2 = "%s.%s" % (end_line, end_index)
+
+                for tagname in self.textBox.tag_names(index1):
+                    self.textBox.tag_remove(tagname, index1, index2)
+
+                # print(ttype, repr(value), index1, index2)
+                self.textBox.tag_add(str(ttype), index1, index2)
+
+            start_line = end_line
+            start_index = end_index
