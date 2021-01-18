@@ -82,8 +82,8 @@ class Interface (object):
         for i in range(len(self._checkBoxList)):
             try:
                 self._iniWriter["LIBRARIES"][self._libraryList[i]] = str(self._checkBoxList[i].get())
-            except IndexError:
-                print('Something weird happened')  # Shouldn't happen since bugfix.
+            except IndexError as e:
+                print('Something weird happened:', e)  # Shouldn't happen since bugfix.
 
     def _saveData(self):
         for i in self._iniWriter["LIBRARIES"]:

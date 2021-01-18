@@ -287,7 +287,7 @@ class Interface(object):
         bold_italic_font = font.Font(self.textBox, self.textBox.cget("font"))
         bold_italic_font.configure(weight=font.BOLD, slant=font.ITALIC)
 
-        style = get_style_by_name('default')
+        style = get_style_by_name('colorful')
         for ttype, ndef in style:
             tag_font = None
             if ndef['bold'] and ndef['italic']:
