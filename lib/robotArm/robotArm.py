@@ -60,13 +60,12 @@ class Arm(object):
 					self._tempPWM.start(power)
 				else:
 					self._tempPWM.start(100)
-				# if a timer is specified, turn off after that time. Otherwise, don't turn off.
 				return
 			# "Simulation code" for when the code is run on a different device. Prints to the console.
 			print("robotArm powering pin", pin, "of part", type(self).__name__, end=" ")
 			if power > 0 & power < 100:
 				print("at " + str(power) + "% power", end=" ")
-			print("")  # creates a new line (yes, really) to keep the console log readable
+			print("")  # creates a new line to keep the console log readable
 			return
 
 		# Turns off a part if running on a pi. Only prints to the console otherwise.

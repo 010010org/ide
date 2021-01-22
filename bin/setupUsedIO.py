@@ -1,8 +1,8 @@
-import tkinter as tk
-import localisationdata as ld
-import os
-import os.path
-import configparser
+import tkinter as tk  # Used to create interface
+import localisationdata as ld  # Contains translated strings for selected language
+import os  # Used to get library folders
+import os.path  # Used to check if required files exist
+import configparser  # Used to read/write ini file
 
 
 class Interface (object):
@@ -17,9 +17,9 @@ class Interface (object):
         self._libraryList = self._updateINI()
         self._checkBoxList = []
 
+        # Create interface items
         self._infoText = tk.Label(self._window, text=ld.infoTextBox)
         self._infoText.grid(row=0, column=1)
-
         rownumber = 0
         for i in range(len(self._libraryList)):
             rownumber += 1
@@ -70,7 +70,7 @@ class Interface (object):
                 iniLibraryList.append(i)
                 self._iniWriter["LIBRARIES"][i] = "0"
 
-        # Remove libraries from ini that no longer exist.
+        # Remove libraries from ini that no longer exist (or are missing required files).
         for i in iniLibraryList:
             if i not in realLibraryList:
                 self._iniWriter.remove_option("LIBRARIES", i)
@@ -78,6 +78,7 @@ class Interface (object):
 
         return iniLibraryList
 
+    # Updates configparser. Think of it as editing the text in your word document, but not saving it yet.
     def _updateCheckbox(self):
         for i in range(len(self._checkBoxList)):
             try:
@@ -85,6 +86,7 @@ class Interface (object):
             except IndexError as e:
                 print('Something weird happened:', e)  # Shouldn't happen since bugfix.
 
+    # Saves updated data to ini file. Closes this program and launches setupPinout.
     def _saveData(self):
         for i in self._iniWriter["LIBRARIES"]:
             if self._iniWriter["LIBRARIES"][i] == "0":
@@ -94,4 +96,4 @@ class Interface (object):
         self._window.destroy()
         import setupPinout
         setupPinout.Interface(self._parent, self._libraryList)
-        return "break"
+        return "break"  # tkinter sometimes seems to require this to function properly.
