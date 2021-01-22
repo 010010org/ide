@@ -2,7 +2,7 @@ import tkinter as tk  # used to create the interface
 import localisationdata as ld  # contains all displayed text
 import configparser  # used to read and write to ini file
 import string  # only used to get a list of letters and numbers
-import importlib.util
+import importlib.util  # Used to import and reference modules inside for loop.
 
 
 class Interface(object):
@@ -33,7 +33,7 @@ class Interface(object):
         libReader.optionxform = str
         configIni = "config.ini"
         libReader.read(configIni)
-        for i in libReader["LIBRARIES"]:    # Should be possible to do this easier now, but I'm too afraid to touch it.
+        for i in libReader["LIBRARIES"]:
             if libReader["LIBRARIES"][i] == "1":
                 self._libraryArray.append(i)
                 module_name = i
@@ -212,10 +212,9 @@ class Interface(object):
             # event is used to ignore the useless data tkinter sends us without us asking for it.
             # device is the class used for the device that needs to be controlled, robotArm.Arm for example.
             # part and direction are the part and direction the specified key needs to control.
-            # getattr() allows us to turn a piece of text into code. For example, if device = robotArm and part = "base", getattr(device, part) would return robotArm.Arm.base
-            # doing this twice (with direction = "counter", for example), we get getattr(getattr(device, part), direction), which would return robotArm.Arm.base.counter
+            # All of this data gets sent to the keyPressed function.
             # the next part adds the power and timer data. Since these function the same, I'll use power to explain:
-            # self.powerMode.get() returns the state if our checkbox. if it's checked, it returns a 1. If it's unchecked, it returns a 0.
+            # self.powerMode.get() returns the state of our checkbox. if it's checked, it returns a 1. If it's unchecked, it returns a 0.
             # self.powerValue returns the number the user added to the entry field.
             # By multiplying these two, we are only sending the data if the checkbox is checked, and 0 if it's unchecked.
 
@@ -250,11 +249,19 @@ class Interface(object):
         # Switches from save mode to edit mode
         self._editMode ^= 1
 
+    # This function sends the selected instruction to the specified device.
+    # getattr is used twice here. It turns text into executable code.
+    # First, the code looks for the part of a device (say, robotarm.Arm.shoulder for example).
+    # Then, it looks for the specified movement function (called direction here). For example: robotarm.Arm.shoulder.up
+    # After that, we add parentheses to execute that movement function.
+    # If the specified direction is "off", the command get's sent en the function terminates.
+    # If not, the specified power (if any) is also sent.
     def _keyPressed(self, device, part, direction='off', power=0, timer=0):
         if direction == 'off':
             (getattr(getattr(device, part), direction)())
             return
         (getattr(getattr(device, part), direction)(power=power))
+        # Schedules turning off the part after the specified time has passed. The rest of the program keeps running in the mean time.
         if timer:
             self._window.after(int(1000*timer), (getattr(getattr(device, part), 'off')))
 

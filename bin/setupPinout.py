@@ -1,21 +1,22 @@
-import tkinter as tk
-import localisationdata as ld
-import os.path
-import configparser
-import string
+import tkinter as tk  # Used to create interface
+import localisationdata as ld  # Contains translated strings for selected language
+import os.path  # Used to check if pinout inis still exist
+import configparser  # Used to read pinout inis
+import string  # Only used for string.digits, which is "0123456789"
 
 
 class Interface(object):
-
     _libraryList = []
     _pinoutList = []
     _entryList = []
     _entryCounter = 0
 
     def __init__(self, parent, libraryList):
+        # Create configparser
         self._iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
         self._iniWriter.optionxform = str
         self._iniFile = None
+        # Creating interface
         self._window = tk.Frame(parent)
         self._libraryList = libraryList
         self._getPinouts()
@@ -38,6 +39,7 @@ class Interface(object):
         self._warningLabel.grid(row=3+rowNumber, column=3, columnspan=3, sticky='w')
         self._window.grid(row=0, column=0)
 
+    # Runs through al libraries and collects the pinouts each of them require.
     def _getPinouts(self):
         self._iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
         self._iniWriter.optionxform = str
@@ -52,6 +54,10 @@ class Interface(object):
             for k in self._iniWriter[j]:
                 self._pinoutList.append([j, k, self._iniWriter[j][k]])
 
+    # This code runs when one of the entries is changed.
+    # If a number over 27, a character that isn't a number, or the number 0 is entered, the last character gets removed.
+    # 27 is the number of GPIO pins the pi has, starting with 1, so it wouldn't make sense for something else to be entered.
+    # If a duplicate number gets entered, a warning is shown.
     def _updateEntries(self, *_args):
         previousEntry = ""
         tempList = []
@@ -61,7 +67,9 @@ class Interface(object):
             if len(i[1].get()) > 0:
                 if i[1].get()[-1] not in string.digits:
                     i[1].set(i[1].get()[:-1])
-                if int(i[1].get()) > 40:
+                if int(i[1].get()) > 27:
+                    i[1].set(i[1].get()[:-1])
+                if int(i[1].get()) == 0:
                     i[1].set(i[1].get()[:-1])
             if i[0] == 0:
                 if previousEntry != "":
@@ -77,6 +85,7 @@ class Interface(object):
         else:
             self._warningLabel.config(text="")
 
+    # Saves changed pinout to ini files.
     def _saveSettings(self, *_args):
         folder = ""
         for i in self._pinoutList:
@@ -100,6 +109,7 @@ class Interface(object):
 
         self._window.master.destroy()
 
+    # Reads pinouts from default file and restores them, closes window.
     def _resetClick(self):
         for i in self._libraryList:
             self._iniFile = "lib/" + i + "/defaultPinout.ini"

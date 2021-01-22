@@ -1,15 +1,15 @@
-import os
-import tkinter as tk
-import tkinter.filedialog as filedialog
-import tkinter.scrolledtext as scrolledtext
-from tkinter import font
+import os  # Used to get working directory (needed to save/open files)
+import tkinter as tk  # Used for interface
+import tkinter.filedialog as filedialog  # Used for open/save as... interfaces
+import tkinter.scrolledtext as scrolledtext  # Used for the textbox
+import tkinter.font as font  # Used for syntax highlighting (specifically for bold and italic text)
 
-import localisationdata as ld
-import configparser
-import importlib.util
+import localisationdata as ld  # Contains translated strings for selected language
+import configparser  # Used to read ini file (to see which libraries we need to use)
+import importlib.util  # Used to import our libraries
 
-from pygments.lexers.python import PythonLexer
-from pygments.styles import get_style_by_name
+from pygments.lexers.python import PythonLexer  # Needed for syntax highlighting
+from pygments.styles import get_style_by_name  # idem
 
 
 class Interface(object):
@@ -21,7 +21,7 @@ class Interface(object):
     _deviceArray = []
     advancedMode = 0
 
-    # lists of menu items
+    # lists of menu items (not all of these are used)
     commandList = ["if", "elif", "else", "for", "while"]
     advancedCommandList = ["break", "continue"]
     expressionList = ["+", "-", "*", "/", "//", "%", "**"]
@@ -41,7 +41,7 @@ class Interface(object):
     fullScreen = 0
 
     def __init__(self, parent):
-        self.lexer = PythonLexer()
+        self.lexer = PythonLexer()  # Used for syntax highlighting
         self._window = tk.Frame(parent)
         self.helpText = tk.StringVar(self._window)
 
@@ -52,7 +52,7 @@ class Interface(object):
         self._window.bind("<F11>", self.swapFullScreen)
         self._window.master.title(ld.windowName)
 
-        # setup library imports
+        # setup library imports (and localisation data of those libraries)
         libReader = configparser.ConfigParser()
         libReader.optionxform = str
         configIni = "config.ini"
@@ -117,6 +117,9 @@ class Interface(object):
         self.menuBar.add_cascade(label=ld.functionWindow2Name, menu=self.functionMenu2)
 
         # setup device menu
+        # basically, this code imports all selected libraries, checks their code for all public variables (i.e. instances of parts),
+        # checks those instance variables for all public methods (i.e. movement directions),
+        # translates all names and organises all this data neatly in a cascading menu.
         self.deviceMenu = tk.Menu(self.menuBar, tearoff=0)
         for libraryCounter in range(len(self._libraryArray)):
             library = self._libraryArray[libraryCounter]
@@ -273,10 +276,7 @@ class Interface(object):
             self.textBox.insert(tk.INSERT, type(device).__name__.lower() + " = " + library + "." + type(device).__name__ + "()\n")
         self.textBox.insert(tk.INSERT, type(device).__name__.lower() + "." + part + "." + movement + "()\n")
 
-    """
-    copyleft 2014 by Jens Diemer
-    licensed under GNU GPL v3
-    """
+    # Syntax highlighting code. Changes pieces of code to bold/italic according to the style sheet.
     def create_tags(self):
         bold_font = font.Font(self.textBox, self.textBox.cget("font"))
         bold_font.configure(weight=font.BOLD)
@@ -304,6 +304,7 @@ class Interface(object):
 
             self.textBox.tag_configure(str(ttype), foreground=foreground, font=tag_font)
 
+    # Syntax highlighting code. Changes color pieces of code specified in style sheet.
     def recolorize(self, _event=None):
         self.create_tags()
         code = self.textBox.get("1.0", "end-1c")

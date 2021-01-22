@@ -1,11 +1,14 @@
-import tkinter as tk
-import sys
-import os
+import tkinter as tk  # Used to create interface
+import sys  # Used to add folders to the path
+import os  # Used to get current directory
 
-import localisationdata as ld
-import configparser
+import localisationdata as ld  # Contains translated strings for selected language
+import configparser  # Used to read/write ini files
 
 
+# This program creates a simple start menu, allowing the user to choose which sub-program they want to start
+# It allows the user to unlock new sub-programs based on the programs they've already used.
+# This progress is stored in an ini file, so users can keep going from where they left off last time when they start a new session.
 class Interface(object):
     _root = tk.Tk()
     _iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
@@ -89,7 +92,9 @@ class Interface(object):
                     self._programmingButton['state'] = tk.NORMAL
         self.fixImports()
 
-    def fixImports(self):  # This actually works?
+    # Adds folders of libraries selected in setupUsedIO to the path, so they can be imported by the user in tkProgrammerInterface
+    # without this kind of added code.
+    def fixImports(self):
         for i in self._iniWriter["LIBRARIES"]:
             if self._iniWriter["LIBRARIES"][i] == "1":
                 if os.getcwd()+"/lib/"+i not in sys.path:
