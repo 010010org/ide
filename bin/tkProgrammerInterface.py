@@ -236,8 +236,11 @@ class Interface(object):
 
     # Setup what happens when regular function menu is clicked
     def functionClick(self, item):
-        self.textBox.insert(tk.INSERT, item)
+        startIndex = self.textBox.index(tk.INSERT)
+        self.textBox.insert(tk.INSERT, item+"\n")
         self.helpText.set(ld.helpInfo + ld.functionExplanationList[self.functionList.index(item)])
+        self.recolorize()
+        self.textBox.mark_set(tk.INSERT, startIndex.split(".")[0] + "." + str(int(startIndex.split(".")[1])+len(item)-1))
         return "break"
 
     # Setup what happens when external function menu is clicked
@@ -275,6 +278,7 @@ class Interface(object):
             self.textBox.insert("1.0", "import " + library + "\n")
             self.textBox.insert(tk.INSERT, type(device).__name__.lower() + " = " + library + "." + type(device).__name__ + "()\n")
         self.textBox.insert(tk.INSERT, type(device).__name__.lower() + "." + part + "." + movement + "()\n")
+        self.recolorize()
 
     # Syntax highlighting code. Changes pieces of code to bold/italic according to the style sheet.
     def create_tags(self):
