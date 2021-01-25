@@ -7,6 +7,9 @@ advancedControlArmOption = "geävanceerde besturing robotarm"
 programOption = "programmeerinterface starten"
 AdvancedProgramOption = "geävanceerde programmeerinterface"
 
+# setupLanguage
+langSelectBox = "selecteer de taal die je wil gebruiken.\nOm deze instelling op te slaan moet je het programma opnieuw opstarten"
+
 # setupUsedIO
 infoTextBox = "Vink de apparaten aan die je wil aansturen"
 saveButton = "Opslaan"

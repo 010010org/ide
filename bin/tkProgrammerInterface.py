@@ -143,7 +143,7 @@ class Interface(object):
 
         # setup run button
         self.runButton = tk.Button(self._window, text=ld.runButtonText, command=self.runCode)
-        self.runButton.grid(row=3, column=0)
+        self.runButton.grid(row=3, sticky='w')
 
         # setup help text
         self.helpText.set(ld.helpInfo+ld.helpInfoDefault)
@@ -304,7 +304,7 @@ class Interface(object):
 
             self.textBox.tag_configure(str(ttype), foreground=foreground, font=tag_font)
 
-    # Syntax highlighting code. Changes color pieces of code specified in style sheet.
+    # Syntax highlighting code. Changes color of pieces of code specified in style sheet.
     def recolorize(self, _event=None):
         self.create_tags()
         code = self.textBox.get("1.0", "end-1c")

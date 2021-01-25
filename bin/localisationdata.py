@@ -7,6 +7,9 @@ advancedControlArmOption = "advanced robot arm control"
 programOption = "start programming interface"
 AdvancedProgramOption = "advanced programming interface"
 
+# setupLanguage
+langSelectBox = "Select the language you want to use.\nTo save your selection, restart the program after finishing setup."
+
 # setupUsedIO
 infoTextBox = "select the devices you want to use"
 saveButton = "Save"

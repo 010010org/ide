@@ -33,8 +33,8 @@ class Interface(object):
         self._iniWriter["OPTIONS"]["PROGRESS"] = str(self._progress)
         with open(self._iniFile, 'w') as configFile:
             self._iniWriter.write(configFile, space_around_delimiters=False)
-        import setupUsedIO
-        setupUsedIO.Interface(tk.Toplevel(self._root))
+        import setupLanguage
+        setupLanguage.Interface(tk.Toplevel(self._root))
         self.getProgress()
 
     def runProgrammer(self):
