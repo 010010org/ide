@@ -13,7 +13,7 @@ windows:
 
 linux en mac: 
 * open de terminal en typ de volgende commando's in:
-	> git clone https://github.com/HermanHeringa/robotarm.git
+	> git clone https://github.com/010010org/ide.git
 
 	> cd robotarm
 
@@ -24,5 +24,3 @@ linux en mac:
 	> ./run.sh
 
 website: https://010010.org
-
-trello: https://trello.com/b/dYWur3pF/robotarm
