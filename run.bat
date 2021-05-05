@@ -1,4 +1,4 @@
-@echo off
+
 :main
   setlocal enabledelayedexpansion
   call :get-ini config.ini OPTIONS LANGUAGE result
@@ -29,7 +29,7 @@
 	pip3 install pygments
   )
   
-  python3 ./bin/startMenu.py
+  python ./bin/startMenu.py
 
   goto :eof
 

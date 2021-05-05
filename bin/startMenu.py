@@ -10,15 +10,19 @@ import configparser  # Used to read/write ini files
 # It allows the user to unlock new sub-programs based on the programs they've already used.
 # This progress is stored in an ini file, so users can keep going from where they left off last time when they start a new session.
 class Interface(object):
+    # _ signifies private field
     _root = tk.Tk()
+    #coonfigparse library coverts ini files to PEP8 format
     _iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
     _iniFile = "config.ini"
+    #forward declaration, used in drawWindow, otherwise a warning / error appears that variables are initiated in the function
     _controlButton = None
     _AdvancedControlButton = None
     _programmingButton = None
     _AdvancedProgrammingButton = None
     _progress = 0
 
+    # __init__ is called when the object is made
     def __init__(self):
         self._window = tk.Frame(self._root)
         self._window.title = ld.startMenuName
@@ -28,14 +32,21 @@ class Interface(object):
         self._root.mainloop()
 
     def runSetup(self):
+        #unlocks different menus
+        #TODO can remove some getProgress
+
         self.getProgress()
         self._progress = max(self._progress, 1)
+        #_iniWriter[header][field]
         self._iniWriter["OPTIONS"]["PROGRESS"] = str(self._progress)
         with open(self._iniFile, 'w') as configFile:
             self._iniWriter.write(configFile, space_around_delimiters=False)
+        #import not above because of load times on raspberryPi 3
         import setupLanguage
         setupLanguage.Interface(tk.Toplevel(self._root))
         self.getProgress()
+
+    #below functions work the same as runSetup
 
     def runProgrammer(self):
         self.getProgress()
@@ -65,10 +76,13 @@ class Interface(object):
         self.getProgress()
 
     def drawWindow(self):
+        #copies everything from localisation\en.py or nl.py to localisationData in the bat file
         welcomeMessage = tk.Label(self._window, text=ld.startMenuMessage)
         welcomeMessage.grid(row=0, columnspan=3, sticky='w')
         setupButton = tk.Button(self._window, text=ld.setupOption, command=self.runSetup)
         setupButton.grid(row=1, column=1)
+        #give very button its function with the command=lambda:
+        #can be used without lambda but tkinter likes to give data with every button press.
         self._controlButton = tk.Button(self._window, text=ld.controlArmOption, command=lambda: self.runControlProgram(0))
         self._controlButton.grid(row=1, column=2)
         self._controlButton['state'] = tk.DISABLED
@@ -84,6 +98,7 @@ class Interface(object):
         self._iniWriter.optionxform = str
         self._iniWriter.read(self._iniFile)
         self._progress = int(self._iniWriter["OPTIONS"]["PROGRESS"])
+        #attributes start as disabled, can configure this in config.ini with the PROGRESS = X, used with the idea of unlocking features in mind. 
         if self._progress >= 1:
             self._controlButton['state'] = tk.NORMAL
             if self._progress >= 2:
@@ -98,6 +113,7 @@ class Interface(object):
         for i in self._iniWriter["LIBRARIES"]:
             if self._iniWriter["LIBRARIES"][i] == "1":
                 if os.getcwd()+"/lib/"+i not in sys.path:
+                    #puts the field i into the path
                     sys.path.append(os.getcwd()+"/lib/"+i)
 
 
