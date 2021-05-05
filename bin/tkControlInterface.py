@@ -33,6 +33,8 @@ class Interface(object):
         libReader.optionxform = str
         configIni = "config.ini"
         libReader.read(configIni)
+        #uses import lib to import libraries with strings
+        #TODO easier solution with startmenu, library path already exists
         for i in libReader["LIBRARIES"]:
             if libReader["LIBRARIES"][i] == "1":
                 self._libraryArray.append(i)
@@ -48,7 +50,11 @@ class Interface(object):
                 ld_module = importlib.util.module_from_spec(ld_spec)
                 ld_spec.loader.exec_module(ld_module)
                 self._ldArray.append(ld_module)
+                #checks all the fields in the modules
                 for objname in dir(module):
+                    #used to read different kinds of code, must be in this manner because it needs to be modular
+                    #checks main class and puts them in an array
+                    #use print to see what changes at what time
                     if type(eval("module." + objname)) is type:
                         self._deviceArray.append(getattr(module, objname)())
 
@@ -57,6 +63,7 @@ class Interface(object):
             _iniFile = 'lib/' + i + '/controls.ini'
             self._iniWriter.read(_iniFile)
             for j in self._iniWriter:
+                #needed so the values read from the ini files are valid, sometimes iniWriter adds a line causing an index mismatch. 
                 if j != "DEFAULT":
                     for k in self._iniWriter[j]:
                         self._partArray.append([i, j, k, self._iniWriter[j][k]])
@@ -78,10 +85,13 @@ class Interface(object):
 
         # Creates an "entry" (editable text field) for every move-action. Also fills in the keys read from the ini file.
         for i in range(len(self._partArray)):
+            #localisation library
+            #TODO read data from label and add into array
             locLib = self._ldArray[self._libraryArray.index(self._partArray[i][0])]
             self._keyArray.append(tk.StringVar(self._window))
             self._keyArray[i].set(self._partArray[i][3])
             self._keyArray[i].trace_add('write', self.updateEntries)
+            #checks the language needed by entering a string into localisationdata
             tk.Label(self._window, text=self._partArray[i][0] + ": " + locLib.partDictionary[self._partArray[i][1]] + " " + locLib.partDictionary[self._partArray[i][2]]).grid(sticky='w', row=i, column=1)
             self._entryArray.append(tk.Entry(self._window, textvariable=self._keyArray[i], width=2))
             self._entryArray[i].grid(sticky='w', row=i, column=2)
@@ -105,6 +115,7 @@ class Interface(object):
             # Setup power options
             self._powerCheckButton = tk.Checkbutton(self._window, text=ld.powerButtonText, variable=self._powerMode, onvalue=1, offvalue=0, command=self.setPowerMode)
             self._powerCheckButton.grid(sticky='w', row=1, column=3)
+            #starts at 30 instead of 0 because pwm doesn't deliver enough power for 0-29, rough estimate
             self._powerSlider = tk.Scale(self._window, from_=30, to=100, showvalue=False, state='disabled', command=self.setPowerValue, orient=tk.HORIZONTAL)
             self._powerSlider.grid(row=1, column=4)
 
@@ -167,6 +178,7 @@ class Interface(object):
             _stringKeyArray.append(i.get())
             if len(i.get()) > 1:
                 i.set(i.get()[0])
+        #checks if there are any duplicates among the keyArray
         if len(self._keyArray) != len(set(_stringKeyArray)):
             self._warningLabel.config(text=ld.duplicatesWarning)
         else:

@@ -53,6 +53,7 @@ class Interface(object):
         self._window.master.title(ld.windowName)
 
         # setup library imports (and localisation data of those libraries)
+        #same as tkControllerface.py __init__
         libReader = configparser.ConfigParser()
         libReader.optionxform = str
         configIni = "config.ini"
