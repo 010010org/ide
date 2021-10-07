@@ -31,23 +31,24 @@ class Arm(object):
 			file.close()
 
 		# create the different parts of the arm
-		self.base = self.Base(_M5, self._runningOnPi)
-		self.shoulder = self.GenericPart(_M4, self._runningOnPi)
-		self.elbow = self.GenericPart(_M3, self._runningOnPi)
-		self.wrist = self.GenericPart(_M2, self._runningOnPi)
-		self.grip = self.Grip(_M1, self._runningOnPi)
-		self.light = self.Light(_M_LIGHT, self._runningOnPi)
+		self.base = self.Base(_M5, self._runningOnPi, "base" )
+		self.shoulder = self.GenericPart(_M4, self._runningOnPi, "shoulder")
+		self.elbow = self.GenericPart(_M3, self._runningOnPi, "elbow")
+		self.wrist = self.GenericPart(_M2, self._runningOnPi, "wrist")
+		self.grip = self.Grip(_M1, self._runningOnPi, "grip")
+		self.light = self.Light(_M_LIGHT, self._runningOnPi, "light")
 
 	# This is the parent class of all parts. This contains the functions that actually move the part.
 	class Part(object):
 		_pins = []
 		_tempPWM = None
 		_runningOnPi = 0
+		_name = ""
 
-		def __init__(self, pins, runningOnPi):
+		def __init__(self, pins, runningOnPi, name):
 			self._pins = pins
 			self._runningOnPi = runningOnPi
-
+			self._name = name
 		# This is the only real function to move one the motors, all the other functions just give this function a different name for ease of use.
 		# Do NOT attempt to call this function directly, it's only meant for internal use.
 		def _move(self, pin, power=0):
@@ -60,9 +61,9 @@ class Arm(object):
 					self._tempPWM.start(power)
 				else:
 					self._tempPWM.start(100)
-				return
+				#return
 			# "Simulation code" for when the code is run on a different device. Prints to the console.
-			print("robotArm powering pin", pin, "of part", type(self).__name__, end=" ")
+			print("robotArm powering pin", pin, "of part", self._name, end=" ")
 			if power > 0 & power < 100:
 				print("at " + str(power) + "% power", end=" ")
 			print("")  # creates a new line to keep the console log readable
@@ -73,15 +74,15 @@ class Arm(object):
 			if self._runningOnPi:
 				if self._tempPWM is not None:
 					self._tempPWM.stop()
-				return
+				#return
 			# Simulation code
 			print("power off pins:", end=" "), [print(i, end=" ") for i in self._pins], print("")
 			return
 
 	# shoulder, elbow and wrist don't have any special functions. They're just the same part, but with different names.
 	class GenericPart(Part):
-		def __init__(self, pins, runningOnPi):
-			super().__init__(pins, runningOnPi)
+		def __init__(self, pins, runningOnPi, name):
+			super().__init__(pins, runningOnPi, name)
 
 		# up() and down() only specify the pin they want to move to the _move function.
 		def up(self, power=0):
@@ -92,8 +93,8 @@ class Arm(object):
 
 	# Because the base moves horizontally instead of vertically, it has clock and counter functions instead of up and down.
 	class Base(Part):
-		def __init__(self, pins, runningOnPi):
-			super().__init__(pins, runningOnPi)
+		def __init__(self, pins, runningOnPi, name):
+			super().__init__(pins, runningOnPi, name)
 
 		def counter(self, power=0):
 			self._move(self._pins[0], power)
@@ -103,8 +104,8 @@ class Arm(object):
 
 	# Just like the Base, the Grip moves differently. As such, it has different functions.
 	class Grip(Part):
-		def __init__(self, pins, runningOnPi):
-			super().__init__(pins, runningOnPi)
+		def __init__(self, pins, runningOnPi, name):
+			super().__init__(pins, runningOnPi, name)
 
 		def close(self, power=0):
 			self._move(self._pins[0], power)
@@ -114,8 +115,8 @@ class Arm(object):
 
 	# Because the light can only go on or off, it only has one "movement" function.
 	class Light(Part):
-		def __init__(self, pins, runningOnPi):
-			super().__init__(pins, runningOnPi)
+		def __init__(self, pins, runningOnPi, name):
+			super().__init__(pins, runningOnPi, name)
 
 		def on(self, power=0):
 			self._move(self._pins[0], power)
