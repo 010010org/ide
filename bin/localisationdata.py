@@ -1,4 +1,5 @@
 # startMenu
+
 startMenuName = "start menu"
 startMenuMessage = "choose a program to start"
 setupOption = "Setup"
