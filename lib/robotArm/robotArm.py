@@ -7,6 +7,7 @@ class Arm(object):
 	_iniWriter.optionxform = str
 	_iniFile = "lib/robotArm/pinout.ini"
 	_runningOnPi = 0
+	_debugmode = 0	
 
 	def __init__(self):
 		# read configured pins from ini file
@@ -49,6 +50,13 @@ class Arm(object):
 			self._pins = pins
 			self._runningOnPi = runningOnPi
 			self._name = name
+
+
+		#wat willen wij hebben? bepaalde volgorde (eerst naar 150 dan naar 75) of overwritten commmando's (gelijk naar 75)
+		def write_to_file():
+			print("off")
+
+
 		# This is the only real function to move one the motors, all the other functions just give this function a different name for ease of use.
 		# Do NOT attempt to call this function directly, it's only meant for internal use.
 		def _move(self, pin, power=0):
@@ -61,8 +69,9 @@ class Arm(object):
 					self._tempPWM.start(power)
 				else:
 					self._tempPWM.start(100)
-				#return
-			# "Simulation code" for when the code is run on a different device. Prints to the console.
+				if not Arm._debugmode:
+					return
+			# "Simulation code" for when the code is run on a different device. Prints to the console for now.
 			print("robotArm powering pin", pin, "of part", self._name, end=" ")
 			if power > 0 & power < 100:
 				print("at " + str(power) + "% power", end=" ")
@@ -74,10 +83,14 @@ class Arm(object):
 			if self._runningOnPi:
 				if self._tempPWM is not None:
 					self._tempPWM.stop()
-				#return
+				if not Arm._debugmode:
+					return
 			# Simulation code
 			print("power off pins:", end=" "), [print(i, end=" ") for i in self._pins], print("")
 			return
+		
+	
+
 
 	# shoulder, elbow and wrist don't have any special functions. They're just the same part, but with different names.
 	class GenericPart(Part):
