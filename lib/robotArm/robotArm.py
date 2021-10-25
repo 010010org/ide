@@ -7,7 +7,8 @@ class Arm(object):
 	_iniWriter.optionxform = str
 	_iniFile = "lib/robotArm/pinout.ini"
 	_runningOnPi = 0
-	_debugmode = 0	
+	_debugmode = 1
+	print("debugmode is", _debugmode)
 
 	def __init__(self):
 		# read configured pins from ini file
@@ -39,6 +40,12 @@ class Arm(object):
 		self.grip = self.Grip(_M1, self._runningOnPi, "grip")
 		self.light = self.Light(_M_LIGHT, self._runningOnPi, "light")
 
+	#function that writes the printlines to a separate file.
+	def write_to_file():
+		print("off")
+
+
+
 	# This is the parent class of all parts. This contains the functions that actually move the part.
 	class Part(object):
 		_pins = []
@@ -52,10 +59,8 @@ class Arm(object):
 			self._name = name
 
 
-		#wat willen wij hebben? bepaalde volgorde (eerst naar 150 dan naar 75) of overwritten commmando's (gelijk naar 75)
-		def write_to_file():
-			print("off")
-
+		
+		
 
 		# This is the only real function to move one the motors, all the other functions just give this function a different name for ease of use.
 		# Do NOT attempt to call this function directly, it's only meant for internal use.
@@ -86,7 +91,8 @@ class Arm(object):
 				if not Arm._debugmode:
 					return
 			# Simulation code
-			print("power off pins:", end=" "), [print(i, end=" ") for i in self._pins], print("")
+			#print("power off pins:", end=" "), [print(i, end=" ") for i in self._pins], print("")
+			Arm.write_to_file()
 			return
 		
 	
