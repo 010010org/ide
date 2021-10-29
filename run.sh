@@ -24,5 +24,6 @@ if [[ ! $(pip3 list|grep "pygments") ]]; then
     pip3 install pygments
 fi
 
-python3 ./bin/startMenu.py
+#change this line to the python variable you want to use
+python3.7 ./bin/startMenu.py
 

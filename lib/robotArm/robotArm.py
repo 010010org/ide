@@ -1,14 +1,20 @@
 import configparser  # library used to read ini file
-import os.path  # library used to test if file exists (to see if we're running on a pi)
+import os.path  # library used to test if file exists (to see if we're running on a pi
 
 
 class Arm(object):
 	_iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
 	_iniWriter.optionxform = str
 	_iniFile = "lib/robotArm/pinout.ini"
+	_robotOutputFile = "lib/robotArm/robot_output.txt"
+	_raspberryPiPath = "/sys/firmware/devicetree/base/model"
 	_runningOnPi = 0
 	_debugmode = 1
-	print("debugmode is", _debugmode)
+
+	#function that checks if the file exists and returns true or false.
+	#also resolves errors that might occur, the open function creates a file is none is found. that can cause communication issues with simpylc.
+	def file_check(path_to_file):
+		return os.path.exists(path_to_file)
 
 	def __init__(self):
 		# read configured pins from ini file
@@ -20,9 +26,10 @@ class Arm(object):
 		_M5 = self._iniWriter["robotArm"]["M5"].split(",")
 		_M_LIGHT = self._iniWriter["robotArm"]["M_LIGHT"].split(",")
 		_channel_list = _M1 + _M2 + _M3 + _M4 + _M5 + _M_LIGHT  # creates a list of all used pins so you can run through them with a for loop.
+		
 		# If running on a pi, set all used pins to output and turn off their power
-		if os.path.exists("/sys/firmware/devicetree/base/model"):
-			with open("/sys/firmware/devicetree/base/model") as file:
+		if os.path.exists(Arm._raspberryPiPath):
+			with open(Arm._raspberryPiPath) as file:
 				if "Raspberry Pi" in file.read():
 					import RPi.GPIO as GPIO
 					GPIO.setmode(GPIO.BCM)
@@ -32,6 +39,12 @@ class Arm(object):
 					self._runningOnPi = 1
 			file.close()
 
+		if Arm.file_check(Arm._robotOutputFile):
+			file = open(Arm._robotOutputFile, "w")
+			#truncate makes the file empty.
+			file.truncate()
+			file.close()
+		
 		# create the different parts of the arm
 		self.base = self.Base(_M5, self._runningOnPi, "base" )
 		self.shoulder = self.GenericPart(_M4, self._runningOnPi, "shoulder")
@@ -40,11 +53,16 @@ class Arm(object):
 		self.grip = self.Grip(_M1, self._runningOnPi, "grip")
 		self.light = self.Light(_M_LIGHT, self._runningOnPi, "light")
 
+
 	#function that writes the printlines to a separate file.
-	def write_to_file():
-		print("off")
-
-
+	def write_to_file(path_to_file, message):
+		if Arm.file_check(path_to_file): 
+			code = open (path_to_file, "a")
+			code.write(str(message + "\n"))
+			
+			print("geschreven")
+		else:
+			print(path_to_file, " is not correct, file cannot be found.")
 
 	# This is the parent class of all parts. This contains the functions that actually move the part.
 	class Part(object):
@@ -57,9 +75,6 @@ class Arm(object):
 			self._pins = pins
 			self._runningOnPi = runningOnPi
 			self._name = name
-
-
-		
 		
 
 		# This is the only real function to move one the motors, all the other functions just give this function a different name for ease of use.
@@ -88,12 +103,15 @@ class Arm(object):
 			if self._runningOnPi:
 				if self._tempPWM is not None:
 					self._tempPWM.stop()
+				#checks if debugmode is turned off, otherwise prints to file
 				if not Arm._debugmode:
 					return
 			# Simulation code
 			#print("power off pins:", end=" "), [print(i, end=" ") for i in self._pins], print("")
-			Arm.write_to_file()
+			Arm.write_to_file(Arm._robotOutputFile, "message")
 			return
+		
+
 		
 	
 
