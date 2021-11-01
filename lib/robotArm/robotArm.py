@@ -13,7 +13,7 @@ class Arm(object):
 
 	#function that checks if the file exists and returns true or false.
 	#also resolves errors that might occur, the open function creates a file is none is found. that can cause communication issues with simpylc.
-	def file_check(path_to_file):
+	def file_check(self, path_to_file):
 		return os.path.exists(path_to_file)
 
 	def __init__(self):
@@ -28,8 +28,8 @@ class Arm(object):
 		_channel_list = _M1 + _M2 + _M3 + _M4 + _M5 + _M_LIGHT  # creates a list of all used pins so you can run through them with a for loop.
 		
 		# If running on a pi, set all used pins to output and turn off their power
-		if os.path.exists(Arm._raspberryPiPath):
-			with open(Arm._raspberryPiPath) as file:
+		if os.path.exists(self._raspberryPiPath):
+			with open(self._raspberryPiPath) as file:
 				if "Raspberry Pi" in file.read():
 					import RPi.GPIO as GPIO
 					GPIO.setmode(GPIO.BCM)
@@ -37,12 +37,6 @@ class Arm(object):
 						GPIO.setup(int(i), GPIO.OUT)
 						GPIO.output(int(i), GPIO.LOW)
 					self._runningOnPi = 1
-			file.close()
-
-		if Arm.file_check(Arm._robotOutputFile):
-			file = open(Arm._robotOutputFile, "w")
-			#truncate makes the file empty.
-			file.truncate()
 			file.close()
 		
 		# create the different parts of the arm
@@ -53,14 +47,19 @@ class Arm(object):
 		self.grip = self.Grip(_M1, self._runningOnPi, "grip")
 		self.light = self.Light(_M_LIGHT, self._runningOnPi, "light")
 
+		if self.file_check(self._robotOutputFile):
+			file = open(self._robotOutputFile, "w")
+			#truncate makes the file empty.
+			file.truncate()
+			file.close()
 
 	#function that writes the printlines to a separate file.
-	def write_to_file(path_to_file, message):
-		if Arm.file_check(path_to_file): 
-			code = open (path_to_file, "a")
-			code.write(str(message + "\n"))
-			
-			print("geschreven")
+	def write_to_file(self, path_to_file, message):
+		if Arm.file_check(self, path_to_file): 
+			file = open (path_to_file, "a")
+			file.write(str(message + "\n"))
+			file.close()
+
 		else:
 			print(path_to_file, " is not correct, file cannot be found.")
 
@@ -92,10 +91,12 @@ class Arm(object):
 				if not Arm._debugmode:
 					return
 			# "Simulation code" for when the code is run on a different device. Prints to the console for now.
-			print("robotArm powering pin", pin, "of part", self._name, end=" ")
-			if power > 0 & power < 100:
-				print("at " + str(power) + "% power", end=" ")
-			print("")  # creates a new line to keep the console log readable
+			#print("robotArm powering pin", pin, "of part", self._name, end=" ")
+			#if power > 0 & power < 100:
+			#	print("at " + str(power) + "% power", end=" ")
+			#print("")  # creates a new line to keep the console log readable
+			message = "powering string is nog niet geconverteerd"
+			Arm.write_to_file(self, Arm._robotOutputFile, message)
 			return
 
 		# Turns off a part if running on a pi. Only prints to the console otherwise.
@@ -107,8 +108,10 @@ class Arm(object):
 				if not Arm._debugmode:
 					return
 			# Simulation code
+			
+			message =  ("off_string is nog niet geconverteerd")
 			#print("power off pins:", end=" "), [print(i, end=" ") for i in self._pins], print("")
-			Arm.write_to_file(Arm._robotOutputFile, "message")
+			Arm.write_to_file(self, Arm._robotOutputFile, message)
 			return
 		
 

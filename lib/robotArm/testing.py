@@ -6,6 +6,6 @@ class test():
         f = a(t,y)
 
 
-open('java.txt', 'w')
 
-#test.b(7,8)
+
+test.b(7,8)
