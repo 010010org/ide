@@ -110,8 +110,8 @@ class Arm(object):
 			# Simulation code
 			
 			message =  ("off_string is nog niet geconverteerd")
-			#print("power off pins:", end=" "), [print(i, end=" ") for i in self._pins], print("")
-			Arm.write_to_file(self, Arm._robotOutputFile, message)
+			print("power off pins:", end=" "), [print(i, end=" ") for i in self._pins], print("")
+			#Arm.write_to_file(self, Arm._robotOutputFile, message)
 			return
 		
 
