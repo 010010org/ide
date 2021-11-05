@@ -5,7 +5,4 @@ class test():
     def b(t,y):
         f = a(t,y)
 
-
-
-
-test.b(7,8)
+print('si')

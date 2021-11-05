@@ -21,6 +21,10 @@ class Interface(object):
     _programmingButton = None
     _AdvancedProgrammingButton = None
     _progress = 0
+    #outer ' are consumed by python
+    _pathToDirectoryAbove = os.path.dirname(os.getcwd())
+    _pathToSimulation = '/GUI-simpylc/Robotarm2/world.py'
+    
 
     # __init__ is called when the object is made
     def __init__(self):
@@ -74,6 +78,11 @@ class Interface(object):
         import tkControlInterface
         tkControlInterface.Interface(self._root, advancedMode)
         self.getProgress()
+    
+    def activateSimulation(self):
+        #moet nog aan gewerkt worden, waarschijnlijk in een andere thread gooien terminal gaat dood.
+        #os.system(str(self._pathToDirectoryAbove + self._pathToSimulation))
+        pass
 
     def drawWindow(self):
         #copies everything from localisation\en.py or nl.py to localisationData in the bat file
@@ -92,6 +101,10 @@ class Interface(object):
         self._programmingButton = tk.Button(self._window, text=ld.programOption, command=lambda: self.runProgrammer())
         self._programmingButton.grid(row=1, column=4)
         self._programmingButton['state'] = tk.DISABLED
+
+        #replace text with ld value, add ld value
+        self._simulationButton = tk.Button(self._window, text = 'start simulation', command = lambda: self.activateSimulation())
+        self._simulationButton.grid(row=1, column = 5)
 
     def getProgress(self):
         self._iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
