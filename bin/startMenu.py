@@ -81,8 +81,9 @@ class Interface(object):
     
     def activateSimulation(self):
         #moet nog aan gewerkt worden, waarschijnlijk in een andere thread gooien terminal gaat dood.
-        #os.system(str(self._pathToDirectoryAbove + self._pathToSimulation))
-        pass
+        print(self._pathToDirectoryAbove)
+        os.system(str(self._pathToDirectoryAbove + self._pathToSimulation))
+        
 
     def drawWindow(self):
         #copies everything from localisation\en.py or nl.py to localisationData in the bat file

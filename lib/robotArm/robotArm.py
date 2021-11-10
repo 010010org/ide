@@ -25,9 +25,11 @@ class Arm(object):
 		_M4 = self._iniWriter["robotArm"]["M4"].split(",")
 		_M5 = self._iniWriter["robotArm"]["M5"].split(",")
 		_M_LIGHT = self._iniWriter["robotArm"]["M_LIGHT"].split(",")
-		_channel_list = _M1 + _M2 + _M3 + _M4 + _M5 + _M_LIGHT  # creates a list of all used pins so you can run through them with a for loop.
+		# creates a list of all used pins so you can run through them with a for loop.
+		_channel_list = _M1 + _M2 + _M3 + _M4 + _M5 + _M_LIGHT  
 		
-		# If running on a pi, set all used pins to output and turn off their power
+		
+		# If running on a pi, set all used pins to output and turn off their power. Raspberry pi sometimes uses these pins on startup.
 		if os.path.exists(self._raspberryPiPath):
 			with open(self._raspberryPiPath) as file:
 				if "Raspberry Pi" in file.read():
@@ -78,7 +80,7 @@ class Arm(object):
 
 		# This is the only real function to move one the motors, all the other functions just give this function a different name for ease of use.
 		# Do NOT attempt to call this function directly, it's only meant for internal use.
-		def _move(self, pin, power=0):
+		def _move(self, pin, power):
 			# This code actually powers the motors. It only runs if the program is running on a pi
 			if self._runningOnPi:
 				import RPi.GPIO as GPIO
@@ -91,11 +93,12 @@ class Arm(object):
 				if not Arm._debugmode:
 					return
 			# "Simulation code" for when the code is run on a different device. Prints to the console for now.
-			#print("robotArm powering pin", pin, "of part", self._name, end=" ")
-			#if power > 0 & power < 100:
-			#	print("at " + str(power) + "% power", end=" ")
-			#print("")  # creates a new line to keep the console log readable
-			message = "powering string is nog niet geconverteerd"
+			message = str("robotarm powering pin " + pin + " from part " + self._name)
+			#cannot enter the if statement, asuming it works
+			if power > 0 & power < 100:
+				message += (" at " + str(power) + "% power")
+				print("appended")
+			#message = "powering string is nog niet geconverteerd"
 			Arm.write_to_file(self, Arm._robotOutputFile, message)
 			return
 
@@ -108,10 +111,11 @@ class Arm(object):
 				if not Arm._debugmode:
 					return
 			# Simulation code
-			
-			message =  ("off_string is nog niet geconverteerd")
-			print("power off pins:", end=" "), [print(i, end=" ") for i in self._pins], print("")
-			#Arm.write_to_file(self, Arm._robotOutputFile, message)
+			message = "power off pins: " 
+			for i in self._pins:
+				message += str(i + " ")
+			#print("power off pins:", end=" "), [print(i, end=" ") for i in self._pins], print("")
+			Arm.write_to_file(self, Arm._robotOutputFile, message)
 			return
 		
 
