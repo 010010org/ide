@@ -17,6 +17,7 @@ class Interface(object):
         self._iniWriter.optionxform = str
         self._iniFile = None
         # Creating interface
+        self._parent = parent
         self._window = tk.Frame(parent)
         self._libraryList = libraryList
         self._getPinouts()
@@ -86,7 +87,7 @@ class Interface(object):
             self._warningLabel.config(text="")
 
     # Saves changed pinout to ini files.
-    def _saveSettings(self, *_args):
+    def _saveSettings(self):
         folder = ""
         for i in self._pinoutList:
             if i[0] != folder:
@@ -106,8 +107,11 @@ class Interface(object):
         self._iniFile = "lib/" + self._pinoutList[-1][0] + "/pinout.ini"
         with open(self._iniFile, 'w') as configFile:
             self._iniWriter.write(configFile, space_around_delimiters=False)
+        self._window.destroy()
+        import setupSimulation
+        setupSimulation.Interface(self._parent, self._libraryList)
 
-        self._window.master.destroy()
+        #self._window.master.destroy()
 
     # Reads pinouts from default file and restores them, closes window.
     def _resetClick(self):

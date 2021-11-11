@@ -1,10 +1,13 @@
 import configparser  # library used to read ini file
-import os.path  # library used to test if file exists (to see if we're running on a pi
+import os.path  # library used to test if file exists (to see if we're running on a pi)
+
+#ervoor zorgen dat de simulatie automatisch de goede simyplc bestand aanroept
 
 
 class Arm(object):
 	_iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
 	_iniWriter.optionxform = str
+	#pathfiles to different files so it only needs to be noetd once and can easily be changed
 	_iniFile = "lib/robotArm/pinout.ini"
 	_robotOutputFile = "lib/robotArm/robot_output.txt"
 	_raspberryPiPath = "/sys/firmware/devicetree/base/model"
@@ -25,11 +28,11 @@ class Arm(object):
 		_M4 = self._iniWriter["robotArm"]["M4"].split(",")
 		_M5 = self._iniWriter["robotArm"]["M5"].split(",")
 		_M_LIGHT = self._iniWriter["robotArm"]["M_LIGHT"].split(",")
-		# creates a list of all used pins so you can run through them with a for loop.
+		# creates a list of all used pins
 		_channel_list = _M1 + _M2 + _M3 + _M4 + _M5 + _M_LIGHT  
 		
 		
-		# If running on a pi, set all used pins to output and turn off their power. Raspberry pi sometimes uses these pins on startup.
+		# If running on a pi, set all used pins to output and turn off their power as Raspberry pi sometimes uses these pins on startup.
 		if os.path.exists(self._raspberryPiPath):
 			with open(self._raspberryPiPath) as file:
 				if "Raspberry Pi" in file.read():
@@ -41,7 +44,7 @@ class Arm(object):
 					self._runningOnPi = 1
 			file.close()
 		
-		# create the different parts of the arm
+		# create the different parts of the arm, passing the motor number, runnningOnPi and name of the part of the motor.
 		self.base = self.Base(_M5, self._runningOnPi, "base" )
 		self.shoulder = self.GenericPart(_M4, self._runningOnPi, "shoulder")
 		self.elbow = self.GenericPart(_M3, self._runningOnPi, "elbow")
@@ -80,7 +83,7 @@ class Arm(object):
 
 		# This is the only real function to move one the motors, all the other functions just give this function a different name for ease of use.
 		# Do NOT attempt to call this function directly, it's only meant for internal use.
-		def _move(self, pin, power):
+		def _move(self, pin, power = 0):
 			# This code actually powers the motors. It only runs if the program is running on a pi
 			if self._runningOnPi:
 				import RPi.GPIO as GPIO

@@ -21,7 +21,6 @@ class Interface(object):
     _programmingButton = None
     _AdvancedProgrammingButton = None
     _progress = 0
-    #outer ' are consumed by python
     _pathToDirectoryAbove = os.path.dirname(os.getcwd())
     _pathToSimulation = '/GUI-simpylc/Robotarm2/world.py'
     
