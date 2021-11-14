@@ -1,26 +1,28 @@
 import configparser  # library used to read ini file
-import os.path  # library used to test if file exists (to see if we're running on a pi)
+import os.path # library used to test if file exists (to see if we're running on a pi)
+#from tkinter import BooleanVar  
 
-#ervoor zorgen dat de simulatie automatisch de goede simyplc bestand aanroept
+#to-do ervoor zorgen dat de simulatie automatisch de goede simyplc bestand aanroept
 
 
 class Arm(object):
 	_iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
 	_iniWriter.optionxform = str
-	#pathfiles to different files so it only needs to be noetd once and can easily be changed
+	#pathfiles to different files so it only needs to be noted once and can easily be changed
 	_iniFile = "lib/robotArm/pinout.ini"
 	_robotOutputFile = "lib/robotArm/robot_output.txt"
 	_raspberryPiPath = "/sys/firmware/devicetree/base/model"
-	_runningOnPi = 0
-	_debugmode = 1
+	_runningOnPi = False
+	_debugmode = True
 
 	#function that checks if the file exists and returns true or false.
-	#also resolves errors that might occur, the open function creates a file is none is found. that can cause communication issues with simpylc.
+	#also resolves errors that might occur, the open function creates a file if none is found. that can cause communication issues with simpylc or any other program.
 	def file_check(self, path_to_file):
 		return os.path.exists(path_to_file)
 
 	def __init__(self):
 		# read configured pins from ini file
+		#each motor has 2 pins, on or off, up or down.
 		self._iniWriter.read(self._iniFile)
 		_M1 = self._iniWriter["robotArm"]["M1"].split(",")
 		_M2 = self._iniWriter["robotArm"]["M2"].split(",")
@@ -41,7 +43,7 @@ class Arm(object):
 					for i in _channel_list:
 						GPIO.setup(int(i), GPIO.OUT)
 						GPIO.output(int(i), GPIO.LOW)
-					self._runningOnPi = 1
+					self._runningOnPi = True
 			file.close()
 		
 		# create the different parts of the arm, passing the motor number, runnningOnPi and name of the part of the motor.
@@ -60,6 +62,7 @@ class Arm(object):
 
 	#function that writes the printlines to a separate file.
 	def write_to_file(self, path_to_file, message):
+		#checks if file exists
 		if Arm.file_check(self, path_to_file): 
 			file = open (path_to_file, "a")
 			file.write(str(message + "\n"))
@@ -72,13 +75,14 @@ class Arm(object):
 	class Part(object):
 		_pins = []
 		_tempPWM = None
-		_runningOnPi = 0
+		_runningOnPi = False
 		_name = ""
 
 		def __init__(self, pins, runningOnPi, name):
 			self._pins = pins
 			self._runningOnPi = runningOnPi
 			self._name = name
+			self._debugmode = Arm._debugmode
 		
 
 		# This is the only real function to move one the motors, all the other functions just give this function a different name for ease of use.
@@ -93,11 +97,11 @@ class Arm(object):
 					self._tempPWM.start(power)
 				else:
 					self._tempPWM.start(100)
-				if not Arm._debugmode:
+				if not self._debugmode:
 					return
-			# "Simulation code" for when the code is run on a different device. Prints to the console for now.
+			# "Simulation code" for when the code is run on a different device. Prints to self._robotOutputFile
 			message = str("robotarm powering pin " + pin + " from part " + self._name)
-			#cannot enter the if statement, asuming it works
+			#cannot enter the if statement, assuming it works.
 			if power > 0 & power < 100:
 				message += (" at " + str(power) + "% power")
 				print("appended")
@@ -111,13 +115,13 @@ class Arm(object):
 				if self._tempPWM is not None:
 					self._tempPWM.stop()
 				#checks if debugmode is turned off, otherwise prints to file
-				if not Arm._debugmode:
+				if not self._debugmode:
 					return
 			# Simulation code
 			message = "power off pins: " 
 			for i in self._pins:
 				message += str(i + " ")
-			#print("power off pins:", end=" "), [print(i, end=" ") for i in self._pins], print("")
+			#print("power off pins:", end=" "), [print(i, end=" ") for i in self._pins], print("") (original println)
 			Arm.write_to_file(self, Arm._robotOutputFile, message)
 			return
 		

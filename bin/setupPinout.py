@@ -111,8 +111,6 @@ class Interface(object):
         import setupSimulation
         setupSimulation.Interface(self._parent, self._libraryList)
 
-        #self._window.master.destroy()
-
     # Reads pinouts from default file and restores them, closes window.
     def _resetClick(self):
         for i in self._libraryList:
@@ -122,4 +120,7 @@ class Interface(object):
             with open(self._iniFile, 'w') as configFile:
                 self._iniWriter.write(configFile, space_around_delimiters=False)
         self._getPinouts()
-        self._window.master.destroy()
+        self._window.destroy()
+        #TO-DO make changes visible? instead of going straight to the next window
+        import setupSimulation
+        setupSimulation.Interface(self._parent, self._libraryList)
