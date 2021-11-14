@@ -1,8 +1,8 @@
+robotarm powering pin 23 from part base
 robotarm powering pin 24 from part base
-robotarm powering pin 27 from part shoulder
+power off pins: 23 24 
 robotarm powering pin 23 from part base
 power off pins: 23 24 
-power off pins: 27 22 
 robotarm powering pin 22 from part shoulder
 power off pins: 23 24 
 power off pins: 27 22 
@@ -11,58 +11,4 @@ robotarm powering pin 27 from part shoulder
 power off pins: 23 24 
 robotarm powering pin 23 from part base
 power off pins: 27 22 
-robotarm powering pin 24 from part base
-robotarm powering pin 22 from part shoulder
 power off pins: 23 24 
-power off pins: 27 22 
-robotarm powering pin 27 from part shoulder
-power off pins: 23 24 
-robotarm powering pin 23 from part base
-power off pins: 27 22 
-robotarm powering pin 22 from part shoulder
-power off pins: 23 24 
-robotarm powering pin 24 from part base
-power off pins: 27 22 
-robotarm powering pin 27 from part shoulder
-power off pins: 23 24 
-robotarm powering pin 23 from part base
-power off pins: 27 22 
-robotarm powering pin 22 from part shoulder
-power off pins: 23 24 
-robotarm powering pin 24 from part base
-power off pins: 27 22 
-robotarm powering pin 27 from part shoulder
-power off pins: 23 24 
-robotarm powering pin 23 from part base
-power off pins: 27 22 
-robotarm powering pin 22 from part shoulder
-power off pins: 23 24 
-robotarm powering pin 24 from part base
-power off pins: 27 22 
-robotarm powering pin 27 from part shoulder
-power off pins: 23 24 
-robotarm powering pin 23 from part base
-power off pins: 27 22 
-robotarm powering pin 22 from part shoulder
-power off pins: 23 24 
-robotarm powering pin 24 from part base
-power off pins: 27 22 
-robotarm powering pin 27 from part shoulder
-power off pins: 23 24 
-robotarm powering pin 23 from part base
-power off pins: 27 22 
-robotarm powering pin 22 from part shoulder
-power off pins: 23 24 
-robotarm powering pin 24 from part base
-power off pins: 27 22 
-robotarm powering pin 27 from part shoulder
-power off pins: 23 24 
-robotarm powering pin 23 from part base
-power off pins: 27 22 
-robotarm powering pin 22 from part shoulder
-power off pins: 23 24 
-robotarm powering pin 24 from part base
-power off pins: 27 22 
-robotarm powering pin 27 from part shoulder
-power off pins: 23 24 
-power off pins: 27 22 

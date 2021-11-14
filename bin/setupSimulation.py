@@ -15,6 +15,8 @@ class Interface (object):
         self._libraryList = libraryList
         self._library = 0
         self._simulationOption = False
+        self._pathToSimulation = "/simulations/robotArmSim/world.py"
+        self._testPath = "/bin/test.py"
 
         #call function
         self._askSimulationOption()
@@ -47,13 +49,24 @@ class Interface (object):
 
     def startSimulation(self, library):
         #works with one call, need 2 or more calls.
+        #needs to call simulation
+
+        #os.system(str(self._pathToSimulation))
         print(os.getcwd())
+        os.system(str(os.getcwd() + self._pathToSimulation))
+        #y = open("simulations/robotArmSim/world.txt", "w")
+        #y.append("het lukte")
+        #y.close()
+
+
+        #print(os.getcwd() + self._pathToSimulation)
+
         '''
         Threadname = library
-        for i in range(5):
+        for i in range(10):
             print(Threadname + " library: " + library)
             time.sleep(2)
-            if i == 4:
+            if i == 9:
                 print("final")
         '''
         
@@ -64,19 +77,26 @@ class Interface (object):
             print("calling: " + self._libraryList[self._library])
             print("vraag, 1 simulatie kunnen kiezen of meerdere?")
 
-        #update library number after all calls have been made for that library
-        self._library += 1
-
         #reset simulationOption so the next option will not be chosen. #better explanation needed
+        
+        #loop through libraries selected until none are left
+
+        if self._simulationOption:
+            import threading
+            #deamon closes thread once the program is killed
+            x = threading.Thread(target = self.startSimulation, args = (self._libraryList[self._library],), daemon = True)
+            print("Thread started")
+            x.start()
+
+        self._library += 1
         self._simulationOption = False
 
-        #loop through libraries selected until none are left
         if self._library == len(self._libraryList):
             self._window.master.destroy()
         else:
-            import threading
-            #deamon closes thread once the program is killed
-            x = threading.Thread(target = self.startSimulation, args = (self._libraryList[self._library - 1],), daemon = True)
-            x.start()
             self._askSimulationOption()
+        
+
+            
+            
     

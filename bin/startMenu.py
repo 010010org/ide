@@ -22,7 +22,7 @@ class Interface(object):
     _AdvancedProgrammingButton = None
     _progress = 0
     _pathToDirectoryAbove = os.path.dirname(os.getcwd())
-    _pathToSimulation = '/GUI-simpylc/Robotarm2/world.py'
+    _pathToSimulation = '/GUI-simpylc/RobotArm/world.py'
     
 
     # __init__ is called when the object is made
@@ -82,6 +82,7 @@ class Interface(object):
         #moet nog aan gewerkt worden, waarschijnlijk in een andere thread gooien terminal gaat dood.
         print(self._pathToDirectoryAbove)
         os.system(str(self._pathToDirectoryAbove + self._pathToSimulation))
+        print(self._pathToDirectoryAbove + self._pathToSimulation)
         
 
     def drawWindow(self):
