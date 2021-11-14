@@ -33,7 +33,7 @@ class Control(sp.Module):
     
     
     def input(self):
-        #hie kan de communicatie komen vanuit robot_output.txt
+        #hier kan de communicatie komen vanuit robot_output.txt
         self.part('angles')
         '''
         self.baseAngle.set(sp.world.robot.baseAngle)

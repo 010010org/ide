@@ -49,26 +49,9 @@ class Interface (object):
 
     def startSimulation(self, library):
         #works with one call, need 2 or more calls.
-        #needs to call simulation
-
-        #os.system(str(self._pathToSimulation))
-        print(os.getcwd())
+        #double clicking .py file
+        #wherispython , pythonfile , path to simulation
         os.system(str(os.getcwd() + self._pathToSimulation))
-        #y = open("simulations/robotArmSim/world.txt", "w")
-        #y.append("het lukte")
-        #y.close()
-
-
-        #print(os.getcwd() + self._pathToSimulation)
-
-        '''
-        Threadname = library
-        for i in range(10):
-            print(Threadname + " library: " + library)
-            time.sleep(2)
-            if i == 9:
-                print("final")
-        '''
         
 
     def _saveData(self):
