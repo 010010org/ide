@@ -22,3 +22,5 @@ partDictionary = {
     "on": ledMovement,
     "off": offMovement
 }
+
+fileError = " klopt niet, bestand kan niet worden gevonden. controleer alstublieft of het bestand bestaat"

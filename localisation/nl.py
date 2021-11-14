@@ -65,3 +65,9 @@ editButtonText = "Stoppen en aanpassen"
 stopButtonText = "Noodstop"
 timerInfo = "vul een aantal seconden in"
 powerInfo = "vul een percentage (0-100) in"
+
+# setupSimulation
+windowTitle = "Simulation"
+simulationInfoText = "Wil je de simulatie voor "
+yes = "ja"
+no = "nee"

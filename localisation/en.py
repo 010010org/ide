@@ -64,3 +64,9 @@ editButtonText = "Stop and edit"
 stopButtonText = "Emergency stop"
 timerInfo = "enter a number of seconds"
 powerInfo = "enter a percentage (0-100)"
+
+# setupSimulation
+windowTitle = "Simulation"
+simulationInfoText = "Do you want to run the simulation for "
+yes = "yes"
+no = "no"

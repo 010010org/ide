@@ -1,6 +1,6 @@
 import configparser  # library used to read ini file
 import os.path # library used to test if file exists (to see if we're running on a pi)
-#from tkinter import BooleanVar  
+import robotArmLocalisationdata as ld  
 
 #to-do ervoor zorgen dat de simulatie automatisch de goede simyplc bestand aanroept
 
@@ -69,7 +69,8 @@ class Arm(object):
 			file.close()
 
 		else:
-			print(path_to_file, " is not correct, file cannot be found.")
+			print(path_to_file, ld.fileError )#ld
+
 
 	# This is the parent class of all parts. This contains the functions that actually move the part.
 	class Part(object):
