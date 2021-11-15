@@ -15,7 +15,7 @@ class Interface (object):
         self._libraryList = libraryList
         self._library = 0
         self._simulationOption = False
-        self._pathToSimulation = "/simulations/robotArmSim/world.py"
+        self._pathToSimulation = "/simulations/robotArmSim"
         self._testPath = "/bin/test.py"
 
         #call function
@@ -51,14 +51,15 @@ class Interface (object):
         #works with one call, need 2 or more calls.
         #double clicking .py file
         #wherispython , pythonfile , path to simulation
-        os.system(str(os.getcwd() + self._pathToSimulation))
+        x = os.system(str(os.getcwd() + self._pathToSimulation + '/' + library + '.py'))
+        print(x)
+        x
         
 
     def _saveData(self):
         if self._simulationOption:
             #call actual simulation or function to call simulation
             print("calling: " + self._libraryList[self._library])
-            print("vraag, 1 simulatie kunnen kiezen of meerdere?")
 
         #reset simulationOption so the next option will not be chosen. #better explanation needed
         
@@ -70,13 +71,12 @@ class Interface (object):
             x = threading.Thread(target = self.startSimulation, args = (self._libraryList[self._library],), daemon = True)
             print("Thread started")
             x.start()
+            self._window.master.destroy()
 
         self._library += 1
         self._simulationOption = False
 
-        if self._library == len(self._libraryList):
-            self._window.master.destroy()
-        else:
+        if self._library != len(self._libraryList):
             self._askSimulationOption()
         
 
