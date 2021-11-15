@@ -1,12 +1,8 @@
 import configparser  # library used to read ini file
 import os.path # library used to test if file exists (to see if we're running on a pi)
 import robotArmLocalisationdata as ld  
-from pynput import keyboard
+#from pynput import keyboard
 import time
-
-
-#to-do ervoor zorgen dat de simulatie automatisch de goede simyplc bestand aanroept
-
 
 class Arm(object):
 	_iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
@@ -111,8 +107,8 @@ class Arm(object):
 					return
 			# "Simulation code" for when the code is run on a different device. Prints to self._robotOutputFile
 			
-
-			message = str("robotarm powering pin " + pin + " from part " + self._name + " for " + self.time() + " seconds.")
+			#TODO time of key pressed instead of random int.
+			message = str("robotarm powering pin " + pin + " from part " + self._name + " for " + self.time() + " second(s).")
 			#cannot enter the if statement, assuming it works.
 			if power > 0 & power < 100:
 				message += (" at " + str(power) + "% power")
