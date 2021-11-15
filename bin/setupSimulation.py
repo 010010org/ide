@@ -58,14 +58,7 @@ class Interface (object):
 
     def _saveData(self):
         if self._simulationOption:
-            #call actual simulation or function to call simulation
-            print("calling: " + self._libraryList[self._library])
-
-        #reset simulationOption so the next option will not be chosen. #better explanation needed
-        
-        #loop through libraries selected until none are left
-
-        if self._simulationOption:
+            #start a new thread that runs the simulation
             import threading
             #deamon closes thread once the program is killed
             x = threading.Thread(target = self.startSimulation, args = (self._libraryList[self._library],), daemon = True)
@@ -74,10 +67,13 @@ class Interface (object):
             self._window.master.destroy()
 
         self._library += 1
-        self._simulationOption = False
 
-        if self._library != len(self._libraryList):
+        if self._library == len(self._libraryList):
+            self._window.master.destroy()
+        else:
             self._askSimulationOption()
+
+        
         
 
             

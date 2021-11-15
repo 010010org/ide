@@ -1,6 +1,9 @@
 import configparser  # library used to read ini file
 import os.path # library used to test if file exists (to see if we're running on a pi)
 import robotArmLocalisationdata as ld  
+from pynput import keyboard
+import time
+
 
 #to-do ervoor zorgen dat de simulatie automatisch de goede simyplc bestand aanroept
 
@@ -14,6 +17,7 @@ class Arm(object):
 	_raspberryPiPath = "/sys/firmware/devicetree/base/model"
 	_runningOnPi = False
 	_debugmode = True
+
 
 	#function that checks if the file exists and returns true or false.
 	#also resolves errors that might occur, the open function creates a file if none is found. that can cause communication issues with simpylc or any other program.
@@ -84,8 +88,13 @@ class Arm(object):
 			self._runningOnPi = runningOnPi
 			self._name = name
 			self._debugmode = Arm._debugmode
+			self._timeTaken = 0
 		
-
+		def time(self):
+			import random
+			return str(random.randint(10,50))
+		
+		
 		# This is the only real function to move one the motors, all the other functions just give this function a different name for ease of use.
 		# Do NOT attempt to call this function directly, it's only meant for internal use.
 		def _move(self, pin, power = 0):
@@ -101,12 +110,13 @@ class Arm(object):
 				if not self._debugmode:
 					return
 			# "Simulation code" for when the code is run on a different device. Prints to self._robotOutputFile
-			message = str("robotarm powering pin " + pin + " from part " + self._name)
+			
+
+			message = str("robotarm powering pin " + pin + " from part " + self._name + " for " + self.time() + " seconds.")
 			#cannot enter the if statement, assuming it works.
 			if power > 0 & power < 100:
 				message += (" at " + str(power) + "% power")
 				print("appended")
-			#message = "powering string is nog niet geconverteerd"
 			Arm.write_to_file(self, Arm._robotOutputFile, message)
 			return
 
@@ -122,8 +132,9 @@ class Arm(object):
 			message = "power off pins: " 
 			for i in self._pins:
 				message += str(i + " ")
-			#print("power off pins:", end=" "), [print(i, end=" ") for i in self._pins], print("") (original println)
-			Arm.write_to_file(self, Arm._robotOutputFile, message)
+			
+			#currently not needed
+			#Arm.write_to_file(self, Arm._robotOutputFile, message)
 			return
 		
 
