@@ -1,8 +1,10 @@
 import configparser  # library used to read ini file
 import os.path # library used to test if file exists (to see if we're running on a pi)
 import robotArmLocalisationdata as ld  
-#from pynput import keyboard
 import time
+import datetime
+
+#TODO ini file resetten voor/na gebruik
 
 class Arm(object):
 	_iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
@@ -10,6 +12,7 @@ class Arm(object):
 	#pathfiles to different files so it only needs to be noted once and can easily be changed
 	_iniFile = "lib/robotArm/pinout.ini"
 	_robotOutputFile = "lib/robotArm/robot_output.txt"
+	_robotOutputiniFile = "lib/robotArm/robotOutput.ini"
 	_raspberryPiPath = "/sys/firmware/devicetree/base/model"
 	_runningOnPi = False
 	_debugmode = True
@@ -17,8 +20,8 @@ class Arm(object):
 
 	#function that checks if the file exists and returns true or false.
 	#also resolves errors that might occur, the open function creates a file if none is found. that can cause communication issues with simpylc or any other program.
-	def file_check(self, path_to_file):
-		return os.path.exists(path_to_file)
+	def file_check(self, filePath):
+		return os.path.exists(filePath)
 
 	def __init__(self):
 		# read configured pins from ini file
@@ -61,15 +64,31 @@ class Arm(object):
 			file.close()
 
 	#function that writes the printlines to a separate file.
-	def write_to_file(self, path_to_file, message):
+	def write_to_file(self, filePath, message):
 		#checks if file exists
-		if Arm.file_check(self, path_to_file): 
-			file = open (path_to_file, "a")
+		if Arm.file_check(self, filePath): 
+			#if statement to check for type of file
+			file = open (filePath, "a")
 			file.write(str(message + "\n"))
 			file.close()
 
 		else:
-			print(path_to_file, ld.fileError )#ld
+			print(filePath, ld.fileError )#ld
+		return
+	
+	def writeToIniFile(self, iniPath):
+		if Arm.file_check(self, iniPath):
+			#write changes of degrees to ini file
+			iniWriter = configparser.ConfigParser(comment_prefixes="/", allow_no_value=True)
+			iniWriter.optionxform = str
+			iniWriter.read(iniPath)
+			iniWriter[self._name]["DEGREES"] = str(self._degrees)
+			with open(iniPath, "w") as configFile:
+				iniWriter.write(configFile, space_around_delimiters=False)
+		else:
+			print(iniPath, ld.fileError )
+		return
+
 
 
 	# This is the parent class of all parts. This contains the functions that actually move the part.
@@ -85,10 +104,18 @@ class Arm(object):
 			self._name = name
 			self._debugmode = Arm._debugmode
 			self._timeTaken = 0
+			self._degrees = 0
 		
 		def time(self):
 			import random
-			return str(random.randint(10,50))
+			return random.randint(5, 15)
+
+		def calculate_degrees(self, keypress):
+			self._degrees += keypress * 4
+			return
+
+			
+
 		
 		
 		# This is the only real function to move one the motors, all the other functions just give this function a different name for ease of use.
@@ -108,12 +135,20 @@ class Arm(object):
 			# "Simulation code" for when the code is run on a different device. Prints to self._robotOutputFile
 			
 			#TODO time of key pressed instead of random int.
-			message = str("robotarm powering pin " + pin + " from part " + self._name + " for " + self.time() + " second(s).")
+			currentTime = datetime.datetime.now()
+			keypress = self.time()
+			message = str(currentTime.strftime("%H:%M:%S") + " robotarm powering pin " + pin + " from part " + self._name + " for " + str(keypress) + " second(s).")
 			#cannot enter the if statement, assuming it works.
 			if power > 0 & power < 100:
 				message += (" at " + str(power) + "% power")
 				print("appended")
+			#write to the text file
 			Arm.write_to_file(self, Arm._robotOutputFile, message)
+			self.calculate_degrees(keypress)
+			#write changed degrees to ini file
+			Arm.writeToIniFile(self, Arm._robotOutputiniFile)
+			print(pin)
+
 			return
 
 		# Turns off a part if running on a pi. Only prints to the console otherwise.
@@ -129,7 +164,7 @@ class Arm(object):
 			for i in self._pins:
 				message += str(i + " ")
 			
-			#currently not needed
+			#Write off message
 			#Arm.write_to_file(self, Arm._robotOutputFile, message)
 			return
 		

@@ -1,4 +1,5 @@
 import simpylc as sp
+import waardes
 
 class Visualisation (sp.Scene):
     def __init__ (self):
@@ -29,11 +30,11 @@ class Visualisation (sp.Scene):
         
     def display (self):
         self.stand (parts = lambda:
-            self.base (rotation = sp.world.control.baseAngle, parts = lambda:
-                self.shoulder (rotation = sp.world.control.shoulderAngle, parts = lambda:
-                    self.elbow (rotation = sp.world.control.elbowAngle, parts = lambda:
-                        self.wrist (rotation = sp.world.control.wristAngle, parts = lambda:
-                            self.handCenter (rotation = sp.world.control.wristAngle))))))
+            self.base (rotation = waardes.Waardes.getBaseAngle(self), parts = lambda:
+                self.shoulder (rotation = 0, parts = lambda:
+                    self.elbow (rotation = 0, parts = lambda:
+                        self.wrist (rotation = 0, parts = lambda:
+                            self.handCenter (rotation = 0))))))
 '''
 
 , parts = lambda:

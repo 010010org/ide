@@ -1,61 +1,23 @@
-robotarm powering pin 23 from part base for 3 seconds.
-robotarm powering pin 27 from part shoulder for 3 seconds.
-robotarm powering pin 22 from part shoulder for 5 seconds.
-robotarm powering pin 23 from part base for 3 seconds.
-robotarm powering pin 22 from part shoulder for 2 seconds.
-robotarm powering pin 27 from part shoulder for 2 seconds.
-robotarm powering pin 23 from part base for 5 seconds.
-robotarm powering pin 22 from part shoulder for 2 seconds.
-robotarm powering pin 27 from part shoulder for 5 seconds.
-robotarm powering pin 23 from part base for 3 seconds.
-robotarm powering pin 27 from part shoulder for 1 seconds.
-robotarm powering pin 22 from part shoulder for 1 seconds.
-robotarm powering pin 23 from part base for 3 seconds.
-robotarm powering pin 23 from part base for 5 seconds.
-robotarm powering pin 24 from part base for 3 seconds.
-robotarm powering pin 24 from part base for 1 seconds.
-robotarm powering pin 27 from part shoulder for 2 seconds.
-robotarm powering pin 27 from part shoulder for 1 seconds.
-robotarm powering pin 22 from part shoulder for 3 seconds.
-robotarm powering pin 23 from part base for 2 seconds.
-robotarm powering pin 22 from part shoulder for 5 seconds.
-robotarm powering pin 24 from part base for 4 seconds.
-robotarm powering pin 27 from part shoulder for 5 seconds.
-robotarm powering pin 23 from part base for 1 seconds.
-robotarm powering pin 22 from part shoulder for 1 seconds.
-robotarm powering pin 24 from part base for 2 seconds.
-robotarm powering pin 27 from part shoulder for 1 seconds.
-robotarm powering pin 23 from part base for 2 seconds.
-robotarm powering pin 22 from part shoulder for 1 seconds.
-robotarm powering pin 24 from part base for 1 seconds.
-robotarm powering pin 27 from part shoulder for 1 seconds.
-robotarm powering pin 23 from part base for 5 seconds.
-robotarm powering pin 22 from part shoulder for 2 seconds.
-robotarm powering pin 24 from part base for 1 seconds.
-robotarm powering pin 27 from part shoulder for 1 seconds.
-robotarm powering pin 23 from part base for 4 seconds.
-robotarm powering pin 22 from part shoulder for 3 seconds.
-robotarm powering pin 24 from part base for 3 seconds.
-robotarm powering pin 27 from part shoulder for 2 seconds.
-robotarm powering pin 23 from part base for 4 seconds.
-robotarm powering pin 22 from part shoulder for 5 seconds.
-robotarm powering pin 24 from part base for 2 seconds.
-robotarm powering pin 27 from part shoulder for 1 seconds.
-robotarm powering pin 23 from part base for 1 seconds.
-robotarm powering pin 22 from part shoulder for 3 seconds.
-robotarm powering pin 24 from part base for 5 seconds.
-robotarm powering pin 27 from part shoulder for 2 seconds.
-robotarm powering pin 23 from part base for 3 seconds.
-robotarm powering pin 27 from part shoulder for 2 seconds.
-robotarm powering pin 24 from part base for 4 seconds.
-robotarm powering pin 22 from part shoulder for 2 seconds.
-robotarm powering pin 23 from part base for 4 seconds.
-robotarm powering pin 27 from part shoulder for 2 seconds.
-robotarm powering pin 24 from part base for 5 seconds.
-robotarm powering pin 22 from part shoulder for 2 seconds.
-robotarm powering pin 23 from part base for 5 seconds.
-robotarm powering pin 27 from part shoulder for 4 seconds.
-robotarm powering pin 24 from part base for 1 seconds.
-robotarm powering pin 22 from part shoulder for 5 seconds.
-robotarm powering pin 23 from part base for 2 seconds.
-robotarm powering pin 27 from part shoulder for 3 seconds.
+21:35:37 robotarm powering pin 23 from part base for 6 second(s).
+21:35:38 robotarm powering pin 23 from part base for 10 second(s).
+21:35:39 robotarm powering pin 22 from part shoulder for 14 second(s).
+21:35:40 robotarm powering pin 22 from part shoulder for 15 second(s).
+21:35:43 robotarm powering pin 14 from part wrist for 5 second(s).
+21:35:44 robotarm powering pin 14 from part wrist for 8 second(s).
+21:36:00 robotarm powering pin 27 from part shoulder for 11 second(s).
+21:36:00 robotarm powering pin 27 from part shoulder for 14 second(s).
+21:36:01 robotarm powering pin 22 from part shoulder for 15 second(s).
+21:36:01 robotarm powering pin 23 from part base for 11 second(s).
+21:36:01 robotarm powering pin 23 from part base for 11 second(s).
+21:36:01 robotarm powering pin 23 from part base for 9 second(s).
+21:36:02 robotarm powering pin 23 from part base for 6 second(s).
+21:36:02 robotarm powering pin 22 from part shoulder for 7 second(s).
+21:36:02 robotarm powering pin 22 from part shoulder for 5 second(s).
+21:36:02 robotarm powering pin 22 from part shoulder for 6 second(s).
+21:36:04 robotarm powering pin 15 from part wrist for 11 second(s).
+21:36:04 robotarm powering pin 15 from part wrist for 9 second(s).
+21:36:04 robotarm powering pin 15 from part wrist for 6 second(s).
+21:36:04 robotarm powering pin 15 from part wrist for 15 second(s).
+21:36:04 robotarm powering pin 15 from part wrist for 6 second(s).
+21:36:04 robotarm powering pin 15 from part wrist for 14 second(s).
+21:36:05 robotarm powering pin 15 from part wrist for 9 second(s).
