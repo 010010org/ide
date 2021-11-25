@@ -3,12 +3,12 @@ import os
 #alleen register gebruiken anders private variabelen, dus _name. wordt op gechecked in simpylc
 class Waardes():
 
-    _robotOutputiniFile = "lib/robotArm/robotOutput.ini"
-    BaseWorkingDirectory = os.path.dirname(os.path.dirname(os.getcwd()))
-    path = os.path.join(BaseWorkingDirectory , _robotOutputiniFile)
-    #TODO make it compatible with debugmode, debugmode shows control page
+        #TODO make it compatible with debugmode, debugmode shows control page
     def __init__(self):
-        
+        self._robotOutputiniFile = "lib/robotArm/robotOutput.ini"
+        self._baseWorkingDirectory = os.path.dirname(os.path.dirname(os.getcwd()))
+        self._iniPath = os.path.join(self._baseWorkingDirectory , self._robotOutputiniFile)
+
         #base
         self._baseAngle = 0
         self._clockwise = 1 

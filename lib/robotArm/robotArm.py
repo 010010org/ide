@@ -3,6 +3,8 @@ import os.path # library used to test if file exists (to see if we're running on
 import robotArmLocalisationdata as ld  
 import time
 import datetime
+import math
+
 
 #TODO ini file resetten voor/na gebruik
 
@@ -62,6 +64,22 @@ class Arm(object):
 			#truncate makes the file empty.
 			file.truncate()
 			file.close()
+		
+		if self.file_check(self._robotOutputiniFile):
+			config = configparser.ConfigParser(strict=False)
+			config.optionxform = str
+			config.read(self._robotOutputiniFile)
+			config['base']["DEGREES"] = '0'
+			config['shoulder']["DEGREES"] = '0'
+			config['elbow']["DEGREES"] = '0'
+			config['wrist']["DEGREES"] = '0'
+			with open(self._robotOutputiniFile, "w") as configFile:
+				config.write(configFile, space_around_delimiters=False)
+
+
+
+			
+
 
 	#function that writes the printlines to a separate file.
 	def write_to_file(self, filePath, message):
@@ -79,10 +97,11 @@ class Arm(object):
 	def writeToIniFile(self, iniPath):
 		if Arm.file_check(self, iniPath):
 			#write changes of degrees to ini file
-			iniWriter = configparser.ConfigParser(comment_prefixes="/", allow_no_value=True)
+			iniWriter = configparser.ConfigParser(comment_prefixes="/", allow_no_value=True, strict=False)
 			iniWriter.optionxform = str
 			iniWriter.read(iniPath)
-			iniWriter[self._name]["DEGREES"] = str(self._degrees)
+			iniWriter.set(self._name, "DEGREES", str(self._degrees))
+			#buffer so the ini file doesn't update too quickly
 			with open(iniPath, "w") as configFile:
 				iniWriter.write(configFile, space_around_delimiters=False)
 		else:
@@ -111,7 +130,9 @@ class Arm(object):
 			return random.randint(5, 15)
 
 		def calculate_degrees(self, keypress):
-			self._degrees += keypress * 4
+			self._degrees = (self._degrees + keypress * 4) % 360
+
+			print(f"{self._degrees}")
 			return
 
 			
@@ -147,7 +168,7 @@ class Arm(object):
 			self.calculate_degrees(keypress)
 			#write changed degrees to ini file
 			Arm.writeToIniFile(self, Arm._robotOutputiniFile)
-			print(pin)
+			#print(pin)
 
 			return
 

@@ -52,8 +52,7 @@ class Interface (object):
         #double clicking .py file
         #wherispython , pythonfile , path to simulation
         x = os.system(str(os.getcwd() + self._pathToSimulation + '/' + library + '.py'))
-        print(x)
-        x
+
         
 
     def _saveData(self):
