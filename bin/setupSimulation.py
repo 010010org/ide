@@ -50,7 +50,7 @@ class Interface (object):
     def startSimulation(self, library):
         #works with one call, need 2 or more calls.
         #double clicking .py file
-        #wherispython , pythonfile , path to simulation
+        #TODO wherispython , pythonfile , path to simulation
         x = os.system(str(os.getcwd() + self._pathToSimulation + '/' + library + '.py'))
 
         

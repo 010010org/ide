@@ -1,4 +1,4 @@
-baseMovements = ["met de klok mee", "tegen de klok in"]
+baseMovements = ["tegen de klok in", "met de klok mee"]
 gripMovements = ["open", "dicht"]
 ledMovement = "aan"
 normalMovements = ["omhoog", "omlaag"]

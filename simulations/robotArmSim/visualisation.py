@@ -1,4 +1,5 @@
 from logging import error
+from time import sleep
 import simpylc as sp
 import os
 import configparser
@@ -58,9 +59,12 @@ class Visualisation (sp.Scene):
             finalAngle = self._finalAngles[i][1]
             currentAngle = self._parts[i][1]
             angledifference = finalAngle - currentAngle
-            #TODO gaat nu van 350 - 8 de andere kant op
+            #print(f'{self._parts[0][0]}: finalangle: {finalAngle}. currentangle: {currentAngle}. angledifference: {angledifference}')
+            #TODO keypress toevoegen aan ini zodat je weet of het een grote of kleine bewerking is
+            #TODO gaat nu van 350 - 8 de andere kant op met modulo 360
+            #Maandag meeting brainstorm
             if angledifference > 0:
-                self._parts[i][1] += 1              
+                self._parts[i][1] += 1           
             elif angledifference < 0:
                 self._parts[i][1] -= 1
 
@@ -70,6 +74,7 @@ class Visualisation (sp.Scene):
         self.updateFinalAngleList()
         self.updateCurrentAngles()
         self.stand (parts = lambda:
+        #for loop met [i]
             self.base (rotation = self._parts[0][1], parts = lambda:
                 self.shoulder (rotation = self._parts[1][1], parts = lambda:
                     self.elbow (rotation = self._parts[2][1], parts = lambda:

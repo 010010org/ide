@@ -1,4 +1,4 @@
-from pynput import keyboard 
+from pynput import keyboard
 import time
 class a():
     def on_key_release(self, key): #what to do on key-release

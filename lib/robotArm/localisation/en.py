@@ -1,4 +1,4 @@
-baseMovements = ["clockwise", "counterclockwise"]
+baseMovements = ["counterclockwise", "clockwise"]
 gripMovements = ["open", "close"]
 ledMovement = "on"
 normalMovements = ["up", "down"]

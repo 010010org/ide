@@ -3,10 +3,7 @@ import os.path # library used to test if file exists (to see if we're running on
 import robotArmLocalisationdata as ld  
 import time
 import datetime
-import math
-
-
-#TODO ini file resetten voor/na gebruik
+#from pynput import keyboard
 
 class Arm(object):
 	_iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
@@ -18,12 +15,6 @@ class Arm(object):
 	_raspberryPiPath = "/sys/firmware/devicetree/base/model"
 	_runningOnPi = False
 	_debugmode = True
-
-
-	#function that checks if the file exists and returns true or false.
-	#also resolves errors that might occur, the open function creates a file if none is found. that can cause communication issues with simpylc or any other program.
-	def file_check(self, filePath):
-		return os.path.exists(filePath)
 
 	def __init__(self):
 		# read configured pins from ini file
@@ -59,13 +50,15 @@ class Arm(object):
 		self.grip = self.Grip(_M1, self._runningOnPi, "grip")
 		self.light = self.Light(_M_LIGHT, self._runningOnPi, "light")
 
-		if self.file_check(self._robotOutputFile):
+		if os.path.exists(self._robotOutputFile):
+			#couldn't truncat file with 'open x as y' 
 			file = open(self._robotOutputFile, "w")
 			#truncate makes the file empty.
 			file.truncate()
 			file.close()
 		
-		if self.file_check(self._robotOutputiniFile):
+		if os.path.exists(self._robotOutputiniFile):
+			#create/ reset all the degrees in the ini file
 			config = configparser.ConfigParser(strict=False)
 			config.optionxform = str
 			config.read(self._robotOutputiniFile)
@@ -76,36 +69,35 @@ class Arm(object):
 			with open(self._robotOutputiniFile, "w") as configFile:
 				config.write(configFile, space_around_delimiters=False)
 
-
-
-			
-
-
 	#function that writes the printlines to a separate file.
 	def write_to_file(self, filePath, message):
 		#checks if file exists
-		if Arm.file_check(self, filePath): 
+		if os.path.exists(filePath): 
 			#if statement to check for type of file
 			file = open (filePath, "a")
 			file.write(str(message + "\n"))
 			file.close()
-
 		else:
-			print(filePath, ld.fileError )#ld
+			print(f'{filePath} {ld.fileError}' )#ld
 		return
 	
 	def writeToIniFile(self, iniPath):
-		if Arm.file_check(self, iniPath):
+		if os.path.exists(iniPath):
 			#write changes of degrees to ini file
 			iniWriter = configparser.ConfigParser(comment_prefixes="/", allow_no_value=True, strict=False)
 			iniWriter.optionxform = str
 			iniWriter.read(iniPath)
 			iniWriter.set(self._name, "DEGREES", str(self._degrees))
 			#buffer so the ini file doesn't update too quickly
-			with open(iniPath, "w") as configFile:
-				iniWriter.write(configFile, space_around_delimiters=False)
+			try:
+				with open(iniPath, "w") as configFile:
+					iniWriter.write(configFile, space_around_delimiters=False)
+			except PermissionError as error:
+				#temporary string kan uiteindelijk vervangen worden door pass na overleg met Bas
+				print(f'er ging iets fout in writeToIniFile: {error}')
+
 		else:
-			print(iniPath, ld.fileError )
+			print(f'{iniPath} {ld.fileError}')
 		return
 
 
@@ -117,6 +109,7 @@ class Arm(object):
 		_runningOnPi = False
 		_name = ""
 
+		#if a is pressed message keeps spamming, not easy too measure time.
 		def __init__(self, pins, runningOnPi, name):
 			self._pins = pins
 			self._runningOnPi = runningOnPi
@@ -125,20 +118,17 @@ class Arm(object):
 			self._timeTaken = 0
 			self._degrees = 0
 		
-		def time(self):
+		def timer(self):
 			import random
 			return random.randint(5, 15)
 
+		
+			
 		def calculate_degrees(self, keypress):
-			self._degrees = (self._degrees + keypress * 4) % 360
-
-			print(f"{self._degrees}")
+			self._degrees = (self._degrees + keypress * 4)# % 360
 			return
 
-			
-
-		
-		
+		#TODO remove on/off parts to different function
 		# This is the only real function to move one the motors, all the other functions just give this function a different name for ease of use.
 		# Do NOT attempt to call this function directly, it's only meant for internal use.
 		def _move(self, pin, power = 0):
@@ -157,19 +147,25 @@ class Arm(object):
 			
 			#TODO time of key pressed instead of random int.
 			currentTime = datetime.datetime.now()
-			keypress = self.time()
-			message = str(currentTime.strftime("%H:%M:%S") + " robotarm powering pin " + pin + " from part " + self._name + " for " + str(keypress) + " second(s).")
+			keypress = self.timer()
+			#keypress = Arm.test(self)
+			message = (f'{currentTime.strftime("%H:%M:%S")} robotarm powering pin {pin} from part {self._name} for {keypress} second(s).')
 			#cannot enter the if statement, assuming it works.
+
 			if power > 0 & power < 100:
-				message += (" at " + str(power) + "% power")
-				print("appended")
+				message += (f" at {power} % power")
+				print(f"appended")
+			
 			#write to the text file
 			Arm.write_to_file(self, Arm._robotOutputFile, message)
+			
+			if pin == self._pins[0]:
+				keypress = -keypress
+			print(f'{keypress}')
 			self.calculate_degrees(keypress)
+
 			#write changed degrees to ini file
 			Arm.writeToIniFile(self, Arm._robotOutputiniFile)
-			#print(pin)
-
 			return
 
 		# Turns off a part if running on a pi. Only prints to the console otherwise.
@@ -183,10 +179,10 @@ class Arm(object):
 			# Simulation code
 			message = "power off pins: " 
 			for i in self._pins:
-				message += str(i + " ")
+				message += (f'{i} ')
 			
 			#Write off message
-			#Arm.write_to_file(self, Arm._robotOutputFile, message)
+			Arm.write_to_file(self, Arm._robotOutputFile, message)
 			return
 		
 
