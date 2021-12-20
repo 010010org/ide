@@ -48,10 +48,10 @@ class Interface (object):
         self._simulationOption = self._simulationOptionVar.get()
 
     def startSimulation(self, library):
-        #works with one call, need 2 or more calls.
         #double clicking .py file
         #TODO wherispython , pythonfile , path to simulation
-        x = os.system(str(os.getcwd() + self._pathToSimulation + '/' + library + '.py'))
+        #x = os.system(str(os.getcwd() + self._pathToSimulation + '/' + library + '.py'))
+        x = os.system(str(os.getcwd())+ "/simulations/builder/visualisation.py")
 
         
 

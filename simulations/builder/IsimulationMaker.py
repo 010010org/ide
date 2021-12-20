@@ -9,11 +9,27 @@ class IsimulationMaker():
         '''give list of all part names'''
 
     @abstractstaticmethod
-    def setRectangle(name, color, size):
+    def createStand(stand, partsList):
+        '''create the stand / platform for the simulation'''
+
+    @abstractstaticmethod
+    def createBeam(name, colour, size):
         '''set size and color of rectangle'''
 
     @abstractstaticmethod
-    def setName(value):
+    def createCylinder(name, colour, size):
+        '''set size and colour of cylinder'''
+    
+    @abstractstaticmethod
+    def createEllipsoid(name):
+        '''set size and name of ellipsoid'''
+
+    @abstractstaticmethod
+    def createCone(name):
+        '''set size and name of Cone'''
+
+    @abstractstaticmethod
+    def setSimulationName(value):
         '''ja toch'''
 
     def getResult():

@@ -15,13 +15,13 @@ class Visualisation (sp.Scene):
         self._parts = [["base", 0], ["shoulder", 0], ["elbow", 0], ["wrist", 0],]
         self._finalAngles = copy.deepcopy(self._parts)
 
-        self.stand = sp.Cylinder (size = (0.3, 0.3, 0.4), center = (0, 0, 0.2), pivot = (0, 0, 1), color = (1, 1, 0.2))
+        self.stand = sp.Cylinder (size = (0.5, 0.5, 0.8), center = (0, 0, 0.2), pivot = (0, 0, 1), color = (1, 1, 0.2))
         self.base = sp.Beam (size = (0.4, 0.4, 0.6), center = (0, 0, 0.5), pivot = (0, 0, 1), color = (0.5, 0.5, 0.5))
         
         armColor = (1, 0.4, 0.4)
-        self.shoulder = sp.Beam (size = (1, 0.2, 0.2), center = (0.4, -0.3, 0.1), joint = (-0.4, 0, 0), pivot = (0, 1, 0), color = armColor)
+        self.shoulder = sp.Ellipsoid (size = (1, 0.2, 0.2), center = (0.4, -0.3, 0.1), joint = (-0.4, 0, 0), pivot = (0, 1, 0), color = armColor)
         self.elbow = sp.Beam (size = (0.7, 0.15, 0.15), center = (0.65, 0.175, 0), joint = (-0.25, 0, 0), pivot = (0, 1, 0), color = armColor)
-        self.wrist = sp.Beam (size = (0.3, 0.1, 0.1), center = (0.40, -0.125, 0), joint = (-0.05, 0, 0), pivot = (0, 1, 0), color = armColor)
+        self.wrist = sp.Cone (size = (0.3, 0.1, 0.1), center = (0.40, -0.125, 0), joint = (-0.05, 0, 0), pivot = (0, 1, 0), color = armColor)
         
         handColor = (1, 0.01, 0.01)
         handSideSize = (0.1, 0.1, 0.1)
@@ -75,12 +75,12 @@ class Visualisation (sp.Scene):
         self.updateCurrentAngles()
         self.stand (parts = lambda:
         #for loop met [i]
-            self.base (rotation = self._parts[0][1], parts = lambda:
-                self.shoulder (rotation = self._parts[1][1], parts = lambda:
-                    self.elbow (rotation = self._parts[2][1], parts = lambda:
-                        self.wrist (rotation = self._parts[3][1], parts = lambda:
+            self.base (rotation = self._parts[0][1] + 
+                self.shoulder (rotation = self._parts[1][1] +
+                    self.elbow (rotation = self._parts[2][1] +
+                        self.wrist (rotation = self._parts[3][1]+ 
                             self.handCenter (rotation = self._parts[3][1]))))))
-                    
+                 
 '''
 
 , parts = lambda:
@@ -93,4 +93,3 @@ class Visualisation (sp.Scene):
     self.finger2 (rotation = sp.world.robot.finAng) +
     self.finger3 (rotation = sp.world.robot.finAng)
     '''
-        

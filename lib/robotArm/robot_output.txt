@@ -1,32 +1,50 @@
-15:29:56 robotarm powering pin 23 from part base for 5 second(s).
-power off pins: 23 24 
-15:29:57 robotarm powering pin 23 from part base for 5 second(s).
-power off pins: 23 24 
-15:29:57 robotarm powering pin 27 from part shoulder for 7 second(s).
+18:51:53 robotarm powering pin 27 from part shoulder for 10 second(s).
 power off pins: 27 22 
-15:29:58 robotarm powering pin 24 from part base for 13 second(s).
+18:51:53 robotarm powering pin 24 from part base for 12 second(s).
+18:51:53 robotarm powering pin 23 from part base for 12 second(s).
 power off pins: 23 24 
-15:29:58 robotarm powering pin 24 from part base for 12 second(s).
+18:51:53 robotarm powering pin 22 from part shoulder for 14 second(s).
 power off pins: 23 24 
-15:29:59 robotarm powering pin 22 from part shoulder for 11 second(s).
+18:51:53 robotarm powering pin 24 from part base for 9 second(s).
 power off pins: 27 22 
-15:29:59 robotarm powering pin 23 from part base for 14 second(s).
 power off pins: 23 24 
-15:29:59 robotarm powering pin 15 from part wrist for 14 second(s).
-power off pins: 14 15 
-15:29:59 robotarm powering pin 14 from part wrist for 11 second(s).
-power off pins: 14 15 
-15:29:59 robotarm powering pin 18 from part elbow for 12 second(s).
-power off pins: 17 18 
-15:30:00 robotarm powering pin 17 from part elbow for 5 second(s).
-power off pins: 17 18 
-15:30:00 robotarm powering pin 17 from part elbow for 13 second(s).
-power off pins: 17 18 
-15:30:00 robotarm powering pin 14 from part wrist for 6 second(s).
-15:30:00 robotarm powering pin 23 from part base for 13 second(s).
-power off pins: 14 15 
+18:51:54 robotarm powering pin 27 from part shoulder for 12 second(s).
+power off pins: 27 22 
+18:51:54 robotarm powering pin 24 from part base for 8 second(s).
+18:51:54 robotarm powering pin 23 from part base for 9 second(s).
 power off pins: 23 24 
-15:30:00 robotarm powering pin 15 from part wrist for 11 second(s).
-power off pins: 14 15 
-15:30:01 robotarm powering pin 17 from part elbow for 12 second(s).
+18:51:54 robotarm powering pin 22 from part shoulder for 8 second(s).
+power off pins: 23 24 
+power off pins: 27 22 
+18:51:54 robotarm powering pin 18 from part elbow for 10 second(s).
 power off pins: 17 18 
+18:51:54 robotarm powering pin 24 from part base for 14 second(s).
+18:51:54 robotarm powering pin 18 from part elbow for 15 second(s).
+power off pins: 17 18 
+18:51:54 robotarm powering pin 27 from part shoulder for 15 second(s).
+power off pins: 23 24 
+power off pins: 27 22 
+18:51:55 robotarm powering pin 17 from part elbow for 10 second(s).
+18:51:55 robotarm powering pin 18 from part elbow for 10 second(s).
+power off pins: 17 18 
+power off pins: 17 18 
+18:51:55 robotarm powering pin 18 from part elbow for 10 second(s).
+power off pins: 17 18 
+18:51:55 robotarm powering pin 17 from part elbow for 11 second(s).
+power off pins: 17 18 
+18:51:56 robotarm powering pin 24 from part base for 10 second(s).
+power off pins: 23 24 
+18:51:56 robotarm powering pin 22 from part shoulder for 8 second(s).
+power off pins: 27 22 
+18:51:56 robotarm powering pin 27 from part shoulder for 10 second(s).
+power off pins: 27 22 
+18:51:56 robotarm powering pin 23 from part base for 7 second(s).
+power off pins: 23 24 
+18:51:56 robotarm powering pin 23 from part base for 12 second(s).
+18:51:57 robotarm powering pin 27 from part shoulder for 12 second(s).
+power off pins: 23 24 
+power off pins: 27 22 
+18:51:57 robotarm powering pin 22 from part shoulder for 6 second(s).
+power off pins: 27 22 
+18:51:57 robotarm powering pin 22 from part shoulder for 8 second(s).
+power off pins: 27 22 

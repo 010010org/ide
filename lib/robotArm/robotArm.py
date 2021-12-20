@@ -1,6 +1,6 @@
 import configparser  # library used to read ini file
 import os.path # library used to test if file exists (to see if we're running on a pi)
-import robotArmLocalisationdata as ld  
+import robotArmLocalisationdata as ld  #used for language options
 import time
 import datetime
 #from pynput import keyboard
