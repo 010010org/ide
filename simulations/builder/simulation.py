@@ -1,4 +1,5 @@
 import simpylc as sp
+
 class Simulation():
 
     def __init__(self, name, List, iniFile):
@@ -51,7 +52,6 @@ class Simulation():
 
     def createPart(self, partName, name, colour, size, center, pivot, joint):
         part = partName(color  = colour, size = size, center = center, pivot = pivot, joint = joint)
-        #print(f'created: {partName, name, colour, size, center, pivot, joint}')
         self.parts.append([name, part])
     
     def print(self):

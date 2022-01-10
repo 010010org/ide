@@ -51,23 +51,12 @@ class Arm(object):
 		self.light = self.Light(_M_LIGHT, self._runningOnPi, "light")
 
 		if os.path.exists(self._robotOutputFile):
+			#makes the output file empty, usually contains all the messages for debugging to decrease clutter in terminal
 			#couldn't truncat file with 'open x as y' 
 			file = open(self._robotOutputFile, "w")
 			#truncate makes the file empty.
 			file.truncate()
 			file.close()
-		
-		if os.path.exists(self._robotOutputiniFile):
-			#create/ reset all the degrees in the ini file
-			config = configparser.ConfigParser(strict=False)
-			config.optionxform = str
-			config.read(self._robotOutputiniFile)
-			config['base']["DEGREES"] = '0'
-			config['shoulder']["DEGREES"] = '0'
-			config['elbow']["DEGREES"] = '0'
-			config['wrist']["DEGREES"] = '0'
-			with open(self._robotOutputiniFile, "w") as configFile:
-				config.write(configFile, space_around_delimiters=False)
 
 	#function that writes the printlines to a separate file.
 	def write_to_file(self, filePath, message):
@@ -88,16 +77,14 @@ class Arm(object):
 			iniWriter.optionxform = str
 			iniWriter.read(iniPath)
 			iniWriter.set(self._name, "DEGREES", str(self._degrees))
-			#buffer so the ini file doesn't update too quickly
 			try:
 				with open(iniPath, "w") as configFile:
 					iniWriter.write(configFile, space_around_delimiters=False)
 			except PermissionError as error:
-				#temporary string kan uiteindelijk vervangen worden door pass na overleg met Bas
-				print(f'er ging iets fout in writeToIniFile: {error}')
-
+				print(f'{ld.writeToIniFile}: {error}')
+				#print(f'er ging iets fout in writeToIniFile: {error}')
 		else:
-			print(f'{iniPath} {ld.fileError}')
+			print(f'{iniPath} {ld.filePathError}')
 		return
 
 
@@ -125,7 +112,7 @@ class Arm(object):
 		
 			
 		def calculate_degrees(self, keypress):
-			self._degrees = (self._degrees + keypress * 4)# % 360
+			self._degrees = (self._degrees + keypress * 4)
 			return
 
 		#TODO remove on/off parts to different function
@@ -185,11 +172,6 @@ class Arm(object):
 			Arm.write_to_file(self, Arm._robotOutputFile, message)
 			return
 		
-
-		
-	
-
-
 	# shoulder, elbow and wrist don't have any special functions. They're just the same part, but with different names.
 	class GenericPart(Part):
 		def __init__(self, pins, runningOnPi, name):

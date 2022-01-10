@@ -23,4 +23,5 @@ partDictionary = {
     "off": offMovement
 }
 
-fileError = " klopt niet, bestand kan niet worden gevonden. controleer alstublieft of het bestand bestaat"
+filePathError = " klopt niet, bestand kan niet worden gevonden. controleer alstublieft of het bestand bestaat"
+writeToIniFile = "er ging iets verkeerd tijdens het schrijven naar de ini file"
