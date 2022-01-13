@@ -23,5 +23,5 @@ partDictionary = {
     "off": offMovement
 }
 
-filePathError = "is not correct, file cannot be found. please make sure the file exists"
+fileError = "is not correct, file cannot be found. please make sure the file exists"
 writeToIniFile = "something went wrong writing to ini file"

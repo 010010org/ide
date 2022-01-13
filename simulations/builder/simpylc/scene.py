@@ -358,3 +358,12 @@ class Cone (Thing):
     def _draw (self):
         glTranslate (0, 0, -0.5)
         glutSolidCone (0.5, 1, 100, 100)
+
+class Circle(Thing):
+    def __init__(self, **arguments):
+        Thing.__init__(self, **arguments)
+    
+    def _draw(self):
+        import math
+        glTranslate(0,0,-0.5)
+        glutSolidSphere(0.5, 100, 100)

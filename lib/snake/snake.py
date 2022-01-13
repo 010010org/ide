@@ -1,17 +1,17 @@
 import configparser  # library used to read ini file
 import os.path # library used to test if file exists (to see if we're running on a pi)
-import robotArmLocalisationdata as ld  #used for language options
+import snakeLocalisationdata as ld  #used for language options
 import time
 import datetime
 #from pynput import keyboard
 
-class Arm(object):
+class Snake(object):
 	_iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
 	_iniWriter.optionxform = str
 	#pathfiles to different files so it only needs to be noted once and can easily be changed
-	_iniFile = "lib/robotArm/pinout.ini"
-	_robotOutputFile = "lib/robotArm/robot_output.txt"
-	_robotOutputiniFile = "lib/robotArm/robotOutput.ini"
+	_iniFile = "lib/snake/pinout.ini"
+	_robotOutputFile = "lib/snake/robot_output.txt"
+	_robotOutputiniFile = "lib/snake/robotOutput.ini"
 	_raspberryPiPath = "/sys/firmware/devicetree/base/model"
 	_runningOnPi = False
 	_debugmode = True
@@ -20,14 +20,17 @@ class Arm(object):
 		# read configured pins from ini file
 		#each motor has 2 pins, on or off, up or down.
 		self._iniWriter.read(self._iniFile)
-		_M1 = self._iniWriter["robotArm"]["M1"].split(",")
-		_M2 = self._iniWriter["robotArm"]["M2"].split(",")
-		_M3 = self._iniWriter["robotArm"]["M3"].split(",")
-		_M4 = self._iniWriter["robotArm"]["M4"].split(",")
-		_M5 = self._iniWriter["robotArm"]["M5"].split(",")
-		_M_LIGHT = self._iniWriter["robotArm"]["M_LIGHT"].split(",")
+		_M1 = self._iniWriter["snake"]["M1"].split(",")
+		_M2 = self._iniWriter["snake"]["M2"].split(",")
+		_M3 = self._iniWriter["snake"]["M3"].split(",")
+		_M4 = self._iniWriter["snake"]["M4"].split(",")
+		_M5 = self._iniWriter["snake"]["M5"].split(",")
+		_M6 = self._iniWriter["snake"]["M6"].split(",")
+		_M7 = self._iniWriter["snake"]["M7"].split(",")
+		_M8 = self._iniWriter["snake"]["M8"].split(",")
+		_M9 = self._iniWriter["snake"]["M9"].split(",")
 		# creates a list of all used pins
-		_channel_list = _M1 + _M2 + _M3 + _M4 + _M5 + _M_LIGHT  
+		_channel_list = _M1 + _M2 + _M3 + _M4 + _M5 + _M6 + _M7 + _M8 + _M9  
 		
 		
 		# If running on a pi, set all used pins to output and turn off their power as Raspberry pi sometimes uses these pins on startup.
@@ -43,12 +46,16 @@ class Arm(object):
 			file.close()
 		
 		# create the different parts of the arm, passing the motor number, runnningOnPi and name of the part of the motor.
-		self.base = self.Base(_M5, self._runningOnPi, "base" )
-		self.shoulder = self.GenericPart(_M4, self._runningOnPi, "shoulder")
-		self.elbow = self.GenericPart(_M3, self._runningOnPi, "elbow")
-		self.wrist = self.GenericPart(_M2, self._runningOnPi, "wrist")
-		self.grip = self.Grip(_M1, self._runningOnPi, "grip")
-		self.light = self.Light(_M_LIGHT, self._runningOnPi, "light")
+		self.head = self.GenericPart(_M1, self._runningOnPi, "head" )
+		self.body1 = self.GenericPart(_M2, self._runningOnPi, "body1")
+		self.body2 = self.GenericPart(_M3, self._runningOnPi, "body2")
+		self.body3 = self.GenericPart(_M4, self._runningOnPi, "body3")
+		self.body4 = self.GenericPart(_M5, self._runningOnPi, "body4")
+		self.body5 = self.GenericPart(_M6, self._runningOnPi, "body5")
+		self.body6 = self.GenericPart(_M7, self._runningOnPi, "body6")
+		self.body7 = self.GenericPart(_M8, self._runningOnPi, "body7")
+		self.tail = self.GenericPart(_M9, self._runningOnPi, "tail")
+		
 
 		if os.path.exists(self._robotOutputFile):
 			#makes the output file empty, usually contains all the messages for debugging to decrease clutter in terminal
@@ -101,7 +108,7 @@ class Arm(object):
 			self._pins = pins
 			self._runningOnPi = runningOnPi
 			self._name = name
-			self._debugmode = Arm._debugmode
+			self._debugmode = Snake._debugmode
 			self._timeTaken = 0
 			self._degrees = 0
 		
@@ -144,14 +151,14 @@ class Arm(object):
 				print(f"appended")
 			
 			#write to the text file
-			Arm.write_to_file(self, Arm._robotOutputFile, message)
+			Snake.write_to_file(self, Snake._robotOutputFile, message)
 			#if the keypress is for the other direction, invert keypress
 			if pin == self._pins[0]:
 				keypress = -keypress
 			self._calculate_degrees(keypress)
 
 			#write changed degrees to ini file
-			Arm.writeToIniFile(self, Arm._robotOutputiniFile)
+			Snake.writeToIniFile(self, Snake._robotOutputiniFile)
 			return
 
 		# Turns off a part if running on a pi. Only prints to the console otherwise.
@@ -168,7 +175,7 @@ class Arm(object):
 				message += (f'{i} ')
 			
 			#Write off message
-			Arm.write_to_file(self, Arm._robotOutputFile, message)
+			Snake.write_to_file(self, Snake._robotOutputFile, message)
 			return
 		
 	# shoulder, elbow and wrist don't have any special functions. They're just the same part, but with different names.

@@ -1,7 +1,6 @@
 import tkinter as tk  # Used to create interface
 import sys  # Used to add folders to the path
 import os  # Used to get current directory
-
 import localisationdata as ld  # Contains translated strings for selected language
 import configparser  # Used to read/write ini files
 

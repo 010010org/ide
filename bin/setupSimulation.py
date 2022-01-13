@@ -42,10 +42,9 @@ class Interface (object):
         self._simulationOption = self._simulationOptionVar.get()
 
     def startSimulation(self, library):
-        #double clicking .py file
-        #TODO wherispython , pythonfile , path to simulation
-        #x = os.system(str(os.getcwd() + self._pathToSimulationFolder + '/' + library + 'Simulation.py'))
-        x = os.system(str(os.getcwd())+ "/simulations/builder/visualisation.py")
+        #os.system opens the file with the method it was last used, so opening it with an editor causes the program to jump to the editor instead of running the python script
+        #x = os.system(str(os.getcwd())+ self._pathToSimulationFolder +"/visualisation.py " + library)
+        x = os.system(str(os.getcwd())+ self._pathToSimulationFolder +"/visualisation.py " + library)
 
         
 

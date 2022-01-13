@@ -51,7 +51,7 @@ class Coder:
         try:
             self.nativeCode = sub (r'/\*\*.*?\*\*/', '', open ('native.cpp') .read (), flags = DOTALL)
         except:
-            print ("File 'native.cpp' missing")
+            #print ("File 'native.cpp' missing")
             return
     
         print ('Code generation started')
