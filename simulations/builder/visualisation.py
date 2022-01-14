@@ -1,3 +1,4 @@
+#!/usr/bin/python3.7
 import simpylc as sp
 import os
 import configparser
