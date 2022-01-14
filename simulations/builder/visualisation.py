@@ -5,6 +5,13 @@ import copy
 import sys
 from visualisationLoader import VisualisationLoader
 
+#check for raspbery pi, raspberry pi 400 and laptop have different versions of python installed
+if os.path.exists("/sys/firmware/devicetree/base/model"):
+    with open("/sys/firmware/devicetree/base/model") as file:
+        if "Raspberry Pi" in file.read():
+            #!/usr/bin/python3.7
+            pass
+
 #call from robotarm gives inifile, debugmode etc
 
 class Visualisation (sp.Scene):
