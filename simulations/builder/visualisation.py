@@ -34,18 +34,10 @@ class Visualisation (sp.Scene):
         #call function once, otherwise append will create a very long duplicate list
         self.createPartsList()
 
-    def _configureIniFile(self):
-        iniWriter = configparser.ConfigParser(strict = False, allow_no_value=True)
-        iniWriter.optionxform = str
-        iniWriter.read(self.robotOutputIniFile)
-        for i in range(self.parts):
-            iniWriter[self.parts[i][0]]
-        pass
-
     def createPartsList(self):
         #creates the list for the angles so the simulation can move, also updates the ini file for all the parts it has
         if os.path.exists(self.robotOutputIniFile):
-            config = configparser.ConfigParser(strict = False, )
+            config = configparser.ConfigParser(comment_prefixes="/", strict = False, allow_no_value=True)
             config.optionxform = str
             config.read(self.robotOutputIniFile)
             for i in range(len(self.receivedPartsList)):
