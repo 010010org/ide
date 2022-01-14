@@ -35,7 +35,7 @@ class Visualisation (sp.Scene):
         self.createPartsList()
 
     def _configureIniFile(self):
-        iniWriter = configparser.ConfigParser(strict = False)
+        iniWriter = configparser.ConfigParser(strict = False, allow_no_value=True)
         iniWriter.optionxform = str
         iniWriter.read(self.robotOutputIniFile)
         for i in range(self.parts):
