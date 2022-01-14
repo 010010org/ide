@@ -1,26 +1,30 @@
-15:23:51 robotarm powering pin 3 from part head for 6 second(s).
-15:23:52 robotarm powering pin 4 from part body1 for 13 second(s).
-power off pins: 2 3 
-15:23:52 robotarm powering pin 7 from part body2 for 12 second(s).
+15:43:53 robotarm powering pin 4 from part body1 for 8 second(s).
+15:43:53 robotarm powering pin 7 from part body2 for 13 second(s).
 power off pins: 4 5 
-15:23:52 robotarm powering pin 6 from part body2 for 8 second(s).
+15:43:53 robotarm powering pin 4 from part body1 for 8 second(s).
+power off pins: 4 5 
+15:43:54 robotarm powering pin 6 from part body2 for 8 second(s).
 power off pins: 6 7 
-15:23:52 robotarm powering pin 9 from part body3 for 9 second(s).
+15:43:54 robotarm powering pin 9 from part body3 for 11 second(s).
 power off pins: 6 7 
-15:23:53 robotarm powering pin 8 from part body3 for 15 second(s).
+15:43:54 robotarm powering pin 8 from part body3 for 7 second(s).
 power off pins: 8 9 
-15:23:53 robotarm powering pin 11 from part body4 for 6 second(s).
+15:43:54 robotarm powering pin 11 from part body4 for 7 second(s).
 power off pins: 8 9 
-15:23:53 robotarm powering pin 10 from part body4 for 5 second(s).
+15:43:55 robotarm powering pin 10 from part body4 for 7 second(s).
 power off pins: 10 11 
-15:23:53 robotarm powering pin 12 from part body5 for 12 second(s).
-15:23:53 robotarm powering pin 14 from part body6 for 8 second(s).
+15:43:55 robotarm powering pin 13 from part body5 for 12 second(s).
 power off pins: 10 11 
+15:43:55 robotarm powering pin 12 from part body5 for 5 second(s).
 power off pins: 12 13 
+power off pins: 12 13 
+15:43:56 robotarm powering pin 15 from part body6 for 13 second(s).
+15:43:56 robotarm powering pin 14 from part body6 for 6 second(s).
 power off pins: 14 15 
-15:23:54 robotarm powering pin 12 from part body5 for 15 second(s).
-15:23:54 robotarm powering pin 10 from part body4 for 13 second(s).
-power off pins: 12 13 
-15:23:54 robotarm powering pin 15 from part body6 for 13 second(s).
-power off pins: 10 11 
+power off pins: 14 15 
+15:43:56 robotarm powering pin 15 from part body6 for 8 second(s).
+power off pins: 14 15 
+15:43:57 robotarm powering pin 15 from part body6 for 8 second(s).
+15:43:57 robotarm powering pin 14 from part body6 for 11 second(s).
+power off pins: 14 15 
 power off pins: 14 15 
