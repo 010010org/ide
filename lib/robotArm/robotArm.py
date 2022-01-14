@@ -10,7 +10,7 @@ class Arm(object):
 	_iniWriter.optionxform = str
 	#pathfiles to different files so it only needs to be noted once and can easily be changed
 	_iniFile = "lib/robotArm/pinout.ini"
-	_robotOutputFile = "lib/robotArm/robot_output.txt"
+	_robotOutputFile = "lib/robotArm/robotOutput.txt"
 	_robotOutputiniFile = "lib/robotArm/robotOutput.ini"
 	_raspberryPiPath = "/sys/firmware/devicetree/base/model"
 	_runningOnPi = False
@@ -140,8 +140,8 @@ class Arm(object):
 			#cannot enter the if statement, assuming it works.
 
 			if power > 0 & power < 100:
-				#message += (f" at {power} % power")
-				print(f"appended")
+				message += (f" at {power} % power")
+				#print(f"appended")
 			
 			#write to the text file
 			Arm.write_to_file(self, Arm._robotOutputFile, message)

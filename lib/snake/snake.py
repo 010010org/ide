@@ -10,7 +10,7 @@ class Snake(object):
 	_iniWriter.optionxform = str
 	#pathfiles to different files so it only needs to be noted once and can easily be changed
 	_iniFile = "lib/snake/pinout.ini"
-	_robotOutputFile = "lib/snake/robot_output.txt"
+	_robotOutputFile = "lib/snake/robotOutput.txt"
 	_robotOutputiniFile = "lib/snake/robotOutput.ini"
 	_raspberryPiPath = "/sys/firmware/devicetree/base/model"
 	_runningOnPi = False
