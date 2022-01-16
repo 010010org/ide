@@ -66,7 +66,7 @@ class Snake(object):
 			file.close()
 
 	#function that writes the printlines to a separate file.
-	def write_to_file(self, filePath, message):
+	def writeToFile(self, filePath, message):
 		#checks if file exists
 		if os.path.exists(filePath): 
 			#if statement to check for type of file
@@ -151,7 +151,7 @@ class Snake(object):
 				print(f"appended")
 			
 			#write to the text file
-			Snake.write_to_file(self, Snake._robotOutputFile, message)
+			Snake.writeToFile(self, Snake._robotOutputFile, message)
 			#if the keypress is for the other direction, invert keypress
 			if pin == self._pins[0]:
 				keypress = -keypress
@@ -175,7 +175,7 @@ class Snake(object):
 				message += (f'{i} ')
 			
 			#Write off message
-			Snake.write_to_file(self, Snake._robotOutputFile, message)
+			Snake.writeToFile(self, Snake._robotOutputFile, message)
 			return
 		
 	# shoulder, elbow and wrist don't have any special functions. They're just the same part, but with different names.

@@ -59,7 +59,7 @@ class Arm(object):
 			file.close()
 
 	#function that writes the printlines to a separate file.
-	def write_to_file(self, filePath, message):
+	def writeToFile(self, filePath, message):
 		#checks if file exists
 		if os.path.exists(filePath): 
 			#if statement to check for type of file
@@ -144,7 +144,7 @@ class Arm(object):
 				#print(f"appended")
 			
 			#write to the text file
-			Arm.write_to_file(self, Arm._robotOutputFile, message)
+			Arm.writeToFile(self, Arm._robotOutputFile, message)
 			#if the keypress is for the other direction, invert keypress
 			if pin == self._pins[0]:
 				keypress = -keypress
@@ -168,7 +168,7 @@ class Arm(object):
 				message += (f'{i} ')
 			
 			#Write off message
-			Arm.write_to_file(self, Arm._robotOutputFile, message)
+			Arm.writeToFile(self, Arm._robotOutputFile, message)
 			return
 		
 	# shoulder, elbow and wrist don't have any special functions. They're just the same part, but with different names.
