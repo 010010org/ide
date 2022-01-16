@@ -69,7 +69,7 @@ class Visualisation (sp.Scene):
                     #both simpylc and ide want to access ini file at the same time
                     #waiting for a short amoun of time does not resolve error 
                     pass 
-                    print(f'er is iets fout gegaan: {k} maar dat maakt niet uit')
+                    #print(f'er is iets fout gegaan: {k} maar dat maakt niet uit')
         else:   
             print(f'{self.path} bestaat niet')
     
