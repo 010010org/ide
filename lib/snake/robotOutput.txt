@@ -1,0 +1,38 @@
+10:41:20 robotarm powering pin 3 from part head for 12 second(s).
+10:41:20 robotarm powering pin 4 from part body1 for 10 second(s).
+power off pins: 2 3 
+power off pins: 4 5 
+10:41:20 robotarm powering pin 7 from part body2 for 6 second(s).
+power off pins: 6 7 
+10:41:21 robotarm powering pin 7 from part body2 for 5 second(s).
+power off pins: 6 7 
+10:41:21 robotarm powering pin 9 from part body3 for 13 second(s).
+power off pins: 8 9 
+10:41:21 robotarm powering pin 8 from part body3 for 15 second(s).
+power off pins: 8 9 
+10:41:22 robotarm powering pin 8 from part body3 for 9 second(s).
+power off pins: 8 9 
+10:41:23 robotarm powering pin 11 from part body4 for 15 second(s).
+power off pins: 10 11 
+10:41:23 robotarm powering pin 10 from part body4 for 14 second(s).
+power off pins: 10 11 
+10:41:24 robotarm powering pin 13 from part body5 for 15 second(s).
+power off pins: 12 13 
+10:41:24 robotarm powering pin 12 from part body5 for 14 second(s).
+power off pins: 12 13 
+10:41:24 robotarm powering pin 12 from part body5 for 13 second(s).
+power off pins: 12 13 
+10:41:25 robotarm powering pin 3 from part head for 7 second(s).
+power off pins: 2 3 
+10:41:25 robotarm powering pin 3 from part head for 12 second(s).
+power off pins: 2 3 
+10:41:25 robotarm powering pin 4 from part body1 for 9 second(s).
+power off pins: 4 5 
+10:41:25 robotarm powering pin 4 from part body1 for 15 second(s).
+power off pins: 4 5 
+10:41:26 robotarm powering pin 4 from part body1 for 10 second(s).
+power off pins: 4 5 
+10:41:26 robotarm powering pin 4 from part body1 for 9 second(s).
+power off pins: 4 5 
+10:41:26 robotarm powering pin 4 from part body1 for 7 second(s).
+power off pins: 4 5 
