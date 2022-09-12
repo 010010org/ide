@@ -111,8 +111,9 @@ class Interface(object):
         import setupSimulation
         setupSimulation.Interface(self._parent, self._libraryList)
 
-    # Reads pinouts from default file and restores them, closes window.
+    
     def _resetClick(self):
+        '''Reads pinouts from default file and restores them, closes window.'''
         for i in self._libraryList:
             self._iniFile = "lib/" + i + "/defaultPinout.ini"
             self._iniWriter.read(self._iniFile)

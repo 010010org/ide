@@ -42,7 +42,10 @@ class Interface(object):
 
     def __init__(self, parent):
         self.lexer = PythonLexer()  # Used for syntax highlighting
-        self._window = tk.Frame(parent)
+        self._newWindow = tk.Toplevel(parent)
+        self._newWindow.attributes("-topmost", True)
+        
+        self._window = tk.Frame(self._newWindow)
         self.helpText = tk.StringVar(self._window)
 
         # setup window

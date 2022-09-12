@@ -4,6 +4,8 @@ import os  # Used to get current directory
 import localisationdata as ld  # Contains translated strings for selected language
 import configparser  # Used to read/write ini files
 
+#from templateWindow import TemplateWindow
+
 
 # This program creates a simple start menu, allowing the user to choose which sub-program they want to start
 # It allows the user to unlock new sub-programs based on the programs they've already used.
@@ -11,6 +13,8 @@ import configparser  # Used to read/write ini files
 class Interface(object):
     # _ signifies private field
     _root = tk.Tk()
+    #_root.attributes("-topmost", True)
+    _root.iconbitmap("icon.ico")
     #coonfigparse library coverts ini files to PEP8 format
     _iniWriter = configparser.ConfigParser(comment_prefixes='/', allow_no_value=True)
     _iniFile = "config.ini"
@@ -57,7 +61,7 @@ class Interface(object):
         with open(self._iniFile, 'w') as configFile:
             self._iniWriter.write(configFile, space_around_delimiters=False)
 
-        self._window.grid_remove()
+        #self._window.grid_remove()
         import tkProgrammerInterface
         tkProgrammerInterface.Interface(self._root)
         self.getProgress()

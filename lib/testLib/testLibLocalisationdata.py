@@ -1,9 +1,9 @@
-ledMovement = "on"
-normalMovements = ["forward", "backwards"]
-planeMovements = ["up", "down"]
-offMovement = "off"
+ledMovement = "aan"
+normalMovements = ["vooruit", "achteruit"]
+planeMovements = ["omhoog", "omlaag"]
+offMovement = "uit"
 
-partList = ["bike", "car", "boat", "plane", "skateboard", "flashlight"]
+partList = ["fiets", "auto", "boot", "vliegtuig", "skateboard", "zaklamp"]
 
 partDictionary = {
     "bike": partList[0],

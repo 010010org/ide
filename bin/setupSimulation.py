@@ -9,7 +9,7 @@ class Interface (object):
     def __init__(self, parent, libraryList):
         self._parent = parent
         self._window = tk.Frame(parent)
-        self._window.title = ld.windowTitle #ld
+        self._window.title = ld.windowTitle
         self._libraryList = libraryList
         self._library = 0
         self._simulationOption = False #turns to true when simulation is called

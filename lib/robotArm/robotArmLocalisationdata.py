@@ -1,10 +1,10 @@
-baseMovements = ["counterclockwise", "clockwise"]
-gripMovements = ["open", "close"]
-ledMovement = "on"
-normalMovements = ["up", "down"]
-offMovement = "off"
+baseMovements = ["tegen de klok in", "met de klok mee"]
+gripMovements = ["open", "dicht"]
+ledMovement = "aan"
+normalMovements = ["omhoog", "omlaag"]
+offMovement = "uit"
 
-partList = ["base", "shoulder", "elbow", "wrist", "grip", "light"]
+partList = ["basis", "schouder", "elleboog", "pols", "grijper", "lampje"]
 
 partDictionary = {
     "base": partList[0],
@@ -23,5 +23,5 @@ partDictionary = {
     "off": offMovement
 }
 
-fileError = "is not correct, file cannot be found. please make sure the file exists"
-writeToIniFile = "something went wrong writing to ini file"
+filePathError = " klopt niet, bestand kan niet worden gevonden. controleer alstublieft of het bestand bestaat"
+writeToIniFile = "er ging iets verkeerd tijdens het schrijven naar de ini file"
